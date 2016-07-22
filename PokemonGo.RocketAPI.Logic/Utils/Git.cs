@@ -43,6 +43,7 @@ namespace PokemonGo.RocketAPI.Helpers
 
         private static string DownloadServerVersion()
         {
+            //test
             using (var wC = new WebClient())
                 return
                     wC.DownloadString(

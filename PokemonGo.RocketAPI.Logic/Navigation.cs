@@ -23,7 +23,7 @@ namespace PokemonGo.RocketAPI.Logic
 
             Location sourceLocation = new Location(_client.CurrentLat, _client.CurrentLng);
             var distanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
-            Logger.Normal($"Distance to target location: {distanceToTarget:0.##} meters. Will take {distanceToTarget / speedInMetersPerSecond:0.##} seconds!");
+            Logger.Normal($"(NAVIGATION) Distance to target location: {distanceToTarget:0.##} meters. Will take {distanceToTarget / speedInMetersPerSecond:0.##} seconds!");
 
             double nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
             double nextWaypointDistance = speedInMetersPerSecond;
@@ -44,17 +44,17 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     if (speedInMetersPerSecond > speedDownTo)
                     {
-                        Logger.Normal("We are within 40 meters of the target. Speeding down to 10 km/h to not pass the target.");
+                        Logger.Normal("(NAVIGATION) We are within 40 meters of the target. Speeding down to 10 km/h to not pass the target.");
                         speedInMetersPerSecond = speedDownTo;
                     }
                     else
                     {
-                        Logger.Normal("We are within 40 meters of the target, attempting to interact.");
+                        Logger.Normal("(NAVIGATION) We are within 40 meters of the target, attempting to interact.");
                     }
                 }
                 else
                 {
-                    Logger.Normal($"Distance to target location: {LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation):0.##} meters.");
+                    Logger.Normal($"(NAVIGATION) Distance to target location: {LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation):0.##} meters.");
                 }
 
                 nextWaypointDistance = Math.Min(currentDistanceToTarget, millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);

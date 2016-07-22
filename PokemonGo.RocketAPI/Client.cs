@@ -18,7 +18,6 @@ namespace PokemonGo.RocketAPI
 {
     public class Client
     {
-        //private readonly ISettings _settings;
         public ISettings Settings { get; }
         private readonly HttpClient _httpClient;
         private AuthType _authType = AuthType.Google;
