@@ -1,4 +1,4 @@
-# Pokemon Go API Client Library #
+﻿# Pokemon Go API Client Library (Discontinued by real owner leaving it here for my own entretainment)#
 
 
 ## About
