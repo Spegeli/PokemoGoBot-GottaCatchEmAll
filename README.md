@@ -48,7 +48,7 @@ You can find all necessary Information [here](https://github.com/FeroxRev/Pokemo
 
 
 # Pokemon-Go-Rocket-API
-Note: To use the API you have to be an expierienced Developer, do not touch or modify Project Files if you are not experienced.
+Note: To use the API you have to be an experienced Developer, do not touch or modify Project Files if you are not experienced.
 
 Example:
 
