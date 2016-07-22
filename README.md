@@ -7,8 +7,6 @@ Chat about this Repository via Discord: https://discord.gg/5CMa3CY
 
 **GitHub issues will be deleted if they are not API related.**
 
-**Accepting all Pull Requests that have something to do with improved Logic :D**
-
 
 
 ## Features
