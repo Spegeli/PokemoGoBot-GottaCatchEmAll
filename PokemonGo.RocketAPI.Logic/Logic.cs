@@ -188,8 +188,8 @@ namespace PokemonGo.RocketAPI.Logic
         private async Task ExecuteFarmingPokestopsAndPokemons()
         {
             var mapObjects = await _client.GetMapObjects();
-            var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).OrderBy(i => LocationUtils.CalculateDistanceInMeters(new Navigation.Location(_client.CurrentLat, _client.CurrentLng), new Navigation.Location(i.Latitude, i.Longitude)));
-            Logger.Normal(ConsoleColor.Green, $"Found {pokeStops.Count()} pokestops");
+            var pokeStops = pathByNearestNeighbour(mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).OrderBy(i => LocationUtils.CalculateDistanceInMeters(new Navigation.Location(_client.CurrentLat, _client.CurrentLng), new Navigation.Location(i.Latitude, i.Longitude))).ToArray());
+            Logger.Normal(ConsoleColor.Green, $"Found {pokeStops.Length} pokestops");
 
             foreach (var pokeStop in pokeStops)
             {
@@ -459,6 +459,31 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 Logger.Normal($"# CP {pokemon.Cp}\t| ({CalculatePokemonPerfection(pokemon).ToString("0.00")}\t% perfect) NAME: '{pokemon.PokemonId}'");
             }
+        }
+
+        private FortData[] pathByNearestNeighbour(FortData[] pokeStops)
+        {
+            for (var i = 1; i < pokeStops.Length - 1; i++)
+            {
+                var closest = i + 1;
+                var cloestDist = LocationUtils.CalculateDistanceInMeters(new Navigation.Location(pokeStops[i].Latitude, pokeStops[i].Longitude), new Navigation.Location(pokeStops[closest].Latitude, pokeStops[closest].Longitude));
+                for (var j = closest; j < pokeStops.Length; j++)
+                {
+                    var initialDist = cloestDist;
+                    var newDist = LocationUtils.CalculateDistanceInMeters(new Navigation.Location(pokeStops[i].Latitude, pokeStops[i].Longitude), new Navigation.Location(pokeStops[j].Latitude, pokeStops[j].Longitude));
+                    if (initialDist > newDist)
+                    {
+                        cloestDist = newDist;
+                        closest = j;
+                    }
+
+                }
+                var tmpPok = pokeStops[closest];
+                pokeStops[closest] = pokeStops[i + 1];
+                pokeStops[i + 1] = tmpPok;
+            }
+
+            return pokeStops;
         }
     
     }
