@@ -49,15 +49,14 @@ namespace PokemonGo.RocketAPI.Console
             new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 40),
             new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 100),
-            
+
             new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 0),
             new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 0),
             new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 40),
             new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 100),
-            
             new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 20),
             new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 100),
-            
+
             new KeyValuePair<ItemId, int>(ItemId.ItemLuckyEgg, 200),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncenseOrdinary, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncenseSpicy, 100),
@@ -67,13 +66,13 @@ namespace PokemonGo.RocketAPI.Console
             new KeyValuePair<ItemId, int>(ItemId.ItemXAttack, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemXDefense, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemXMiracle, 100),
-            
+
             new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemBlukBerry, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemNanabBerry, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemWeparBerry, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemPinapBerry, 60),
-            
+
             new KeyValuePair<ItemId, int>(ItemId.ItemSpecialCamera, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncubatorBasicUnlimited, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncubatorBasic, 100),
