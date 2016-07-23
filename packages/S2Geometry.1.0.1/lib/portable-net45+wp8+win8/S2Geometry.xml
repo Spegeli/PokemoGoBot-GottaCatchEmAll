@@ -1,0 +1,2217 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>S2Geometry</name>
+    </assembly>
+    <members>
+        <member name="F:Google.Common.Geometry.DoubleConsts.SignificandWidth">
+            The number of logical bits in the significand of a
+            <code>double</code> number, including the implicit bit.
+        </member>
+        <member name="F:Google.Common.Geometry.DoubleConsts.MaxExponent">
+            Maximum exponent a finite <code>double</code> number may have.
+            It is equal to the value returned by
+            <code>Math.ilogb(Double.MAX_VALUE)</code>.
+        </member>
+        <member name="F:Google.Common.Geometry.DoubleConsts.MinExponent">
+            Minimum exponent a normalized <code>double</code> number may
+            have.  It is equal to the value returned by
+            <code>Math.ilogb(Double.MIN_NORMAL)</code>.
+        </member>
+        <member name="F:Google.Common.Geometry.DoubleConsts.ExpBitMask">
+            Bit mask to isolate the exponent field of a
+            <code>double</code>.
+        </member>
+        <member name="F:Google.Common.Geometry.DoubleConsts.ExpBias">
+            Bias used in representing a <code>double</code> exponent.
+        </member>
+        <member name="M:Google.Common.Geometry.FpUtils.PowerOfTwoD(System.Int32)">
+            Returns a floating-point power of two in the normal range.
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.FpUtils.Scalb(System.Double,System.Int32)" -->
+        <member name="T:Google.Common.Geometry.IS2Region">
+            <summary>
+                An IS2Region represents a two-dimensional region over the unit sphere. It is
+                an abstract interface with various concrete subtypes.
+                The main purpose of this interface is to allow complex regions to be
+                approximated as simpler regions. So rather than having a wide variety of
+                virtual methods that are implemented by all subtypes, the interface is
+                restricted to methods that are useful for computing approximations.
+            </summary>
+        </member>
+        <member name="M:Google.Common.Geometry.IS2Region.Contains(Google.Common.Geometry.S2Cell)">
+            <summary>
+                If this method returns true, the region completely contains the given cell.
+                Otherwise, either the region does not contain the cell or the containment
+                relationship could not be determined.
+            </summary>
+            <param name="cell"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Google.Common.Geometry.IS2Region.MayIntersect(Google.Common.Geometry.S2Cell)">
+            <summary>
+                If this method returns false, the region does not intersect the given cell.
+                Otherwise, either region intersects the cell, or the intersection
+                relationship could not be determined.
+            </summary>
+            <param name="cell"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Google.Common.Geometry.IS2Region.CapBound">
+            <summary>
+                Return a bounding spherical cap.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Google.Common.Geometry.IS2Region.RectBound">
+            <summary>
+                Return a bounding latitude-longitude rectangle.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Google.Common.Geometry.R1Interval">
+            <summary>
+                An R1Interval represents a closed, bounded interval on the real line. It is
+                capable of representing the empty interval (containing no points) and
+                zero-length intervals (containing a single point).
+            </summary>
+        </member>
+        <member name="F:Google.Common.Geometry.R1Interval.Empty">
+            <summary>
+                Returns an empty interval. (Any interval where lo > hi is considered empty.)
+            </summary>
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.FromPoint(System.Double)">
+            Convenience method to construct an interval containing a single point.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.FromPointPair(System.Double,System.Double)">
+            Convenience method to construct the minimal interval containing the two
+            given points. This is equivalent to starting with an empty interval and
+            calling AddPoint() twice, but it is more efficient.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Contains(System.Double)">
+            Return the center of the interval. For empty intervals, the result is
+            arbitrary.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Contains(Google.Common.Geometry.R1Interval)">
+            Return true if this interval contains the interval 'y'. 
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.InteriorContains(Google.Common.Geometry.R1Interval)">
+            Return true if the interior of this interval contains the entire interval
+            'y' (including its boundary).
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Intersects(Google.Common.Geometry.R1Interval)">
+            Return true if this interval intersects the given interval, i.e. if they
+            have any points in common.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.InteriorIntersects(Google.Common.Geometry.R1Interval)">
+            Return true if the interior of this interval intersects any point of the
+            given interval (including its boundary).
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.AddPoint(System.Double)">
+            Expand the interval so that it contains the given point "p". 
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Expanded(System.Double)">
+            Return an interval that contains all points with a distance "radius" of a
+            point in this interval. Note that the expansion of an empty interval is
+            always empty.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Union(Google.Common.Geometry.R1Interval)">
+            Return the smallest interval that contains this interval and the given
+            interval "y".
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.Intersection(Google.Common.Geometry.R1Interval)">
+            Return the intersection of this interval with the given interval. Empty
+            intervals do not need to be special-cased.
+        </member>
+        <member name="M:Google.Common.Geometry.R1Interval.ApproxEquals(Google.Common.Geometry.R1Interval,System.Double)">
+             Return true if length of the symmetric difference between the two intervals
+             is at most the given tolerance.
+            
+        </member>
+        <member name="P:Google.Common.Geometry.R1Interval.Length">
+            Return the length of the interval. The length of an empty interval is
+            negative.
+        </member>
+        <member name="M:Google.Common.Geometry.R2Vector.#ctor(System.Collections.Generic.IList{System.Double})">
+            <summary>
+                Point as a list of 2; x is index 0, y is index 1
+            </summary>
+            <param name="coord"></param>
+        </member>
+        <member name="M:Google.Common.Geometry.R2Vector.GetHashCode">
+            Calcualates hashcode based on stored coordinates. Since we want +0.0 and
+            -0.0 to be treated the same, we ignore the sign of the coordinates.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Angle.#ctor(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            <summary>
+                Return the angle between two points, which is also equal to the distance
+                between these points on the unit sphere. The points do not need to be
+                normalized.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:Google.Common.Geometry.S1Angle.op_LessThan(Google.Common.Geometry.S1Angle,Google.Common.Geometry.S1Angle)">
+            The default constructor yields a zero angle.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Angle.ToString">
+            Writes the angle in degrees with a "d" suffix, e.g. "17.3745d". By default
+            6 digits are printed; this can be changed using setprecision(). Up to 17
+            digits are required to distinguish one angle from another.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.#ctor(System.Double,System.Double,System.Boolean)">
+            Internal constructor that assumes that both arguments are in the correct
+            range, i.e. normalization from -Pi to Pi is already done.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.FromPointPair(System.Double,System.Double)">
+            Convenience method to construct the minimal interval containing the two
+            given points. This is equivalent to starting with an empty interval and
+            calling AddPoint() twice, but it is more efficient.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Contains(System.Double)">
+            Return true if the interval (which is closed) contains the point 'p'. 
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.FastContains(System.Double)">
+             Return true if the interval (which is closed) contains the point 'p'. Skips
+             the normalization of 'p' from -Pi to Pi.
+            
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.InteriorContains(System.Double)">
+            Return true if the interior of the interval contains the point 'p'. 
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Contains(Google.Common.Geometry.S1Interval)">
+            Return true if the interval contains the given interval 'y'. Works for
+            empty, full, and singleton intervals.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.InteriorContains(Google.Common.Geometry.S1Interval)">
+            Returns true if the interior of this interval contains the entire interval
+            'y'. Note that x.InteriorContains(x) is true only when x is the empty or
+            full interval, and x.InteriorContains(S1Interval(p,p)) is equivalent to
+            x.InteriorContains(p).
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Intersects(Google.Common.Geometry.S1Interval)">
+            Return true if the two intervals contain any points in common. Note that
+            the point +/-Pi has two representations, so the intervals [-Pi,-3] and
+            [2,Pi] intersect, for example.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.InteriorIntersects(Google.Common.Geometry.S1Interval)">
+            Return true if the interior of this interval contains any point of the
+            interval 'y' (including its boundary). Works for empty, full, and singleton
+            intervals.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.AddPoint(System.Double)">
+            Expand the interval by the minimum amount necessary so that it contains the
+            given point "p" (an angle in the range [-Pi, Pi]).
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Expanded(System.Double)">
+            Return an interval that contains all points within a distance "radius" of
+            a point in this interval. Note that the expansion of an empty interval is
+            always empty. The radius must be non-negative.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Union(Google.Common.Geometry.S1Interval)">
+            Return the smallest interval that contains this interval and the given
+            interval "y".
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.Intersection(Google.Common.Geometry.S1Interval)">
+            Return the smallest interval that contains the intersection of this
+            interval with "y". Note that the region of intersection may consist of two
+            disjoint intervals.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.ApproxEquals(Google.Common.Geometry.S1Interval,System.Double)">
+            Return true if the length of the symmetric difference between the two
+            intervals is at most the given tolerance.
+        </member>
+        <member name="M:Google.Common.Geometry.S1Interval.PositiveDistance(System.Double,System.Double)">
+            Compute the distance from "a" to "b" in the range [0, 2*Pi). This is
+            equivalent to (drem(b - a - S2.M_PI, 2 * S2.M_PI) + S2.M_PI), except that
+            it is more numerically stable (it does not lose precision for very small
+            positive distances).
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.IsValid">
+            An interval is valid if neither bound exceeds Pi in absolute value, and the
+            value -Pi appears only in the Empty() and Full() intervals.
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.IsFull">
+            Return true if the interval contains all points on the unit circle. 
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.IsEmpty">
+            Return true if the interval is empty, i.e. it contains no points. 
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.Center">
+            Return the midpoint of the interval. For full and empty intervals, the
+            result is arbitrary.
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.Length">
+            Return the length of the interval. The length of an empty interval is
+            negative.
+        </member>
+        <member name="P:Google.Common.Geometry.S1Interval.Complement">
+            Return the complement of the interior of the interval. An interval and its
+            complement have the same boundary but do not share any interior values. The
+            complement operator is not a bijection, since the complement of a singleton
+            interval (containing a single value) is the same as the complement of an
+            empty interval.
+        </member>
+        <member name="F:Google.Common.Geometry.S2._PosToOrientation">
+            Mapping Hilbert traversal order to orientation adjustment mask. 
+        </member>
+        <member name="F:Google.Common.Geometry.S2._PosToIj">
+            Mapping from cell orientation + Hilbert traversal to IJ-index. 
+        </member>
+        <member name="F:Google.Common.Geometry.S2._IjToPos">
+            Mapping from Hilbert traversal order + cell orientation to IJ-index. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2.IjToPos(System.Int32,System.Int32)">
+             Returns the order in which a specified subcell is visited by the Hilbert
+             curve. This is the inverse of {@link #posToIJ}.
+            
+             @param orientation the subcell orientation, in the range [0,3].
+             @param ijIndex the subcell index where
+                 {@code 0->(0,0), 1->(0,1), 2->(1,0), 3->(1,1)}.
+             @return the position of the subcell in the Hilbert traversal, in the range
+                 [0,3].
+             @throws IllegalArgumentException if either parameter is out of bounds.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.IsUnitLength(Google.Common.Geometry.S2Point)">
+            Return true if the given point is approximately unit length (this is mainly
+            useful for assertions).
+        </member>
+        <member name="M:Google.Common.Geometry.S2.SimpleCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return true if edge AB crosses CD at a point that is interior to both
+             edges. Properties:
+            
+              (1) SimpleCrossing(b,a,c,d) == SimpleCrossing(a,b,c,d) (2)
+             SimpleCrossing(c,d,a,b) == SimpleCrossing(a,b,c,d)
+        </member>
+        <member name="M:Google.Common.Geometry.S2.RobustCrossProd(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return a vector "c" that is orthogonal to the given unit-length vectors "a"
+             and "b". This function is similar to a.CrossProd(b) except that it does a
+             better job of ensuring orthogonality when "a" is nearly parallel to "b",
+             and it returns a non-zero result even when a == b or a == -b.
+            
+              It satisfies the following properties (RCP == RobustCrossProd):
+            
+              (1) RCP(a,b) != 0 for all a, b (2) RCP(b,a) == -RCP(a,b) unless a == b or
+             a == -b (3) RCP(-a,b) == -RCP(a,b) unless a == b or a == -b (4) RCP(a,-b)
+             == -RCP(a,b) unless a == b or a == -b
+        </member>
+        <member name="M:Google.Common.Geometry.S2.Ortho(Google.Common.Geometry.S2Point)">
+            Return a unit-length vector that is orthogonal to "a". Satisfies Ortho(-a)
+            = -Ortho(a) for all a.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.Area(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return the area of triangle ABC. The method used is about twice as
+             expensive as Girard's formula, but it is numerically stable for both large
+             and very small triangles. The points do not need to be normalized. The area
+             is always positive.
+            
+              The triangle area is undefined if it contains two antipodal points, and
+             becomes numerically unstable as the length of any edge approaches 180
+             degrees.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.GirardArea(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Return the area of the triangle computed using Girard's formula. This is
+            slightly faster than the Area() method above is not accurate for very small
+            triangles.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.SignedArea(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Like Area(), but returns a positive value for counterclockwise triangles
+            and a negative value otherwise.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.PlanarCentroid(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Return the centroid of the planar triangle ABC. This can be normalized to
+            unit length to obtain the "surface centroid" of the corresponding spherical
+            triangle, i.e. the intersection of the three medians. However, note that
+            for large spherical triangles the surface centroid may be nowhere near the
+            intuitive "center" (see example above).
+        </member>
+        <member name="M:Google.Common.Geometry.S2.TrueCentroid(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Returns the true centroid of the spherical triangle ABC multiplied by the
+            signed area of spherical triangle ABC. The reasons for multiplying by the
+            signed area are (1) this is the quantity that needs to be summed to compute
+            the centroid of a union or difference of triangles, and (2) it's actually
+            easier to calculate this way.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.SimpleCcw(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return true if the points A, B, C are strictly counterclockwise. Return
+             false if the points are clockwise or colinear (i.e. if they are all
+             contained on some great circle).
+            
+              Due to numerical errors, situations may arise that are mathematically
+             impossible, e.g. ABC may be considered strictly CCW while BCA is not.
+             However, the implementation guarantees the following:
+            
+              If SimpleCCW(a,b,c), then !SimpleCCW(c,b,a) for all a,b,c.
+            
+             In other words, ABC and CBA are guaranteed not to be both CCW
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2.RobustCcw(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)" -->
+        <member name="M:Google.Common.Geometry.S2.RobustCcw(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             A more efficient version of RobustCCW that allows the precomputed
+             cross-product of A and B to be specified.
+            
+              Note: a, b and c are expected to be of unit length. Otherwise, the results
+             are undefined
+        </member>
+        <member name="M:Google.Common.Geometry.S2.ExpensiveCcw(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            A relatively expensive calculation invoked by RobustCCW() if the sign of
+            the determinant is uncertain.
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2.OrderedCcw(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)" -->
+        <member name="M:Google.Common.Geometry.S2.Angle(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return the angle at the vertex B in the triangle ABC. The return value is
+             always in the range [0, Pi]. The points do not need to be normalized.
+             Ensures that Angle(a,b,c) == Angle(c,b,a) for all a,b,c.
+            
+              The angle is undefined if A or C is diametrically opposite from B, and
+             becomes numerically unstable as the length of edge AB or BC approaches 180
+             degrees.
+        </member>
+        <member name="M:Google.Common.Geometry.S2.TurnAngle(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return the exterior angle at the vertex B in the triangle ABC. The return
+             value is positive if ABC is counterclockwise and negative otherwise. If you
+             imagine an ant walking from A to B to C, this is the angle that the ant
+             turns at vertex B (positive = left, negative = right). Ensures that
+             TurnAngle(a,b,c) == -TurnAngle(c,b,a) for all a,b,c.
+            
+             @param a
+             @param b
+             @param c
+             @return the exterior angle at the vertex B in the triangle ABC
+        </member>
+        <member name="M:Google.Common.Geometry.S2.ApproxEquals(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Double)">
+            Return true if two points are within the given distance of each other
+            (mainly useful for testing).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.#ctor(System.Int32,System.Double)">
+            Defines a cell metric of the given dimension (1 == length, 2 == area).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.Deriv">
+            The "deriv" value of a metric is a derivative, and must be multiplied by
+            a length or area in (s,t)-space to get a useful value.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.GetValue(System.Int32)">
+            Return the value of a metric for cells at the given level. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.GetClosestLevel(System.Double)">
+            Return the level at which the metric has approximately the given value.
+            For example, S2::kAvgEdge.GetClosestLevel(0.1) returns the level at which
+            the average cell edge length is approximately 0.1. The return value is
+            always a valid level.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.GetMinLevel(System.Double)">
+            Return the minimum level such that the metric is at most the given value,
+            or S2CellId::kMaxLevel if there is no such level. For example,
+            S2::kMaxDiag.GetMinLevel(0.1) returns the minimum level such that all
+            cell diagonal lengths are 0.1 or smaller. The return value is always a
+            valid level.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellMetric.GetMaxLevel(System.Double)">
+            Return the maximum level such that the metric is at least the given
+            value, or zero if there is no such level. For example,
+            S2.kMinWidth.GetMaxLevel(0.1) returns the maximum level such that all
+            cells have a minimum width of 0.1 or larger. The return value is always a
+            valid level.
+        </member>
+        <member name="T:Google.Common.Geometry.S2AreaCentroid">
+             The area of an interior, i.e. the region on the left side of an odd
+             number of loops and optionally a centroid.
+             The area is between 0 and 4*Pi. If it has a centroid, it is
+             the true centroid of the interiord multiplied by the area of the shape.
+             Note that the centroid may not be contained by the shape.
+            
+             @author dbentley@google.com (Daniel Bentley)
+        </member>
+        <member name="T:Google.Common.Geometry.S2Cap">
+             This class represents a spherical cap, i.e. a portion of a sphere cut off by
+             a plane. The cap is defined by its axis and height. This representation has
+             good numerical accuracy for very small caps (unlike the (axis,
+             min-distance-from-origin) representation), and is also efficient for
+             containment tests (unlike the (axis, angle) representation).
+            
+             Here are some useful relationships between the cap height (h), the cap
+             opening angle (theta), the maximum chord length from the cap's center (d),
+             and the radius of cap's base (a). All formulas assume a unit radius.
+            
+             h = 1 - cos(theta) = 2 sin^2(theta/2) d^2 = 2 h = a^2 + h^2
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2Cap.RoundUp">
+            Multiply a positive number by this constant to ensure that the result of a
+            floating point operation is at least as large as the true
+            infinite-precision result.
+        </member>
+        <member name="F:Google.Common.Geometry.S2Cap.Full">
+            Return a full cap, i.e. a cap that contains all points. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.FromAxisHeight(Google.Common.Geometry.S2Point,System.Double)">
+            Create a cap given its axis and the cap height, i.e. the maximum projected
+            distance along the cap axis from the cap center. 'axis' should be a
+            unit-length vector.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.FromAxisAngle(Google.Common.Geometry.S2Point,Google.Common.Geometry.S1Angle)">
+            Create a cap given its axis and the cap opening angle, i.e. maximum angle
+            between the axis and a point on the cap. 'axis' should be a unit-length
+            vector, and 'angle' should be between 0 and 180 degrees.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.FromAxisArea(Google.Common.Geometry.S2Point,System.Double)">
+            Create a cap given its axis and its area in steradians. 'axis' should be a
+            unit-length vector, and 'area' should be between 0 and 4 * M_PI.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.Contains(Google.Common.Geometry.S2Cap)">
+            Return true if and only if this cap contains the given other cap (in a set
+            containment sense, e.g. every cap contains the empty cap).
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.InteriorIntersects(Google.Common.Geometry.S2Cap)">
+            Return true if and only if the interior of this cap intersects the given
+            other cap. (This relationship is not symmetric, since only the interior of
+            this cap is used.)
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.InteriorContains(Google.Common.Geometry.S2Point)">
+            Return true if and only if the given point is contained in the interior of
+            the region (i.e. the region excluding its boundary). 'p' should be a
+            unit-length vector.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.AddPoint(Google.Common.Geometry.S2Point)">
+            Increase the cap height if necessary to include the given point. If the cap
+            is empty the axis is set to the given point, but otherwise it is left
+            unchanged. 'p' should be a unit-length vector.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.Intersects(Google.Common.Geometry.S2Cell,System.Collections.Generic.IReadOnlyList{Google.Common.Geometry.S2Point})">
+            Return true if the cap intersects 'cell', given that the cap vertices have
+            alrady been checked.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cap.ApproxEquals(Google.Common.Geometry.S2Cap,System.Double)">
+            Return true if the cap axis and height differ by at most "max_error" from
+            the given cap "other".
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cap.Angle">
+            Return the cap opening angle in radians, or a negative number for empty
+            caps.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cap.IsValid">
+            We allow negative heights (to represent empty caps) but not heights greater
+            than 2.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cap.IsEmpty">
+            Return true if the cap is empty, i.e. it contains no points. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cap.IsFull">
+            Return true if the cap is full, i.e. it contains all points. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cap.Complement">
+            Return the complement of the interior of the cap. A cap and its complement
+            have the same boundary but do not share any interior points. The complement
+            operator is not a bijection, since the complement of a singleton cap
+            (containing a single point) is the same as the complement of an empty cap.
+        </member>
+        <member name="T:Google.Common.Geometry.S2Cell">
+             An S2Cell is an S2Region object that represents a cell. Unlike S2CellIds, it
+             supports efficient containment and intersection tests. However, it is also a
+             more expensive representation.
+            
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.#ctor">
+            Default constructor used only internally.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.#ctor(Google.Common.Geometry.S2CellId)">
+            An S2Cell always corresponds to a particular S2CellId. The other
+            constructors are just convenience methods.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.GetVertexRaw(System.Int32)">
+            Return the k-th vertex of the cell (k = 0,1,2,3). Vertices are returned in
+            CCW order. The points returned by GetVertexRaw are not necessarily unit
+            length.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.Subdivide(System.Collections.Generic.IReadOnlyList{Google.Common.Geometry.S2Cell})">
+             Return the inward-facing normal of the great circle passing through the
+             edge from vertex k to vertex k+1 (mod 4). The normals returned by
+             GetEdgeRaw are not necessarily unit length.
+            
+              If this is not a leaf cell, set children[0..3] to the four children of
+             this cell (in traversal order) and return true. Otherwise returns false.
+             This method is equivalent to the following:
+            
+              for (pos=0, id=child_begin(); id != child_end(); id = id.next(), ++pos)
+             children[i] = S2Cell(id);
+            
+             except that it is more than two times faster.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.AverageArea(System.Int32)">
+            Return the average area for cells at the given level.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.AverageArea">
+            Return the average area of cells at this level. This is accurate to within
+            a factor of 1.7 (for S2_QUADRATIC_PROJECTION) and is extremely cheap to
+            compute.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.ApproxArea">
+            Return the approximate area of this cell. This method is accurate to within
+            3% percent for all cell sizes and accurate to within 0.1% for cells at
+            level 5 or higher (i.e. 300km square or smaller). It is moderately cheap to
+            compute.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Cell.ExactArea">
+            Return the area of this cell as accurately as possible. This method is more
+            expensive but it is accurate to 6 digits of precision even for leaf cells
+            (whose area is approximately 1e-18).
+        </member>
+        <member name="P:Google.Common.Geometry.S2Cell.CenterUv">
+            Return the center of the cell in (u,v) coordinates (see {@code
+            S2Projections}). Note that the center of the cell is defined as the point
+            at which it is recursively subdivided into four children; in general, it is
+            not at the midpoint of the (u,v) rectangle covered by the cell
+        </member>
+        <member name="T:Google.Common.Geometry.S2CellId">
+             An S2CellId is a 64-bit unsigned integer that uniquely identifies a cell in
+             the S2 cell decomposition. It has the following format:
+            
+             <pre>
+             id = [face][face_pos]
+             </pre>
+            
+             face: a 3-bit number (range 0..5) encoding the cube face.
+            
+             face_pos: a 61-bit number encoding the position of the center of this cell
+             along the Hilbert curve over this face (see the Wiki pages for details).
+            
+             Sequentially increasing cell ids follow a continuous space-filling curve over
+             the entire sphere. They have the following properties:
+              - The id of a cell at level k consists of a 3-bit face number followed by k
+             bit pairs that recursively select one of the four children of each cell. The
+             next bit is always 1, and all other bits are 0. Therefore, the level of a
+             cell is determined by the position of its lowest-numbered bit that is turned
+             on (for a cell at level k, this position is 2 * (MAX_LEVEL - k).)
+              - The id of a parent cell is at the midpoint of the range of ids spanned by
+             its children (or by its descendants at any level).
+            
+             Leaf cells are often used to represent points on the unit sphere, and this
+             class provides methods for converting directly between these two
+             representations. For cells that represent 2D regions rather than discrete
+             point, it is better to use the S2Cell class.
+            
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2CellId.Sentinel">
+            Returns an invalid cell id guaranteed to be larger than any valid cell id.
+            Useful for creating indexes.
+        </member>
+        <member name="F:Google.Common.Geometry.S2CellId._id">
+            The id of the cell.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromFacePosLevel(System.Int32,System.UInt64,System.Int32)">
+            Return a cell given its face (range 0..5), 61-bit Hilbert curve position
+            within that face, and level (range 0..MAX_LEVEL). The given position will
+            be modified to correspond to the Hilbert curve position at the center of
+            the returned cell. This is a static function rather than a constructor in
+            order to give names to the arguments.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromPoint(Google.Common.Geometry.S2Point)">
+            Return the leaf cell containing the given point (a direction vector, not
+            necessarily unit length).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromLatLng(Google.Common.Geometry.S2LatLng)">
+            Return the leaf cell containing the given S2LatLng. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ToPointRaw">
+            Return the direction vector corresponding to the center of the given cell.
+            The vector returned by ToPointRaw is not necessarily unit length.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ToLatLng">
+            Return the S2LatLng corresponding to the center of the given cell. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ChildPosition(System.Int32)">
+            Return the child position (0..3) of this cell's ancestor at the given
+            level, relative to its parent. The argument should be in the range
+            1..MAX_LEVEL. For example, child_position(1) returns the position of this
+            cell's level-1 ancestor within its top-level face cell.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.Contains(Google.Common.Geometry.S2CellId)">
+            Return true if the given cell is contained within this one. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.Intersects(Google.Common.Geometry.S2CellId)">
+            Return true if the given cell intersects this one. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ParentForLevel(System.Int32)">
+            Return the cell at the previous level or at the given level (which must be
+            less than or equal to the current level).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.Begin(System.Int32)">
+            Return the next cell at the same level along the Hilbert curve. Works
+            correctly when advancing from one face to the next, but does *not* wrap
+            around from the last face to the first or vice versa.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromToken(System.String)">
+             Decodes the cell id from a compact text string suitable for display or
+             indexing. Cells at lower levels (i.e. larger cells) are encoded into
+             fewer characters. The maximum token length is 16.
+            
+             @param token the token to decode
+             @return the S2CellId for that token
+             @throws NumberFormatException if the token is not formatted correctly
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ToToken">
+             Encodes the cell id to compact text strings suitable for display or indexing.
+             Cells at lower levels (i.e. larger cells) are encoded into fewer characters.
+             The maximum token length is 16.
+            
+             Simple implementation: convert the id to hex and strip trailing zeros. We
+             could use base-32 or base-64, but assuming the cells used for indexing
+             regions are at least 100 meters across (level 16 or less), the savings
+             would be at most 3 bytes (9 bytes hex vs. 6 bytes base-64).
+            
+             @return the encoded cell id
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.OverflowInParse(System.UInt64,System.Int32,System.Int32)">
+            Returns true if (current * radix) + digit is a number too large to be
+            represented by an unsigned long.  This is useful for detecting overflow
+            while parsing a string representation of a number.
+            Does not verify whether supplied radix is valid, passing an invalid radix
+            will give undefined results or an ArrayIndexOutOfBoundsException.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.GetEdgeNeighbors">
+            Return the four cells that are adjacent across the cell's four edges.
+            Neighbors are returned in the order defined by S2Cell::GetEdge. All
+            neighbors are guaranteed to be distinct.
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2CellId.GetVertexNeighbors(System.Int32,System.Collections.Generic.IList{Google.Common.Geometry.S2CellId})" -->
+        <member name="M:Google.Common.Geometry.S2CellId.GetAllNeighbors(System.Int32,System.Collections.Generic.IList{Google.Common.Geometry.S2CellId})">
+             Append all neighbors of this cell at the given level to "output". Two cells
+             X and Y are neighbors if their boundaries intersect but their interiors do
+             not. In particular, two cells that intersect at a single point are
+             neighbors.
+            
+             Requires: nbr_level >= this->level(). Note that for cells adjacent to a
+             face vertex, the same neighbor may be appended more than once.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromFaceIj(System.Int32,System.Int32,System.Int32)">
+            Return a leaf cell given its cube face (range 0..5) and i- and
+            j-coordinates (see s2.h).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.ToFaceIjOrientation(System.Int32@,System.Int32@,System.Nullable{System.Int32}@)">
+            Return the (face, i, j) coordinates for the leaf cell corresponding to this
+            cell id. Since cells are represented by the Hilbert curve position at the
+            center of the cell, the returned (i,j) for non-leaf cells will be a leaf
+            cell adjacent to the cell center. If "orientation" is non-NULL, also return
+            the Hilbert curve orientation for the current cell.
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2CellId.LowestOnBitForLevel(System.Int32)" -->
+        <member name="M:Google.Common.Geometry.S2CellId.StToIj(System.Double)">
+            Return the i- or j-index of the leaf cell containing the given s- or
+            t-value.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FaceSiTiToXyz(System.Int32,System.Int32,System.Int32)">
+            Convert (face, si, ti) coordinates (see s2.h) to a direction vector (not
+            necessarily unit length).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromFaceIjWrap(System.Int32,System.Int32,System.Int32)">
+            Given (i, j) coordinates that may be out of bounds, normalize them by
+            returning the corresponding neighbor cell on an adjacent face.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellId.FromFaceIjSame(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            Public helper function that calls FromFaceIJ if sameFace is true, or
+            FromFaceIJWrap if sameFace is false.
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.IsValid">
+            Return true if id() represents a valid cell. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.Face">
+            Which cube face this cell belongs to, in the range 0..5. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.Position">
+            The position of the cell center along the Hilbert curve over this face, in
+            the range 0..(2**kPosBits-1).
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.Level">
+            Return the subdivision level of the cell (range 0..MAX_LEVEL). 
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.IsLeaf">
+            Return true if this is a leaf cell (more efficient than checking whether
+            level() == MAX_LEVEL).
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.IsFace">
+            Return true if this is a top-level face cell (more efficient than checking
+            whether level() == 0).
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.Previous">
+            Return the previous cell at the same level along the Hilbert curve. Works
+            correctly when advancing from one face to the next, but does *not* wrap
+            around from the last face to the first or vice versa.
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.NextWithWrap">
+            Like next(), but wraps around from the last face to the first and vice
+            versa. Should *not* be used for iteration in conjunction with
+            child_begin(), child_end(), Begin(), or End().
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellId.PreviousWithWrap">
+            Like prev(), but wraps around from the last face to the first and vice
+            versa. Should *not* be used for iteration in conjunction with
+            child_begin(), child_end(), Begin(), or End().
+        </member>
+        <member name="T:Google.Common.Geometry.S2CellUnion">
+             Normalizes the cell union by discarding cells that are contained by other
+             cells, replacing groups of 4 child cells by their parent cell whenever
+             possible, and sorting all the cell ids in increasing order. Returns true if
+             the number of cells was reduced.
+            
+              This method *must* be called before doing any calculations on the cell
+             union, such as Intersects() or Contains().
+            
+             @return true if the normalize operation had any effect on the cell union,
+                     false if the union was already normalized
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.MayIntersect(Google.Common.Geometry.S2Cell)">
+            This is a fast operation (logarithmic in the size of the cell union). 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.InitFromCellIds(System.Collections.Generic.IEnumerable{Google.Common.Geometry.S2CellId})">
+            The CellIds that form the Union 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.InitFromIds(System.Collections.Generic.IEnumerable{System.UInt64})">
+            Populates a cell union with the given S2CellIds or 64-bit cells ids, and
+            then calls Normalize(). The InitSwap() version takes ownership of the
+            vector data without copying and clears the given vector. These methods may
+            be called multiple times.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.InitRawSwap(System.Collections.Generic.ICollection{Google.Common.Geometry.S2CellId})">
+            Like Init(), but does not call Normalize(). The cell union *must* be
+            normalized before doing any calculations with it, so it is the caller's
+            responsibility to make sure that the input is normalized. This method is
+            useful when converting cell unions to another representation and back.
+            These methods may be called multiple times.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.CellId(System.Int32)">
+            Convenience methods for accessing the individual cell ids. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Denormalize(System.Int32,System.Int32,System.Collections.Generic.ICollection{Google.Common.Geometry.S2CellId})">
+             Replaces "output" with an expanded version of the cell union where any
+             cells whose level is less than "min_level" or where (level - min_level) is
+             not a multiple of "level_mod" are replaced by their children, until either
+             both of these conditions are satisfied or the maximum level is reached.
+            
+              This method allows a covering generated by S2RegionCoverer using
+             min_level() or level_mod() constraints to be stored as a normalized cell
+             union (which allows various geometric computations to be done) and then
+             converted back to the original list of cell ids that satisfies the desired
+             constraints.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Pack">
+            If there are more than "excess" elements of the cell_ids() vector that are
+            allocated but unused, reallocate the array to eliminate the excess space.
+            This reduces memory usage when many cell unions need to be held in memory
+            at once.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Contains(Google.Common.Geometry.S2CellId)">
+            Return true if the cell union contains the given cell id. Containment is
+            defined with respect to regions, e.g. a cell contains its 4 children. This
+            is a fast operation (logarithmic in the size of the cell union).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Intersects(Google.Common.Geometry.S2CellId)">
+            Return true if the cell union intersects the given cell id. This is a fast
+            operation (logarithmic in the size of the cell union).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Intersects(Google.Common.Geometry.S2CellUnion)">
+            Return true if this cell union contain/intersects the given other cell
+            union.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.GetIntersection(Google.Common.Geometry.S2CellUnion,Google.Common.Geometry.S2CellId)">
+            Specialized version of GetIntersection() that gets the intersection of a
+            cell union with the given cell id. This can be useful for "splitting" a
+            cell union into chunks.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.GetIntersection(Google.Common.Geometry.S2CellUnion,Google.Common.Geometry.S2CellUnion)">
+            Initialize this cell union to the union or intersection of the two given
+            cell unions. Requires: x != this and y != this.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.IndexedBinarySearch(System.Collections.Generic.IReadOnlyList{Google.Common.Geometry.S2CellId},Google.Common.Geometry.S2CellId,System.Int32)">
+             Just as normal binary search, except that it allows specifying the starting
+             value for the lower bound.
+            
+             @return The position of the searched element in the list (if found), or the
+                     position where the element could be inserted without violating the
+                     order.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Expand(System.Int32)">
+             Expands the cell union such that it contains all cells of the given level
+             that are adjacent to any cell of the original union. Two cells are defined
+             as adjacent if their boundaries have any points in common, i.e. most cells
+             have 8 adjacent cells (not counting the cell itself).
+            
+              Note that the size of the output is exponential in "level". For example,
+             if level == 20 and the input has a cell at level 10, there will be on the
+             order of 4000 adjacent cells in the output. For most applications the
+             Expand(min_fraction, min_distance) method below is easier to use.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Expand(Google.Common.Geometry.S1Angle,System.Int32)">
+             Expand the cell union such that it contains all points whose distance to
+             the cell union is at most minRadius, but do not use cells that are more
+             than maxLevelDiff levels higher than the largest cell in the input. The
+             second parameter controls the tradeoff between accuracy and output size
+             when a large region is being expanded by a small amount (e.g. expanding
+             Canada by 1km).
+            
+              For example, if maxLevelDiff == 4, the region will always be expanded by
+             approximately 1/16 the width of its largest cell. Note that in the worst
+             case, the number of cells in the output can be up to 4 * (1 + 2 **
+             maxLevelDiff) times larger than the number of cells in the input.
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Contains(Google.Common.Geometry.S2Point)">
+            The point 'p' does not need to be normalized. This is a fast operation
+            (logarithmic in the size of the cell union).
+        </member>
+        <member name="M:Google.Common.Geometry.S2CellUnion.Normalize">
+             Normalizes the cell union by discarding cells that are contained by other
+             cells, replacing groups of 4 child cells by their parent cell whenever
+             possible, and sorting all the cell ids in increasing order. Returns true if
+             the number of cells was reduced.
+            
+              This method *must* be called before doing any calculations on the cell
+             union, such as Intersects() or Contains().
+            
+             @return true if the normalize operation had any effect on the cell union,
+                     false if the union was already normalized
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellUnion.AverageBasedArea">
+             Approximate this cell union's area by summing the average area of
+             each contained cell's average area, using {@link S2Cell#averageArea()}.
+             This is equivalent to the number of leaves covered, multiplied by
+             the average area of a leaf.
+             Note that {@link S2Cell#averageArea()} does not take into account
+             distortion of cell, and thus may be off by up to a factor of 1.7.
+             NOTE: Since this is proportional to LeafCellsCovered(), it is
+             always better to use the other function if all you care about is
+             the relative average area between objects.
+            
+             @return the sum of the average area of each contained cell's average area
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellUnion.ApproxArea">
+             Calculates this cell union's area by summing the approximate area for each
+             contained cell, using {@link S2Cell#approxArea()}.
+            
+             @return approximate area of the cell union
+        </member>
+        <member name="P:Google.Common.Geometry.S2CellUnion.ExactArea">
+             Calculates this cell union's area by summing the exact area for each
+             contained cell, using the {@link S2Cell#exactArea()}.
+            
+             @return the exact area of the cell union
+        </member>
+        <member name="T:Google.Common.Geometry.S2Edge">
+             An abstract directed edge from one S2Point to another S2Point.
+            
+             @author kirilll@google.com (Kirill Levin)
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex.Thickening">
+            Thicken the edge in all directions by roughly 1% of the edge length when
+            thickenEdge is true.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex.MaxDetError">
+            Threshold for small angles, that help lenientCrossing to determine whether
+            two edges are likely to intersect.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex._cells">
+            The cell containing each edge, as given in the parallel array
+            <code>edges</code>.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex._edges">
+            The edge contained by each cell, as given in the parallel array
+            <code>cells</code>.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex._indexComputed">
+            Has the index been computed already?
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex._queryCount">
+            Number of queries so far
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.Reset">
+            Empties the index in case it already contained something.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.Compare(System.UInt64,System.Int32,System.UInt64,System.Int32)">
+             Compares [cell1, edge1] to [cell2, edge2], by cell first and edge second.
+            
+             @return -1 if [cell1, edge1] is less than [cell2, edge2], 1 if [cell1,
+                     edge1] is greater than [cell2, edge2], 0 otherwise.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.ComputeIndex">
+            Computes the index (if it has not been previously done). 
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.SortIndex">
+            Sorts the parallel <code>cells</code> and <code>edges</code> arrays. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.IncrementQueryCount">
+            Tell the index that we just received a new request for candidates. Useful
+            to compute when to switch to quad tree.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.PredictAdditionalCalls(System.Int32)">
+             If the index hasn't been computed yet, looks at how much work has gone into
+             iterating using the brute force method, and how much more work is planned
+             as defined by 'cost'. If it were to have been cheaper to use a quad tree
+             from the beginning, then compute it now. This guarantees that we will never
+             use more than twice the time we would have used had we known in advance
+             exactly how many edges we would have wanted to test. It is the theoretical
+             best.
+            
+              The value 'n' is the number of iterators we expect to request from this
+             edge index.
+            
+              If we have m data edges and n query edges, then the brute force cost is m
+             * n * testCost where testCost is taken to be the cost of
+             EdgeCrosser.robustCrossing, measured to be about 30ns at the time of this
+             writing.
+            
+              If we compute the index, the cost becomes: m * costInsert + n *
+             costFind(m)
+            
+              - costInsert can be expected to be reasonably stable, and was measured at
+             1200ns with the BM_QuadEdgeInsertionCost benchmark.
+            
+              - costFind depends on the length of the edge . For m=1000 edges, we got
+             timings ranging from 1ms (edge the length of the polygon) to 40ms. The
+             latter is for very long query edges, and needs to be optimized. We will
+             assume for the rest of the discussion that costFind is roughly 3ms.
+            
+              When doing one additional query, the differential cost is m * testCost -
+             costFind(m) With the numbers above, it is better to use the quad tree (if
+             we have it) if m >= 100.
+            
+              If m = 100, 30 queries will give m*n*testCost = m * costInsert = 100ms,
+             while the marginal cost to find is 3ms. Thus, this is a reasonable thing to
+             do.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.FindCandidateCrossings(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Collections.Generic.IList{System.Int32})">
+            Appends to "candidateCrossings" all edge references which may cross the
+            given edge. This is done by covering the edge and then finding all
+            references of edges whose coverings overlap this covering. Parent cells are
+            checked level by level. Child cells are checked all at once by taking
+            advantage of the natural ordering of S2CellIds.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.ContainingCell(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Returns the smallest cell containing all four points, or
+            {@link S2CellId#sentinel()} if they are not all on the same face. The
+            points don't need to be normalized.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.ContainingCell(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Returns the smallest cell containing both points, or Sentinel if they are
+            not all on the same face. The points don't need to be normalized.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.GetCovering(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Boolean,System.Collections.Generic.List{Google.Common.Geometry.S2CellId})">
+             Computes a cell covering of an edge. Clears edgeCovering and returns the
+             level of the s2 cells used in the covering (only one level is ever used for
+             each call).
+            
+              If thickenEdge is true, the edge is thickened and extended by 1% of its
+             length.
+            
+              It is guaranteed that no child of a covering cell will fully contain the
+             covered edge.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.GetEdges(System.UInt64,System.UInt64)">
+             Filters a list of entries down to the inclusive range defined by the given
+             cells, in <code>O(log N)</code> time.
+            
+             @param cell1 One side of the inclusive query range.
+             @param cell2 The other side of the inclusive query range.
+             @return An array of length 2, containing the start/end indices.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.GetEdgesInParentCells(System.Collections.Generic.IEnumerable{Google.Common.Geometry.S2CellId},System.Collections.Generic.ISet{System.Int32})">
+            Adds to candidateCrossings all the edges present in any ancestor of any
+            cell of cover, down to minimumS2LevelUsed. The cell->edge map is in the
+            variable mapping.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.LenientCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Returns true if ab possibly crosses cd, by clipping tiny angles to zero.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.EdgeIntersectsCellBoundary(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Cell)">
+            Returns true if the edge and the cell (including boundary) intersect.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.GetEdgesInChildrenCells(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Collections.Generic.IList{Google.Common.Geometry.S2CellId},System.Collections.Generic.ISet{System.Int32})">
+            Appends to candidateCrossings the edges that are fully contained in an S2
+            covering of edge. The covering of edge used is initially cover, but is
+            refined to eliminate quickly subcells that contain many edges but do not
+            intersect with edge.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.GetIterator">
+             <summary>
+             An iterator on data edges that may cross a query edge (a,b). Create the
+             iterator, call getCandidates(), then enumerating.
+            
+             The current edge in the iteration has index, goes between from()
+             and to().
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="P:Google.Common.Geometry.S2EdgeIndex.NumEdges">
+            Overwrite these functions to give access to the underlying data. The
+            function getNumEdges() returns the number of edges in the index, while
+            edgeFrom(index) and edgeTo(index) return the "from" and "to" endpoints of
+            the edge at the given index.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex.DataEdgeIterator._candidates">
+            The structure containing the data edges.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex.DataEdgeIterator._currentIndex">
+            Index of the current edge and of the edge before the last next() call.
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeIndex.DataEdgeIterator._currentIndexInCandidates">
+            Index within array above. We have: currentIndex =
+            candidates.get(currentIndexInCandidates).
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeIndex.DataEdgeIterator.GetCandidates(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Initializes the iterator to iterate over a set of candidates that may
+            cross the edge (a,b).
+        </member>
+        <member name="T:Google.Common.Geometry.S2EdgeUtil">
+             This class contains various utility functions related to edges. It collects
+             together common code that is needed to implement polygonal geometry such as
+             polylines, loops, and general polygons.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2EdgeUtil.DefaultIntersectionTolerance">
+            IEEE floating-point operations have a maximum error of 0.5 ULPS (units in
+            the last place). For double-precision numbers, this works out to 2**-53
+            (about 1.11e-16) times the magnitude of the result. It is possible to
+            analyze the calculation done by getIntersection() and work out the
+            worst-case rounding error. I have done a rough version of this, and my
+            estimate is that the worst case distance from the intersection point X to
+            the great circle through (a0, a1) is about 12 ULPS, or about 1.3e-15. This
+            needs to be increased by a factor of (1/0.866) to account for the
+            edgeSpliceFraction() in S2PolygonBuilder. Note that the maximum error
+            measured by the unittest in 1,000,000 trials is less than 3e-16.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.SimpleCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Return true if edge AB crosses CD at a point that is interior to both
+             edges. Properties:
+            
+              (1) simpleCrossing(b,a,c,d) == simpleCrossing(a,b,c,d) (2)
+             simpleCrossing(c,d,a,b) == simpleCrossing(a,b,c,d)
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2EdgeUtil.RobustCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)" -->
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.VertexCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Given two edges AB and CD where at least two vertices are identical (i.e.
+             robustCrossing(a,b,c,d) == 0), this function defines whether the two edges
+             "cross" in a such a way that point-in-polygon containment tests can be
+             implemented by counting the number of edge crossings. The basic rule is
+             that a "crossing" occurs if AB is encountered after CD during a CCW sweep
+             around the shared vertex starting from a fixed reference point.
+            
+              Note that according to this rule, if AB crosses CD then in general CD does
+             not cross AB. However, this leads to the correct result when counting
+             polygon edge crossings. For example, suppose that A,B,C are three
+             consecutive vertices of a CCW polygon. If we now consider the edge
+             crossings of a segment BP as P sweeps around B, the crossing number changes
+             parity exactly when BP crosses BA or BC.
+            
+              Useful properties of VertexCrossing (VC):
+            
+              (1) VC(a,a,c,d) == VC(a,b,c,c) == false (2) VC(a,b,a,b) == VC(a,b,b,a) ==
+             true (3) VC(a,b,c,d) == VC(a,b,d,c) == VC(b,a,c,d) == VC(b,a,d,c) (3) If
+             exactly one of a,b Equals one of c,d, then exactly one of VC(a,b,c,d) and
+             VC(c,d,a,b) is true
+            
+             It is an error to call this method with 4 distinct vertices.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.EdgeOrVertexCrossing(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            A convenience function that calls robustCrossing() to handle cases where
+            all four vertices are distinct, and VertexCrossing() to handle cases where
+            two or more vertices are the same. This defines a crossing function such
+            that point-in-polygon containment tests can be implemented by simply
+            counting edge crossings.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.GetDistanceFraction(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Given a point X and an edge AB, return the distance ratio AX / (AX + BX).
+            If X happens to be on the line segment AB, this is the fraction "t" such
+            that X == Interpolate(A, B, t). Requires that A and B are distinct.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.GetDistance(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Return the minimum distance from X to any point on the edge AB. The result
+            is very accurate for small distances but may have some numerical error if
+            the distance is large (approximately Pi/2 or greater). The case A == B is
+            handled correctly. Note: x, a and b must be of unit length. Throws
+            IllegalArgumentException if this is not the case.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.GetDistance(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            A slightly more efficient version of getDistance() where the cross product
+            of the two endpoints has been precomputed. The cross product does not need
+            to be normalized, but should be computed using S2.robustCrossProd() for the
+            most accurate results.
+        </member>
+        <member name="M:Google.Common.Geometry.S2EdgeUtil.GetClosestPoint(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Returns the point on edge AB closest to X. x, a and b must be of unit
+             length. Throws IllegalArgumentException if this is not the case.
+            
+        </member>
+        <member name="M:Google.Common.Geometry.XyzPruner.AddEdgeToBounds(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+             Accumulate a bounding rectangle from provided edges.
+            
+             @param from start of edge
+             @param to end of edge.
+        </member>
+        <member name="M:Google.Common.Geometry.XyzPruner.Intersects(Google.Common.Geometry.S2Point)">
+            Returns true if the edge going from the last point to this point passes
+            through the pruner bounding box, otherwise returns false.  So the
+            method returns false if we are certain there is no intersection, but it
+            may return true when there turns out to be no intersection.
+        </member>
+        <member name="M:Google.Common.Geometry.WedgeContainsOrCrosses.Test(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Given two edge chains (see WedgeRelation above), this function returns +1
+            if A contains B, 0 if B contains A or the two wedges do not intersect,
+            and -1 if the edge chains A and B cross each other (i.e. if A intersects
+            both the interior and exterior of the region to the left of B). In
+            degenerate cases where more than one of these conditions is satisfied,
+            the maximum possible result is returned. For example, if A == B then the
+            result is +1.
+        </member>
+        <member name="M:Google.Common.Geometry.WedgeContainsOrIntersects.Test(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Given two edge chains (see WedgeRelation above), this function returns +1
+            if A contains B, 0 if A and B are disjoint, and -1 if A intersects but
+            does not contain B.
+        </member>
+        <member name="M:Google.Common.Geometry.WedgeIntersects.Test(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Given two edge chains (see WedgeRelation above), this function returns -1
+            if the region to the left of A intersects the region to the left of B,
+            and 0 otherwise. Note that regions are defined such that points along a
+            boundary are contained by one side or the other, not both. So for
+            example, if A,B,C are distinct points ordered CCW around a vertex O, then
+            the wedges BOA, AOC, and COB do not intersect.
+        </member>
+        <member name="M:Google.Common.Geometry.WedgeContains.Test(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Given two edge chains (see WedgeRelation above), this function returns +1
+            if the region to the left of A contains the region to the left of B, and
+            0 otherwise.
+        </member>
+        <member name="P:Google.Common.Geometry.RectBounder.Bound">
+            Return the bounding rectangle of the edge chain that connects the
+            vertices defined so far.
+        </member>
+        <member name="M:Google.Common.Geometry.LongitudePruner.#ctor(Google.Common.Geometry.S1Interval,Google.Common.Geometry.S2Point)">
+            'interval' is the longitude interval to be tested against, and 'v0' is
+             the first vertex of edge chain.
+        </member>
+        <member name="M:Google.Common.Geometry.LongitudePruner.Intersects(Google.Common.Geometry.S2Point)">
+            Returns true if the edge (v0, v1) intersects the given longitude
+            interval, and then saves 'v1' to be used as the next 'v0'.
+        </member>
+        <member name="M:Google.Common.Geometry.EdgeCrosser.#ctor(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            AB is the given fixed edge, and C is the first vertex of the vertex
+            chain. All parameters must point to fixed storage that persists for the
+            lifetime of the EdgeCrosser object.
+        </member>
+        <member name="M:Google.Common.Geometry.EdgeCrosser.RestartAt(Google.Common.Geometry.S2Point)">
+            Call this function when your chain 'jumps' to a new place.
+        </member>
+        <member name="M:Google.Common.Geometry.EdgeCrosser.RobustCrossing(Google.Common.Geometry.S2Point)">
+            This method is equivalent to calling the S2EdgeUtil.robustCrossing()
+            function (defined below) on the edges AB and CD. It returns +1 if there
+            is a crossing, -1 if there is no crossing, and 0 if two points from
+            different edges are the same. Returns 0 or -1 if either edge is
+            degenerate. As a side effect, it saves vertex D to be used as the next
+            vertex C.
+        </member>
+        <member name="M:Google.Common.Geometry.EdgeCrosser.EdgeOrVertexCrossing(Google.Common.Geometry.S2Point)">
+            This method is equivalent to the S2EdgeUtil.edgeOrVertexCrossing() method
+            defined below. It is similar to robustCrossing, but handles cases where
+            two vertices are identical in a way that makes it easy to implement
+            point-in-polygon containment tests.
+        </member>
+        <member name="M:Google.Common.Geometry.EdgeCrosser.RobustCrossingInternal(Google.Common.Geometry.S2Point)">
+            This function handles the "slow path" of robustCrossing().
+        </member>
+        <member name="T:Google.Common.Geometry.S2LatLng">
+             This class represents a point on the unit sphere as a pair of
+             latitude-longitude coordinates. Like the rest of the "geometry" package, the
+             intent is to represent spherical geometry as a mathematical abstraction, so
+             functions that are specifically related to the Earth's geometry (e.g.
+             easting/northing conversions) should be put elsewhere.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2LatLng.Center">
+            The center point the lat/lng coordinate system. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.#ctor(Google.Common.Geometry.S1Angle,Google.Common.Geometry.S1Angle)">
+             Basic constructor. The latitude and longitude must be within the ranges
+             allowed by is_valid() below.
+            
+             TODO(dbeaumont): Make this a static factory method (fromLatLng() ?).
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.#ctor(Google.Common.Geometry.S2Point)">
+             Convert a point (not necessarily normalized) to an S2LatLng.
+            
+             TODO(dbeaumont): Make this a static factory method (fromPoint() ?).
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.FromRadians(System.Double,System.Double)">
+            Approximate "effective" radius of the Earth in meters.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.ToPoint">
+            Convert an S2LatLng to the equivalent unit-length vector (S2Point). 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.GetDistance(Google.Common.Geometry.S2LatLng)">
+            Return the distance (measured along the surface of the sphere) to the given
+            point.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.GetDistance(Google.Common.Geometry.S2LatLng,System.Double)">
+            Returns the surface distance to the given point assuming a constant radius.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.GetEarthDistance(Google.Common.Geometry.S2LatLng)">
+            Returns the surface distance to the given point assuming the default Earth
+            radius of {@link #EARTH_RADIUS_METERS}.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.op_Addition(Google.Common.Geometry.S2LatLng,Google.Common.Geometry.S2LatLng)">
+            Adds the given point to this point.
+            Note that there is no guarantee that the new point will be <em>valid</em>.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.op_Subtraction(Google.Common.Geometry.S2LatLng,Google.Common.Geometry.S2LatLng)">
+            Subtracts the given point from this point.
+            Note that there is no guarantee that the new point will be <em>valid</em>.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.op_Multiply(Google.Common.Geometry.S2LatLng,System.Double)">
+            Scales this point by the given scaling factor.
+            Note that there is no guarantee that the new point will be <em>valid</em>.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.ApproxEquals(Google.Common.Geometry.S2LatLng,System.Double)">
+            Returns true if both the latitude and longitude of the given point are
+            within {@code maxError} radians of this point.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLng.ApproxEquals(Google.Common.Geometry.S2LatLng)">
+            Returns true if the given point is within {@code 1e-9} radians of this
+            point. This corresponds to a distance of less than {@code 1cm} at the
+            surface of the Earth.
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.LatRadians">
+            Returns the latitude of this point as radians. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.LatDegrees">
+            Returns the latitude of this point as degrees. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.Lng">
+            Returns the longitude of this point as a new S1Angle. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.LngRadians">
+            Returns the longitude of this point as radians. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.LngDegrees">
+            Returns the longitude of this point as degrees. 
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLng.IsValid">
+            Return true if the latitude is between -90 and 90 degrees inclusive and the
+            longitude is between -180 and 180 degrees inclusive.
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Google.Common.Geometry.S2LatLng.Normalized" -->
+        <member name="T:Google.Common.Geometry.S2LatLngRect">
+             An S2LatLngRect represents a latitude-longitude rectangle. It is capable of
+             representing the empty and full rectangles as well as single points.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2LatLngRect.FullLat">
+            The full allowable range of latitudes. 
+        </member>
+        <member name="F:Google.Common.Geometry.S2LatLngRect.FullLng">
+            The full allowable range of longitudes.
+        </member>
+        <member name="F:Google.Common.Geometry.S2LatLngRect.Full">
+            The canonical full rectangle. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.#ctor(Google.Common.Geometry.S2LatLng,Google.Common.Geometry.S2LatLng)">
+            Construct a rectangle from minimum and maximum latitudes and longitudes. If
+            lo.Lng > hi.Lng, the rectangle spans the 180 degree longitude line.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.#ctor(Google.Common.Geometry.R1Interval,Google.Common.Geometry.S1Interval)">
+            Construct a rectangle from latitude and longitude intervals. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.MayIntersect(Google.Common.Geometry.S2Cell)">
+            This test is cheap but is NOT exact. Use Intersects() if you want a more
+            accurate and more expensive test. Note that when this method is used by an
+            S2RegionCoverer, the accuracy isn't all that important since if a cell may
+            intersect the region then it is subdivided, and the accuracy of this method
+            goes up as the cells get smaller.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.FromCenterSize(Google.Common.Geometry.S2LatLng,Google.Common.Geometry.S2LatLng)">
+            Construct a rectangle from a center point (in lat-lng space) and size in
+            each dimension. If size.Lng is greater than 360 degrees it is clamped,
+            and latitudes greater than +/- 90 degrees are also clamped. So for example,
+            FromCenterSize((80,170),(20,20)) -> (lo=(60,150),hi=(90,-170)).
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.FromPoint(Google.Common.Geometry.S2LatLng)">
+            Convenience method to construct a rectangle containing a single point. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.FromPointPair(Google.Common.Geometry.S2LatLng,Google.Common.Geometry.S2LatLng)">
+            Convenience method to construct the minimal bounding rectangle containing
+            the two given points. This is equivalent to starting with an empty
+            rectangle and calling AddPoint() twice. Note that it is different than the
+            S2LatLngRect(lo, hi) constructor, where the first point is always used as
+            the lower-left corner of the resulting rectangle.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.FromEdge(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Return a latitude-longitude rectangle that contains the edge from "a" to
+            "b". Both points must be unit-length. Note that the bounding rectangle of
+            an edge can be larger than the bounding rectangle of its endpoints.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.GetVertex(System.Int32)">
+            Return the k-th vertex of the rectangle (k = 0,1,2,3) in CCW order. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.GetDistance(Google.Common.Geometry.S2LatLng)">
+            Return the minimum distance (measured along the surface of the sphere)
+            from a given point to the rectangle (both its boundary and its interior).
+            The latLng must be valid.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.GetDistance(Google.Common.Geometry.S2LatLngRect)">
+            Return the minimum distance (measured along the surface of the sphere) to
+            the given S2LatLngRect. Both S2LatLngRects must be non-empty.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Contains(Google.Common.Geometry.S2LatLng)">
+            More efficient version of Contains() that accepts a S2LatLng rather than an
+            S2Point.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.InteriorContains(Google.Common.Geometry.S2Point)">
+            Return true if and only if the given point is contained in the interior of
+            the region (i.e. the region excluding its boundary). The point 'p' does not
+            need to be normalized.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.InteriorContains(Google.Common.Geometry.S2LatLng)">
+            More efficient version of InteriorContains() that accepts a S2LatLng rather
+            than an S2Point.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Contains(Google.Common.Geometry.S2LatLngRect)">
+            Return true if and only if the rectangle contains the given other
+            rectangle.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.InteriorContains(Google.Common.Geometry.S2LatLngRect)">
+            Return true if and only if the interior of this rectangle contains all
+            points of the given other rectangle (including its boundary).
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Intersects(Google.Common.Geometry.S2LatLngRect)">
+            Return true if this rectangle and the given other rectangle have any
+              points in common. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Intersects(Google.Common.Geometry.S2Cell)">
+            Returns true if this rectangle intersects the given cell. (This is an exact
+            test and may be fairly expensive, see also MayIntersect below.)
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.InteriorIntersects(Google.Common.Geometry.S2LatLngRect)">
+            Return true if and only if the interior of this rectangle intersects any
+            point (including the boundary) of the given other rectangle.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Expanded(Google.Common.Geometry.S2LatLng)">
+             Return a rectangle that contains all points whose latitude distance from
+             this rectangle is at most margin.Lat, and whose longitude distance from
+             this rectangle is at most margin.Lng. In particular, latitudes are
+             clamped while longitudes are wrapped. Note that any expansion of an empty
+             interval remains empty, and both components of the given margin must be
+             non-negative.
+            
+             NOTE: If you are trying to grow a rectangle by a certain *distance* on the
+             sphere (e.g. 5km), use the ConvolveWithCap() method instead.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Union(Google.Common.Geometry.S2LatLngRect)">
+            Return the smallest rectangle containing the union of this rectangle and
+            the given rectangle.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Intersection(Google.Common.Geometry.S2LatLngRect)">
+            Return the smallest rectangle containing the intersection of this rectangle
+            and the given rectangle. Note that the region of intersection may consist
+            of two disjoint rectangles, in which case a single rectangle spanning both
+            of them is returned.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.ConvolveWithCap(Google.Common.Geometry.S1Angle)">
+            Return a rectangle that contains the convolution of this rectangle with a
+            cap of the given angle. This expands the rectangle by a fixed distance (as
+            opposed to growing the rectangle in latitude-longitude space). The returned
+            rectangle includes all points whose minimum distance to the original
+            rectangle is at most the given angle.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.ApproxEquals(Google.Common.Geometry.S2LatLngRect,System.Double)">
+            Return true if the latitude and longitude intervals of the two rectangles
+            are the same up to the given tolerance (see r1interval.h and s1interval.h
+            for details).
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.Contains(Google.Common.Geometry.S2Point)">
+            The point 'p' does not need to be normalized. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.IntersectsLngEdge(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.R1Interval,System.Double)">
+            Return true if the edge AB intersects the given edge of constant longitude.
+        </member>
+        <member name="M:Google.Common.Geometry.S2LatLngRect.IntersectsLatEdge(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Double,Google.Common.Geometry.S1Interval)">
+            Return true if the edge AB intersects the given edge of constant latitude.
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLngRect.IsEmpty">
+            Return true if the rectangle is empty, i.e. it contains no points at all.
+        </member>
+        <member name="P:Google.Common.Geometry.S2LatLngRect.IsInverted">
+            Return true if lng_.lo() > lng_.hi(), i.e. the rectangle crosses the 180
+            degree latitude line.
+        </member>
+        <member name="T:Google.Common.Geometry.S2Loop">
+            
+             An S2Loop represents a simple spherical polygon. It consists of a single
+             chain of vertices where the first vertex is implicitly connected to the last.
+             All loops are defined to have a CCW orientation, i.e. the interior of the
+             polygon is on the left side of the edges. This implies that a clockwise loop
+             enclosing a small area is interpreted to be a CCW loop enclosing a very large
+             area.
+            
+              Loops are not allowed to have any duplicate vertices (whether adjacent or
+             not), and non-adjacent edges are not allowed to intersect. Loops must have at
+             least 3 vertices. Although these restrictions are not enforced in optimized
+             code, you may get unexpected results if they are violated.
+            
+              Point containment is defined such that if the sphere is subdivided into
+             faces (loops), every point is contained by exactly one face. This implies
+             that loops do not necessarily contain all (or any) of their vertices An
+             S2LatLngRect represents a latitude-longitude rectangle. It is capable of
+             representing the empty and full rectangles as well as single points.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2Loop.MaxIntersectionError">
+            Max angle that intersections can be off by and yet still be considered
+            colinear.
+        </member>
+        <member name="F:Google.Common.Geometry.S2Loop._numVertices">
+            Edge index used for performance-critical operations. For example,
+            contains() can determine whether a point is inside a loop in nearly
+            constant time, whereas without an edge index it is forced to compare the
+            query point against every edge in the loop.
+        </member>
+        <member name="F:Google.Common.Geometry.S2Loop._bound">
+            The index (into "vertices") of the vertex that comes first in the total
+            ordering of all vertices in this loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.#ctor(System.Collections.Generic.IEnumerable{Google.Common.Geometry.S2Point})">
+             Initialize a loop connecting the given vertices. The last vertex is
+             implicitly connected to the first. All points should be unit length. Loops
+             must have at least 3 vertices.
+            
+             @param vertices
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.#ctor(Google.Common.Geometry.S2Cell)">
+            Initialize a loop corresponding to the given cell.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.#ctor(Google.Common.Geometry.S2Cell,Google.Common.Geometry.S2LatLngRect)">
+             Like the constructor above, but assumes that the cell's bounding rectangle
+             has been precomputed.
+            
+             @param cell
+             @param bound
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.#ctor(Google.Common.Geometry.S2Loop)">
+            Copy constructor.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Contains(Google.Common.Geometry.S2Cell)">
+            If this method returns true, the region completely contains the given cell.
+            Otherwise, either the region does not contain the cell or the containment
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.MayIntersect(Google.Common.Geometry.S2Cell)">
+            If this method returns false, the region does not intersect the given cell.
+            Otherwise, either region intersects the cell, or the intersection
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Vertex(System.Int32)">
+            For convenience, we make two entire copies of the vertex list available:
+            vertex(n..2*n-1) is mapped to vertex(0..n-1), where n == numVertices().
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.InitFirstLogicalVertex">
+            Calculates firstLogicalVertex, the vertex in this loop that comes first in
+            a total ordering of all vertices (by way of S2Point's compareTo function).
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Normalize">
+            Invert the loop if necessary so that the area enclosed by the loop is at
+            most 2*Pi.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Invert">
+            Reverse the order of the loop vertices, effectively complementing the
+            region represented by the loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.GetAreaCentroid(System.Boolean)">
+            Helper method to get area and optionally centroid.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Contains(Google.Common.Geometry.S2Loop)">
+            Return true if the region contained by this loop is a superset of the
+            region contained by the given other loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Intersects(Google.Common.Geometry.S2Loop)">
+            Return true if the region contained by this loop intersects the region
+            contained by the given other loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.ContainsNested(Google.Common.Geometry.S2Loop)">
+            Given two loops of a polygon, return true if A contains B. This version of
+            contains() is much cheaper since it does not need to check whether the
+            boundaries of the two loops cross.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.ContainsOrCrosses(Google.Common.Geometry.S2Loop)">
+            Return +1 if A contains B (i.e. the interior of B is a subset of the
+            interior of A), -1 if the boundaries of A and B cross, and 0 otherwise.
+            Requires that A does not properly contain the complement of B, i.e. A and B
+            do not contain each other's boundaries. This method is used for testing
+            whether multi-loop polygons contain each other.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.BoundaryApproxEquals(Google.Common.Geometry.S2Loop,System.Double)">
+            Returns true if two loops have the same boundary except for vertex
+            perturbations. More precisely, the vertices in the two loops must be in the
+            same cyclic order, and corresponding vertex pairs must be separated by no
+            more than maxError. Note: This method mostly useful only for testing
+            purposes.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.Contains(Google.Common.Geometry.S2Point)">
+            The point 'p' does not need to be normalized.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.GetDistance(Google.Common.Geometry.S2Point)">
+            Returns the shortest distance from a point P to this loop, given as the
+            angle formed between P, the origin and the nearest point on the loop to P.
+            This angle in radians is equivalent to the arclength along the unit sphere.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.GetEdgeIterator(System.Int32)">
+            Creates an edge index over the vertices, which by itself takes no time.
+            Then the expected number of queries is used to determine whether brute
+            force lookups are likely to be slower than really creating an index, and if
+            so, we do so. Finally an iterator is returned that can be used to perform
+            edge lookups.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.IsValidLoop(System.Collections.Generic.IEnumerable{Google.Common.Geometry.S2Point})">
+             Static version of isValid(), to be used only when an S2Loop instance is not
+             available, but validity of the points must be checked.
+            
+             @return true if the given loop is valid. Creates an instance of S2Loop and
+                     defers this call to {@link #isValid()}.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.FindVertex(Google.Common.Geometry.S2Point)">
+            Return the index of a vertex at point "p", or -1 if not found. The return
+            value is in the range 1..num_vertices_ if found.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Loop.CheckEdgeCrossings(Google.Common.Geometry.S2Loop,Google.Common.Geometry.IWedgeRelation)">
+             This method encapsulates the common code for loop containment and
+             intersection tests. It is used in three slightly different variations to
+             implement contains(), intersects(), and containsOrCrosses().
+            
+              In a nutshell, this method checks all the edges of this loop (A) for
+             intersection with all the edges of B. It returns -1 immediately if any edge
+             intersections are found. Otherwise, if there are any shared vertices, it
+             returns the minimum value of the given WedgeRelation for all such vertices
+             (returning immediately if any wedge returns -1). Returns +1 if there are no
+             intersections and no shared vertices.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Loop.IsHole">
+            Return true if this loop represents a hole in its containing polygon.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Loop.Sign">
+            The sign of a loop is -1 if the loop represents a hole in its containing
+            polygon, and +1 otherwise.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Loop.Area">
+            Return the area of the polygon interior, i.e. the region on the left side
+            of an odd number of loops. The return value is between 0 and 4*Pi.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Loop.Centroid">
+            Return the true centroid of the polygon multiplied by the area of the
+            polygon (see {@link S2} for details on centroids). Note that the centroid
+            may not be contained by the polygon.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Loop.RectBound">
+            Return a bounding latitude-longitude rectangle. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Point.GetHashCode">
+            Calcualates hashcode based on stored coordinates. Since we want +0.0 and
+            -0.0 to be treated the same, we ignore the sign of the coordinates.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Point.Fabs(Google.Common.Geometry.S2Point)">
+            return a vector orthogonal to this one 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Point.Angle(Google.Common.Geometry.S2Point)">
+            Return the angle between two vectors in radians 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Point.ApproxEquals(Google.Common.Geometry.S2Point,System.Double)">
+            Compare two vectors, return true if all their components are within a
+            difference of margin.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Point.LargestAbsComponent">
+            Return the index of the largest component fabs 
+        </member>
+        <member name="T:Google.Common.Geometry.S2Polygon">
+             An S2Polygon is an SI2Region object that represents a polygon. A polygon
+             consists of zero or more {@link S2Loop loops} representing "shells" and
+             "holes". All loops should be oriented CCW, i.e. the shell or hole is on the
+             left side of the loop. Loops may be specified in any order. A point is
+             defined to be inside the polygon if it is contained by an odd number of
+             loops.
+            
+              Polygons have the following restrictions:
+            
+              - Loops may not cross, i.e. the boundary of a loop may not intersect both
+             the interior and exterior of any other loop.
+            
+              - Loops may not share edges, i.e. if a loop contains an edge AB, then no
+             other loop may contain AB or BA.
+            
+              - No loop may cover more than half the area of the sphere. This ensures that
+             no loop properly contains the complement of any other loop, even if the loops
+             are from different polygons. (Loops that represent exact hemispheres are
+             allowed.)
+            
+              Loops may share vertices, however no vertex may appear twice in a single
+             loop.
+            
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.#ctor">
+            Creates an empty polygon that should be initialized by calling Init().
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.#ctor(System.Collections.Generic.IList{Google.Common.Geometry.S2Loop})">
+            Convenience constructor that calls Init() with the given loops. Clears the
+            given list.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.#ctor(Google.Common.Geometry.S2Loop)">
+            Copy constructor.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.#ctor(Google.Common.Geometry.S2Polygon)">
+            Copy constructor.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.CompareTo(Google.Common.Geometry.S2Polygon)">
+            Comparator (needed by Comparable interface). For two polygons to be
+            compared as equal: - the must have the same number of loops; - the loops
+            must be ordered in the same way (this is guaranteed by the total ordering
+            imposed by sortValueLoops). - loops must be logically equivalent (even if
+            ordered with a different starting point, e.g. ABCD and BCDA).
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Contains(Google.Common.Geometry.S2Cell)">
+            If this method returns true, the region completely contains the given cell.
+            Otherwise, either the region does not contain the cell or the containment
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.MayIntersect(Google.Common.Geometry.S2Cell)">
+            If this method returns false, the region does not intersect the given cell.
+            Otherwise, either region intersects the cell, or the intersection
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Init(System.Collections.Generic.IList{Google.Common.Geometry.S2Loop})">
+            Initialize a polygon by taking ownership of the given loops and clearing
+            the given list. This method figures out the loop nesting hierarchy and then
+            reorders the loops by following a preorder traversal. This implies that
+            each loop is immediately followed by its descendants in the nesting
+            hierarchy. (See also getParent and getLastDescendant.)
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Release(System.Collections.Generic.IList{Google.Common.Geometry.S2Loop})">
+            Release ownership of the loops of this polygon by appending them to the
+            given list. Resets the polygon to be empty.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.IsValidPolygon(System.Collections.Generic.IReadOnlyList{Google.Common.Geometry.S2Loop})">
+            Return true if the given loops form a valid polygon. Assumes that that all
+            of the given loops have already been validated.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.GetParent(System.Int32)">
+            Return the index of the parent of loop k, or -1 if it has no parent.
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Google.Common.Geometry.S2Polygon.GetLastDescendant(System.Int32)" -->
+        <member name="M:Google.Common.Geometry.S2Polygon.GetDistance(Google.Common.Geometry.S2Point)">
+             Returns the shortest distance from a point P to this polygon, given as the
+             angle formed between P, the origin and the nearest point on the polygon to
+             P. This angle in radians is equivalent to the arclength along the unit
+             sphere.
+            
+             If the point is contained inside the polygon, the distance returned is 0.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Contains(Google.Common.Geometry.S2Polygon)">
+            Return true if this polygon contains the given other polygon, i.e. if
+            polygon A contains all points contained by polygon B.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Intersects(Google.Common.Geometry.S2Polygon)">
+            Return true if this polygon intersects the given other polygon, i.e. if
+            there is a point that is contained by both polygons.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.AddIntersection(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Boolean,System.Int32,System.Collections.Generic.ICollection{Google.Common.Geometry.S2Polygon.ParametrizedS2Point})">
+              Indexing structure to efficiently clipEdge() of a polygon. This is an
+             abstract class because we need to use if for both polygons (for
+             initToIntersection() and friends) and for sets of lists of points (for
+             initToSimplified()).
+            
+              Usage -- in your subclass, create an array of vertex counts for each loop
+             in the loop sequence and pass it to this constructor. Overwrite
+             edgeFromTo(), calling decodeIndex() and use the resulting two indices to
+             access your accessing vertices.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.ClipEdge(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Polygon.S2LoopSequenceIndex,System.Boolean,System.Collections.Generic.ICollection{Google.Common.Geometry.S2Polygon.ParametrizedS2Point})">
+            Find all points where the polygon B intersects the edge (a0,a1), and add
+            the corresponding parameter values (in the range [0,1]) to "intersections".
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.ClipBoundary(Google.Common.Geometry.S2Polygon,System.Boolean,Google.Common.Geometry.S2Polygon,System.Boolean,System.Boolean,System.Boolean,Google.Common.Geometry.S2PolygonBuilder)">
+            Clip the boundary of A to the interior of B, and add the resulting edges to
+            "builder". Shells are directed CCW and holes are directed clockwise, unless
+            "reverseA" or "reverseB" is true in which case these directions in the
+            corresponding polygon are reversed. If "invertB" is true, the boundary of A
+            is clipped to the exterior rather than the interior of B. If
+            "adSharedEdges" is true, then the output will include any edges that are
+            shared between A and B (both edges must be in the same direction after any
+            edge reversals are taken into account).
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.InitToIntersection(Google.Common.Geometry.S2Polygon,Google.Common.Geometry.S2Polygon)">
+             Initialize this polygon to the intersection, union, or difference (A - B)
+             of the given two polygons. The "vertexMergeRadius" determines how close two
+             vertices must be to be merged together and how close a vertex must be to an
+             edge in order to be spliced into it (see S2PolygonBuilder for details). By
+             default, the merge radius is just large enough to compensate for errors
+             that occur when computing intersection points between edges
+             (S2EdgeUtil.DEFAULT_INTERSECTION_TOLERANCE).
+            
+              If you are going to convert the resulting polygon to a lower-precision
+             format, it is necessary to increase the merge radius in order to get a
+             valid result after rounding (i.e. no duplicate vertices, etc). For example,
+             if you are going to convert them to geostore.PolygonProto format, then
+             S1Angle.e7(1) is a good value for "vertex_merge_radius".
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.DestructiveUnion(System.Collections.Generic.ICollection{Google.Common.Geometry.S2Polygon})">
+            Return a polygon which is the union of the given polygons. Note: clears the
+            List!
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.DestructiveUnionSloppy(System.Collections.Generic.ICollection{Google.Common.Geometry.S2Polygon},Google.Common.Geometry.S1Angle)">
+            Return a polygon which is the union of the given polygons; combines
+            vertices that form edges that are almost identical, as defined by
+            vertexMergeRadius. Note: clears the List!
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.BoundaryApproxEquals(Google.Common.Geometry.S2Polygon,System.Double)">
+            Return true if two polygons have the same boundary except for vertex
+            perturbations. Both polygons must have loops with the same cyclic vertex
+            order and the same nesting hierarchy, but the vertex locations are allowed
+            to differ by up to "max_error". Note: This method mostly useful only for
+            testing purposes.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.Contains(Google.Common.Geometry.S2Point)">
+            The point 'p' does not need to be normalized.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.AnyLoopContains(Google.Common.Geometry.S2Loop)">
+            Return true if any loop contains the given loop. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.ContainsAllShells(Google.Common.Geometry.S2Polygon)">
+            Return true if this polygon (A) contains all the shells of B. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.ExcludesAllHoles(Google.Common.Geometry.S2Polygon)">
+            Return true if this polygon (A) excludes (i.e. does not intersect) all
+            holes of B.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.IntersectsAnyShell(Google.Common.Geometry.S2Polygon)">
+            Return true if this polygon (A) intersects any shell of B. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.ToString">
+            A human readable representation of the polygon
+        </member>
+        <member name="P:Google.Common.Geometry.S2Polygon.Area">
+            Return the area of the polygon interior, i.e. the region on the left side
+            of an odd number of loops. The return value is between 0 and 4*Pi.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Polygon.Centroid">
+            Return the true centroid of the polygon multiplied by the area of the
+            polygon (see s2.h for details on centroids). Note that the centroid may not
+            be contained by the polygon.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Polygon.RectBound">
+            Return a bounding latitude-longitude rectangle. 
+        </member>
+        <member name="T:Google.Common.Geometry.S2Polygon.ParametrizedS2Point">
+            An S2Point that also has a parameter associated with it, which corresponds
+            to a time-like order on the points.
+        </member>
+        <member name="F:Google.Common.Geometry.S2Polygon.S2LoopSequenceIndex._indexToLoop">
+            Map from the unidimensional edge index to the loop this edge belongs to. 
+        </member>
+        <member name="F:Google.Common.Geometry.S2Polygon.S2LoopSequenceIndex._loopToFirstIndex">
+            Reverse of indexToLoop: maps a loop index to the unidimensional index
+            of the first edge in the loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polygon.S2LoopSequenceIndex.#ctor(System.Collections.Generic.IList{System.Int32})">
+            Must be called by each subclass with the array of vertices per loop. The
+            length of the array is the number of loops, and the <code>i</code>
+            <sup>th</sup> loop's vertex count is in the <code>i</code>
+            <sup>th</sup> index of the array.
+        </member>
+        <member name="T:Google.Common.Geometry.S2PolygonBuilder">
+             This is a simple class for assembling polygons out of edges. It requires that
+             no two edges cross. It can handle both directed and undirected edges, and
+             optionally it can also remove duplicate edge pairs (consisting of two
+             identical edges or an edge and its reverse edge). This is useful for
+             computing seamless unions of polygons that have been cut into pieces.
+            
+              Here are some of the situations this class was designed to handle:
+            
+              1. Computing the union of disjoint polygons that may share part of their
+             boundaries. For example, reassembling a lake that has been split into two
+             loops by a state boundary.
+            
+              2. Constructing polygons from input data that does not follow S2
+             conventions, i.e. where loops may have repeated vertices, or distinct loops
+             may share edges, or shells and holes have opposite or unspecified
+             orientations.
+            
+              3. Computing the symmetric difference of a set of polygons whose edges
+             intersect only at vertices. This can be used to implement a limited form of
+             polygon intersection or subtraction as well as unions.
+            
+              4. As a tool for implementing other polygon operations by generating a
+             collection of directed edges and then assembling them into loops.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2PolygonBuilder._edges">
+            The current set of edges, grouped by origin. The set of destination
+            vertices is a multiset so that the same edge can be present more than once.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.#ctor">
+            Default constructor for well-behaved polygons. Uses the DIRECTED_XOR
+            options.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AddEdge(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point)">
+            Add the given edge to the polygon builder. This method should be used for
+            input data that may not follow S2 polygon conventions. Note that edges are
+            not allowed to cross each other. Also note that as a convenience, edges
+            where v0 == v1 are ignored.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AddLoop(Google.Common.Geometry.S2Loop)">
+             Add all edges in the given loop. If the sign() of the loop is negative
+             (i.e. this loop represents a hole), the reverse edges are added instead.
+             This implies that "shells" are CCW and "holes" are CW, as required for the
+             directed edges convention described above.
+            
+             This method does not take ownership of the loop.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AddPolygon(Google.Common.Geometry.S2Polygon)">
+            Add all loops in the given polygon. Shells and holes are added with
+            opposite orientations as described for AddLoop(). This method does not take
+            ownership of the polygon.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AssembleLoops(System.Collections.Generic.IList{Google.Common.Geometry.S2Loop},System.Collections.Generic.IList{Google.Common.Geometry.S2Edge})">
+             Assembles the given edges into as many non-crossing loops as possible. When
+             there is a choice about how to assemble the loops, then CCW loops are
+             preferred. Returns true if all edges were assembled. If "unused_edges" is
+             not NULL, it is initialized to the set of edges that could not be assembled
+             into loops.
+            
+              Note that if xor_edges() is false and duplicate edge pairs may be present,
+             then undirected_edges() should be specified unless all loops can be
+             assembled in a counter-clockwise direction. Otherwise this method may not
+             be able to assemble all loops due to its preference for CCW loops.
+            
+             This method resets the S2PolygonBuilder state so that it can be reused.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AssemblePolygon(Google.Common.Geometry.S2Polygon,System.Collections.Generic.IList{Google.Common.Geometry.S2Edge})">
+             Like AssembleLoops, but normalizes all the loops so that they enclose less
+             than half the sphere, and then assembles the loops into a polygon.
+            
+              For this method to succeed, there should be no duplicate edges in the
+             input. If this is not known to be true, then the "xor_edges" option should
+             be set (which is true by default).
+            
+              Note that S2Polygons cannot represent arbitrary regions on the sphere,
+             because of the limitation that no loop encloses more than half of the
+             sphere. For example, an S2Polygon cannot represent a 100km wide band around
+             the equator. In such cases, this method will return the *complement* of the
+             expected region. So for example if all the world's coastlines were
+             assembled, the output S2Polygon would represent the land area (irrespective
+             of the input edge or loop orientations).
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AssemblePolygon">
+            Convenience method for when you don't care about unused edges.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.AssembleLoop(Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point,System.Collections.Generic.IList{Google.Common.Geometry.S2Edge})">
+            We start at the given edge and assemble a loop taking left turns whenever
+            possible. We stop the loop as soon as we encounter any vertex that we have
+            seen before *except* for the first vertex (v0). This ensures that only CCW
+            loops are constructed when possible.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.RejectLoop(Google.Common.Geometry.S2Loop,System.Int32,System.Collections.Generic.IList{Google.Common.Geometry.S2Edge})">
+            Erases all edges of the given loop and marks them as unused. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.RejectLoop(System.Collections.Generic.IList{Google.Common.Geometry.S2Point},System.Int32,System.Collections.Generic.IList{Google.Common.Geometry.S2Edge})">
+            Erases all edges of the given loop and marks them as unused. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.MoveVertices(System.Collections.Generic.IDictionary{Google.Common.Geometry.S2Point,Google.Common.Geometry.S2Point})">
+            Moves a set of vertices from old to new positions. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.MergeVertices">
+            Look for groups of vertices that are separated by at most merge_distance()
+            and merge them into a single vertex.
+        </member>
+        <member name="T:Google.Common.Geometry.S2PolygonBuilder.MarkedS2Point">
+            An S2Point that can be marked. Used in PointIndex.
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.PointIndex.GetEnumerator">
+            Add a point to the index if it does not already exist. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2PolygonBuilder.PointIndex.Query(Google.Common.Geometry.S2Point,System.Collections.Generic.ICollection{Google.Common.Geometry.S2Point})">
+            Return the set the unmarked points whose distance to "center" is less
+            than search_radius_, and mark these points. By construction, these points
+            will be contained by one of the vertex neighbors of "center".
+        </member>
+        <member name="F:Google.Common.Geometry.S2PolygonBuilderOptions.DirectedXor">
+            These are the options that should be used for assembling well-behaved
+            input data into polygons. All edges should be directed such that "shells"
+            and "holes" have opposite orientations (typically CCW shells and
+            clockwise holes), unless it is known that shells and holes do not share
+            any edges.
+        </member>
+        <member name="F:Google.Common.Geometry.S2PolygonBuilderOptions.UndirectedXor">
+            These are the options that should be used for assembling polygons that do
+            not follow the conventions above, e.g. where edge directions may vary
+            within a single loop, or shells and holes are not oppositely oriented.
+        </member>
+        <member name="F:Google.Common.Geometry.S2PolygonBuilderOptions.UndirectedUnion">
+            These are the options that should be used for assembling edges where the
+            desired output is a collection of loops rather than a polygon, and edges
+            may occur more than once. Edges are treated as undirected and are not
+            XORed together, in particular, adding edge A->B also adds B->A.
+        </member>
+        <member name="F:Google.Common.Geometry.S2PolygonBuilderOptions.DirectedUnion">
+            Finally, select this option when the desired output is a collection of
+            loops rather than a polygon, but your input edges are directed and you do
+            not want reverse edges to be added implicitly as above.
+        </member>
+        <member name="P:Google.Common.Geometry.S2PolygonBuilderOptions.UndirectedEdges">
+            If "undirected_edges" is false, then the input is assumed to consist of
+            edges that can be assembled into oriented loops without reversing any of
+            the edges. Otherwise, "undirected_edges" should be set to true.
+        </member>
+        <member name="P:Google.Common.Geometry.S2PolygonBuilderOptions.XorEdges">
+             If "xor_edges" is true, then any duplicate edge pairs are removed. This
+             is useful for computing the union of a collection of polygons whose
+             interiors are disjoint but whose boundaries may share some common edges
+             (e.g. computing the union of South Africa, Lesotho, and Swaziland).
+            
+              Note that for directed edges, a "duplicate edge pair" consists of an
+             edge and its corresponding reverse edge. This means that either (a)
+             "shells" and "holes" must have opposite orientations, or (b) shells and
+             holes do not share edges. Otherwise undirected_edges() should be
+             specified.
+            
+              There are only two reasons to turn off xor_edges():
+            
+              (1) assemblePolygon() will be called, and you want to assert that there
+             are no duplicate edge pairs in the input.
+            
+              (2) assembleLoops() will be called, and you want to keep abutting loops
+             separate in the output rather than merging their regions together (e.g.
+             assembling loops for Kansas City, KS and Kansas City, MO simultaneously).
+        </member>
+        <member name="P:Google.Common.Geometry.S2PolygonBuilderOptions.Validate">
+            If true, isValid() is called on all loops and polygons before
+            constructing them. If any loop is invalid (e.g. self-intersecting), it is
+            rejected and returned as a set of "unused edges". Any remaining valid
+            loops are kept. If the entire polygon is invalid (e.g. two loops
+            intersect), then all loops are rejected and returned as unused edges.
+        </member>
+        <member name="P:Google.Common.Geometry.S2PolygonBuilderOptions.MergeDistance">
+             If set to a positive value, all vertices that are separated by at most
+             this distance will be merged together. In addition, vertices that are
+             closer than this distance to a non-incident edge will be spliced into it
+             (TODO).
+            
+              The merging is done in such a way that all vertex-vertex and vertex-edge
+             distances in the output are greater than 'merge_distance'.
+            
+              This method is useful for assembling polygons out of input data where
+             vertices and/or edges may not be perfectly aligned.
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Google.Common.Geometry.S2Polyline" -->
+        <member name="M:Google.Common.Geometry.S2Polyline.#ctor(System.Collections.Generic.IEnumerable{Google.Common.Geometry.S2Point})">
+            Create a polyline that connects the given vertices. Empty polylines are
+            allowed. Adjacent vertices should not be identical or antipodal. All
+            vertices should be unit length.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.#ctor(Google.Common.Geometry.S2Polyline)">
+             Copy constructor.
+            
+             TODO(dbeaumont): Now that S2Polyline is immutable, remove this.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.Contains(Google.Common.Geometry.S2Cell)">
+            If this method returns true, the region completely contains the given cell.
+            Otherwise, either the region does not contain the cell or the containment
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.MayIntersect(Google.Common.Geometry.S2Cell)">
+            If this method returns false, the region does not intersect the given cell.
+            Otherwise, either region intersects the cell, or the intersection
+            relationship could not be determined.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.IsValidPolyline(System.Collections.Generic.IReadOnlyList{Google.Common.Geometry.S2Point})">
+            Return true if the given vertices form a valid polyline.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.Interpolate(System.Double)">
+            Return the point whose distance from vertex 0 along the polyline is the
+            given fraction of the polyline's total length. Fractions less than zero or
+            greater than one are clamped. The return value is unit length. This cost of
+            this function is currently linear in the number of vertices.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.GetNearestEdgeIndex(Google.Common.Geometry.S2Point)">
+            Given a point, returns the index of the start point of the (first) edge on
+            the polyline that is closest to the given point. The polyline must have at
+            least one vertex. Throws IllegalStateException if this is not the case.
+        </member>
+        <member name="M:Google.Common.Geometry.S2Polyline.ProjectToEdge(Google.Common.Geometry.S2Point,System.Int32)">
+            Given a point p and the index of the start point of an edge of this polyline,
+            returns the point on that edge that is closest to p.
+        </member>
+        <member name="P:Google.Common.Geometry.S2Polyline.RectBound">
+            Return a bounding latitude-longitude rectangle. 
+        </member>
+        <member name="T:Google.Common.Geometry.S2Projections">
+             This class specifies the details of how the cube faces are projected onto the
+             unit sphere. This includes getting the face ordering and orientation correct
+             so that sequentially increasing cell ids follow a continuous space-filling
+             curve over the entire sphere, and defining the transformation from cell-space
+             to cube-space (see s2.h) in order to make the cells more uniform in size.
+            
+            
+              We have implemented three different projections from cell-space (s,t) to
+             cube-space (u,v): linear, quadratic, and tangent. They have the following
+             tradeoffs:
+            
+              Linear - This is the fastest transformation, but also produces the least
+             uniform cell sizes. Cell areas vary by a factor of about 5.2, with the
+             largest cells at the center of each face and the smallest cells in the
+             corners.
+            
+              Tangent - Transforming the coordinates via atan() makes the cell sizes more
+             uniform. The areas vary by a maximum ratio of 1.4 as opposed to a maximum
+             ratio of 5.2. However, each call to atan() is about as expensive as all of
+             the other calculations combined when converting from points to cell ids, i.e.
+             it reduces performance by a factor of 3.
+            
+              Quadratic - This is an approximation of the tangent projection that is much
+             faster and produces cells that are almost as uniform in size. It is about 3
+             times faster than the tangent projection for converting cell ids to points,
+             and 2 times faster for converting points to cell ids. Cell areas vary by a
+             maximum ratio of about 2.1.
+            
+              Here is a table comparing the cell uniformity using each projection. "Area
+             ratio" is the maximum ratio over all subdivision levels of the largest cell
+             area to the smallest cell area at that level, "edge ratio" is the maximum
+             ratio of the longest edge of any cell to the shortest edge of any cell at the
+             same level, and "diag ratio" is the ratio of the longest diagonal of any cell
+             to the shortest diagonal of any cell at the same level. "ToPoint" and
+             "FromPoint" are the times in microseconds required to convert cell ids to and
+             from points (unit vectors) respectively.
+            
+              Area Edge Diag ToPoint FromPoint Ratio Ratio Ratio (microseconds)
+             ------------------------------------------------------- Linear: 5.200 2.117
+             2.959 0.103 0.123 Tangent: 1.414 1.414 1.704 0.290 0.306 Quadratic: 2.082
+             1.802 1.932 0.116 0.161
+            
+              The worst-case cell aspect ratios are about the same with all three
+             projections. The maximum ratio of the longest edge to the shortest edge
+             within the same cell is about 1.4 and the maximum ratio of the diagonals
+             within the same cell is about 1.7.
+            
+             This data was produced using s2cell_unittest and s2cellid_unittest.
+            
+        </member>
+        <member name="M:Google.Common.Geometry.S2Projections.FaceUvToXyz(System.Int32,System.Double,System.Double)">
+            Convert (face, u, v) coordinates to a direction vector (not necessarily
+            unit length).
+        </member>
+        <member name="T:Google.Common.Geometry.S2RegionCoverer">
+             An S2RegionCoverer is a class that allows arbitrary regions to be
+             approximated as unions of cells (S2CellUnion). This is useful for
+             implementing various sorts of search and precomputation operations.
+            
+             Typical usage: {@code S2RegionCoverer coverer; coverer.setMaxCells(5); S2Cap
+             cap = S2Cap.fromAxisAngle(...); S2CellUnion covering;
+             coverer.getCovering(cap, covering); * }
+            
+             This yields a cell union of at most 5 cells that is guaranteed to cover the
+             given cap (a disc-shaped region on the sphere).
+            
+              The approximation algorithm is not optimal but does a pretty good job in
+             practice. The output does not always use the maximum number of cells allowed,
+             both because this would not always yield a better approximation, and because
+             max_cells() is a limit on how much work is done exploring the possible
+             covering as well as a limit on the final output size.
+            
+              One can also generate interior coverings, which are sets of cells which are
+             entirely contained within a region. Interior coverings can be empty, even for
+             non-empty regions, if there are no cells that satisfy the provided
+             constraints and are contained by the region. Note that for performance
+             reasons, it is wise to specify a max_level when computing interior coverings
+             - otherwise for regions with small or zero area, the algorithm may spend a
+             lot of time subdividing cells all the way to leaf level to try to find
+             contained cells.
+            
+              This class is thread-unsafe. Simultaneous calls to any of the getCovering
+             methods will conflict and produce unpredictable results.
+            
+        </member>
+        <member name="F:Google.Common.Geometry.S2RegionCoverer.DefaultMaxCells">
+            By default, the covering uses at most 8 cells at any level. This gives a
+            reasonable tradeoff between the number of cells used and the accuracy of
+            the approximation (see table below).
+        </member>
+        <member name="F:Google.Common.Geometry.S2RegionCoverer._region">
+            We save a temporary copy of the pointer passed to GetCovering() in order to
+            avoid passing this parameter around internally. It is only used (and only
+            valid) for the duration of a single GetCovering() call.
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.#ctor">
+            Default constructor, sets all fields to default values.
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetCovering(Google.Common.Geometry.IS2Region,System.Collections.Generic.ICollection{Google.Common.Geometry.S2CellId})">
+             Computes a list of cell ids that covers the given region and satisfies the
+             various restrictions specified above.
+            
+             @param region The region to cover
+             @param covering The list filled in by this method
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetInteriorCovering(Google.Common.Geometry.IS2Region,System.Collections.Generic.List{Google.Common.Geometry.S2CellId})">
+             Computes a list of cell ids that is contained within the given region and
+             satisfies the various restrictions specified above.
+            
+             @param region The region to fill
+             @param interior The list filled in by this method
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetCovering(Google.Common.Geometry.IS2Region)">
+            Return a normalized cell union that covers the given region and satisfies
+            the restrictions *EXCEPT* for min_level() and level_mod(). These criteria
+            cannot be satisfied using a cell union because cell unions are
+            automatically normalized by replacing four child cells with their parent
+            whenever possible. (Note that the list of cell ids passed to the cell union
+            constructor does in fact satisfy all the given restrictions.)
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetInteriorCovering(Google.Common.Geometry.IS2Region)">
+            Return a normalized cell union that is contained within the given region
+            and satisfies the restrictions *EXCEPT* for min_level() and level_mod().
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetSimpleCovering(Google.Common.Geometry.IS2Region,Google.Common.Geometry.S2Point,System.Int32,System.Collections.Generic.List{Google.Common.Geometry.S2CellId})">
+            Given a connected region and a starting point, return a set of cells at the
+            given level that cover the region.
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.NewCandidate(Google.Common.Geometry.S2Cell)">
+            If the cell intersects the given region, return a new candidate with no
+            children, otherwise return null. Also marks the candidate as "terminal" if
+            it should not be expanded further.
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.AddCandidate(Google.Common.Geometry.S2RegionCoverer.Candidate)">
+            Process a candidate by either adding it to the result list or expanding its
+            children and inserting it into the priority queue. Passing an argument of
+            NULL does nothing.
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.ExpandChildren(Google.Common.Geometry.S2RegionCoverer.Candidate,Google.Common.Geometry.S2Cell,System.Int32)">
+            Populate the children of "candidate" by expanding the given number of
+            levels from the given cell. Returns the number of children that were marked
+            "terminal".
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetInitialCandidates">
+            Computes a set of initial candidates that cover the given region. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.GetCoveringInternal(Google.Common.Geometry.IS2Region)">
+            Generates a covering and stores it in result. 
+        </member>
+        <member name="M:Google.Common.Geometry.S2RegionCoverer.FloodFill(Google.Common.Geometry.IS2Region,Google.Common.Geometry.S2CellId,System.Collections.Generic.List{Google.Common.Geometry.S2CellId})">
+            Given a region and a starting cell, return the set of all the
+            edge-connected cells at the same level that intersect "region". The output
+            cells are returned in arbitrary order.
+        </member>
+        <member name="P:Google.Common.Geometry.S2RegionCoverer.MinLevel">
+            Sets the minimum level to be used.
+        </member>
+        <member name="P:Google.Common.Geometry.S2RegionCoverer.MaxLevel">
+            Sets the maximum level to be used.
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Google.Common.Geometry.S2RegionCoverer.MaxCells" -->
+        <member name="P:Google.Common.Geometry.S2RegionCoverer.LevelMod">
+            If specified, then only cells where (level - min_level) is a multiple of
+            "level_mod" will be used (default 1). This effectively allows the branching
+            factor of the S2CellId hierarchy to be increased. Currently the only
+            parameter values allowed are 1, 2, or 3, corresponding to branching factors
+            of 4, 16, and 64 respectively.
+        </member>
+    </members>
+</doc>
