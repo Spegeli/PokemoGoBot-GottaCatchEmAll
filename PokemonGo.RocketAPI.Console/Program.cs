@@ -15,6 +15,14 @@ namespace PokemonGo.RocketAPI.Console
 
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException
+                += delegate (object sender, UnhandledExceptionEventArgs eargs)
+                {
+                    Exception exception = (Exception)eargs.ExceptionObject;
+                    System.Console.WriteLine("Unhandled exception: " + exception);
+                    Environment.Exit(1);
+                };
+                
             Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
 
             Task.Run(() =>
