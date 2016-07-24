@@ -21,12 +21,17 @@ namespace PokemonGo.RocketAPI.Logic.Utils
         public static string CurrentLevelInfos;
         public static int Currentlevel = -1;
         public static string PlayerName;
+        public static int TotalPokesInBag;
 
         public static DateTime InitSessionDateTime = DateTime.Now;
         public static TimeSpan Duration = DateTime.Now - InitSessionDateTime;
 
         public static async Task<string> _getcurrentLevelInfos(Inventory inventory)
         {
+            //appears to give incorrect info?
+            var pokes = await inventory.GetPokemons();
+            TotalPokesInBag = pokes.Count();
+
             var stats = await inventory.GetPlayerStats();
             var output = string.Empty;
             var stat = stats.FirstOrDefault();
@@ -91,9 +96,9 @@ namespace PokemonGo.RocketAPI.Logic.Utils
         {
             return
                 string.Format(
-                    "{0} - Runtime {1} - Lvl: {2:0} | EXP/H: {3:0} | P/H: {4:0} | Stardust: {5:0} | Transfered: {6:0} | Items Recycled: {7:0}",
+                    "{0} - Runtime {1} - Lvl: {2:0} | EXP/H: {3:0} | P/H: {4:0} | Stardust: {5:0} | Transfered: {6:0} | Items Recycled: {7:0} | Pokemon in bag: {8:0}",
                     PlayerName, _getSessionRuntimeInTimeFormat(), CurrentLevelInfos, TotalExperience / _getSessionRuntime(),
-                    TotalPokemons / _getSessionRuntime(), TotalStardust, TotalPokemonsTransfered, TotalItemsRemoved);
+                    TotalPokemons / _getSessionRuntime(), TotalStardust, TotalPokemonsTransfered, TotalItemsRemoved, TotalPokesInBag);
         }
 
         public static int GetXpDiff(int level)
