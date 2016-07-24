@@ -590,15 +590,22 @@ namespace PokemonGo.RocketAPI.Logic
                     {
                         var AllPokemon = await _inventory.GetHighestsPerfect(1000);
                         var csvExportPokemonAll = new StringBuilder();
-                        var columnnames = string.Format("{0};{1};{2};{3}", "#", "NAME", "CP", "PERFECTION");
+                        var columnnames = string.Format("{0};{1};{2};{3};{4}", "#", "NAME", "CP", "PERFECTION","CANDY");
                         csvExportPokemonAll.AppendLine(columnnames);
+                        var myPokemonSettings = await _inventory.GetPokemonSettings();
+                        var pokemonSettings = myPokemonSettings.ToList();
+                        var myPokemonFamilies = await _inventory.GetPokemonFamilies();
+                        var pokemonFamilies = myPokemonFamilies.ToArray();
                         foreach (var pokemon in AllPokemon)
                         {
+                            var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
+                            var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
                             int POKENUMBER = (int)pokemon.PokemonId;
                             var NAME = $"{pokemon.PokemonId}";
                             var CP = $"{pokemon.Cp}";
+                            var CANDY = $"{familyCandy.Candy}";
                             string PERFECTION = PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00");
-                            var pokedata = string.Format("{0};{1};{2};{3}", POKENUMBER, NAME, CP, PERFECTION);
+                            var pokedata = string.Format("{0};{1};{2};{3};{4}", POKENUMBER, NAME, CP, PERFECTION,CANDY);
                             csvExportPokemonAll.AppendLine(pokedata);
                         }
                         Logger.Write($"Export all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
