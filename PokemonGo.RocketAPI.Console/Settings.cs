@@ -127,27 +127,29 @@ namespace PokemonGo.RocketAPI.Console
         private ICollection<PokemonId> LoadPokemonList(string filename, List<PokemonId> defaultPokemon)
         {
             ICollection<PokemonId> result = new List<PokemonId>();
-            string path = Directory.GetCurrentDirectory() + "\\Configs\\";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Configs");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            if (!File.Exists(path + filename))
+            path = Path.Combine(path, filename);
+
+            if (!File.Exists(path))
             {
-                Logger.Write($"File: \"\\Configs\\{filename}\" not found, creating new...", LogLevel.Warning);
-                using (var w = File.AppendText(path + filename))
+                Logger.Write($"File: \"Configs/{filename}\" not found, creating new...", LogLevel.Warning);
+                using (var w = File.AppendText(path))
                 {
                     defaultPokemon.ForEach(pokemon => w.WriteLine(pokemon.ToString()));
                     defaultPokemon.ForEach(pokemon => result.Add((PokemonId)pokemon));
                     w.Close();
                 }
             }
-            if (File.Exists(path + filename))
+            if (File.Exists(path))
             {
-                Logger.Write($"Loading File: \"\\Configs\\{filename}\"", LogLevel.Info);
+                Logger.Write($"Loading File: \"Configs/{filename}\"", LogLevel.Info);
 
                 var content = string.Empty;
-                using (StreamReader reader = new StreamReader(path + filename))
+                using (StreamReader reader = new StreamReader(path))
                 {
                     content = reader.ReadToEnd();
                     reader.Close();

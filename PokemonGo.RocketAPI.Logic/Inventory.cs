@@ -274,7 +274,7 @@ namespace PokemonGo.RocketAPI.Logic
             if (stat == null)
                 return;
 
-            string path = Directory.GetCurrentDirectory() + "\\Export\\";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Export");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
@@ -282,11 +282,12 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 try
                 {
-                    if (File.Exists(path + $"Profile_{player.Username}_{filename}"))
-                        File.Delete(path + filename);
+                    path = Path.Combine(path, $"Profile_{player.Username}_{filename}");
+                    if (File.Exists(path))
+                        File.Delete(path);
                     string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
                     string header = "PokemonID,Name,NickName,CP / MaxCP,Perfection,Attack 1,Attack 2,HP,Attk,Def,Stamina,Familie Candies,previewLink";
-                    File.WriteAllText(path + $"Profile_{player.Username}_{filename}", $"{header.Replace(",", $"{ls}")}");
+                    File.WriteAllText(path, $"{header.Replace(",", $"{ls}")}");
 
                     var AllPokemon = await GetHighestsPerfect();
                     var myPokemonSettings = await GetPokemonSettings();
@@ -297,7 +298,7 @@ namespace PokemonGo.RocketAPI.Logic
                     int[] exp_req = new[] { 0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000, 55000, 65000, 75000, 85000, 100000, 120000, 140000, 160000, 185000, 210000, 260000, 335000, 435000, 560000, 710000, 900000, 1100000, 1350000, 1650000, 2000000, 2500000, 3000000, 3750000, 4750000, 6000000, 7500000, 9500000, 12000000, 15000000, 20000000 };
                     int exp_req_at_level = exp_req[stat.Level - 1];
 
-                    using (var w = File.AppendText(path + $"Profile_{player.Username}_{filename}"))
+                    using (var w = File.AppendText(path))
                     {
                         w.WriteLine("");
                         foreach (var pokemon in AllPokemon)
@@ -317,7 +318,7 @@ namespace PokemonGo.RocketAPI.Logic
                         }
                         w.Close();
                     }
-                    Logger.Write($"Export Player Infos and all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
+                    Logger.Write($"Export Player Infos and all Pokemon to \"Export/{filename}\"", LogLevel.Info);
                 }
                 catch
                 {
