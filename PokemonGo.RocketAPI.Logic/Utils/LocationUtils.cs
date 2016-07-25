@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Device.Location;
 
 #endregion
 
