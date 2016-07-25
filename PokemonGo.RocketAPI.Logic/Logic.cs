@@ -622,7 +622,7 @@ namespace PokemonGo.RocketAPI.Logic
                         var csvExportPokemonAll = new StringBuilder();
                         var _currentLevelInfos = await Statistics._getcurrentLevelInfos(_inventory);
                         csvExportPokemonAll.AppendLine(Statistics.GetUsername(_client, _playerProfile) + _currentLevelInfos.ToString());
-                        var columnnames = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}", "#", "NAME", "LVL", "CP", "MaxCP", "PERFECTION", "CANDY", "iATK", "iDEF", "iSTA");
+                        var columnnames = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", "#", "NAME", "LVL", "CP", "MaxCP", "PERFECTION", "CANDY", "iATK", "iDEF", "iSTA");
                         csvExportPokemonAll.AppendLine(columnnames);
 
                         foreach (var pokemon in AllPokemon)
@@ -639,7 +639,7 @@ namespace PokemonGo.RocketAPI.Logic
                             var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.PokemonId);
                             var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
                             var CANDY = familyCandy.Candy;
-                            var pokedata = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}", POKENUMBER, NAME, LVL, CP, MaxCP, PERFECTION, CANDY, IATK, IDEF, ISTA);
+                            var pokedata = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", POKENUMBER, NAME, LVL, CP, MaxCP, PERFECTION, CANDY, IATK, IDEF, ISTA);
                             csvExportPokemonAll.AppendLine(pokedata);
                         }
                         Logger.Write($"Export all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
