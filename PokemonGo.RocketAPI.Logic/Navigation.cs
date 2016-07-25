@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Device.Location;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.GeneratedCode;
 using PokemonGo.RocketAPI.Logic.Utils;
