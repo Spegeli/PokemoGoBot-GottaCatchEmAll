@@ -34,7 +34,7 @@ namespace PokemonGo.RocketAPI
 
             Tuple<double, double> latLngFromFile = GetLatLngFromFile("LastCoords.ini");
 
-            if (latLngFromFile != null)
+            if (latLngFromFile != null && latLngFromFile.Item1 != 0 && latLngFromFile.Item2 != 0)
             {
                 SetCoordinates(latLngFromFile.Item1, latLngFromFile.Item2, Settings.DefaultAltitude);
             }
