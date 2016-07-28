@@ -303,7 +303,7 @@ namespace PokemonGo.RocketAPI.Logic
                         foreach (var pokemon in AllPokemon)
                         {
                             string toEncode = $"{(int)pokemon.PokemonId}" + "," + trainerLevel + "," + PokemonInfo.GetLevel(pokemon) + "," + pokemon.Cp + "," + pokemon.Stamina;
-                            //Generate base64 code to make it viewable here https://jackhumbert.github.io/poke-rater/#MTUwLDIzLDE3LDE5MDIsMTE4
+                            //Generate base64 code to make it viewable here http://poke.isitin.org/#MTUwLDIzLDE3LDE5MDIsMTE4
                             var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(toEncode));
 
                             string IsInGym = string.Empty;
@@ -323,7 +323,7 @@ namespace PokemonGo.RocketAPI.Logic
                             string perfection = PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
                             string content_part1 = $"{(int)pokemon.PokemonId},{pokemon.PokemonId},{pokemon.Nickname},{pokemon.Cp}/{PokemonInfo.CalculateMaxCP(pokemon)},";
-                            string content_part2 = $",{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},{IsInGym},{IsFavorite},https://jackhumbert.github.io/poke-rater/#{encoded}";
+                            string content_part2 = $",{pokemon.Move1},{pokemon.Move2},{pokemon.Stamina},{pokemon.IndividualAttack},{pokemon.IndividualDefense},{pokemon.IndividualStamina},{familiecandies},{IsInGym},{IsFavorite},http://poke.isitin.org/#{encoded}";
                             string content = $"{content_part1.Replace(",", $"{ls}")}{perfection}{content_part2.Replace(",", $"{ls}")}";
                             w.WriteLine($"{content}");
 
