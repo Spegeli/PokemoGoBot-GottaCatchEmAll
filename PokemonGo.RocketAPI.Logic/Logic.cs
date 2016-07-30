@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -377,41 +377,50 @@ namespace PokemonGo.RocketAPI.Logic
                 var fortTry = 0;      //Current check
                 const int retryNumber = 50; //How many times it needs to check to clear softban
                 const int zeroCheck = 5; //How many times it checks fort before it thinks it's softban
-                do
+
+                if (!_clientSettings.SkipPokeStopHit)
                 {
-                    fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                    if (fortSearch.ExperienceAwarded > 0 && TimesZeroXPawarded > 0) TimesZeroXPawarded = 0;
-                    if (fortSearch.ExperienceAwarded == 0)
+                    do
                     {
-                        TimesZeroXPawarded++;
-
-                        if (TimesZeroXPawarded > zeroCheck)
+                        fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                        if (fortSearch.ExperienceAwarded > 0 && TimesZeroXPawarded > 0) TimesZeroXPawarded = 0;
+                        if (fortSearch.ExperienceAwarded == 0)
                         {
-                            if ((int)fortSearch.CooldownCompleteTimestampMs != 0)
+                            TimesZeroXPawarded++;
+
+                            if (TimesZeroXPawarded > zeroCheck)
                             {
-                                break; // Check if successfully looted, if so program can continue as this was "false alarm".
+                                if ((int)fortSearch.CooldownCompleteTimestampMs != 0)
+                                {
+                                    break; // Check if successfully looted, if so program can continue as this was "false alarm".
+                                }
+                                fortTry += 1;
+
+                                if (_client.Settings.DebugMode)
+                                    Logger.Write($"Seems your Soft-Banned. Trying to Unban via Pokestop Spins. Retry {fortTry} of {retryNumber - zeroCheck}", LogLevel.Warning);
+
+                                await RandomHelper.RandomDelay(200, 400);
                             }
-                            fortTry += 1;
-
-                            if (_client.Settings.DebugMode)
-                                Logger.Write($"Seems your Soft-Banned. Trying to Unban via Pokestop Spins. Retry {fortTry} of {retryNumber-zeroCheck}", LogLevel.Warning);
-
-                            await RandomHelper.RandomDelay(200, 400);
                         }
-                    }
-                    else
-                    {
-                        _stats.AddExperience(fortSearch.ExperienceAwarded);
-                        _stats.UpdateConsoleTitle(_client, _inventory);
-                        string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
-                        Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
-                        recycleCounter++;
-                        break; //Continue with program as loot was succesfull.
-                    }
-                } while (fortTry < retryNumber - zeroCheck); //Stop trying if softban is cleaned earlier or if 40 times fort looting failed.
+                        else
+                        {
+                            _stats.AddExperience(fortSearch.ExperienceAwarded);
+                            _stats.UpdateConsoleTitle(_client, _inventory);
+                            string EggReward = fortSearch.PokemonDataEgg != null ? "1" : "0";
+                            Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {EggReward}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
+                            recycleCounter++;
+                            break; //Continue with program as loot was succesfull.
+                        }
+                    } while (fortTry < retryNumber - zeroCheck); //Stop trying if softban is cleaned earlier or if 40 times fort looting failed.
 
-                if (recycleCounter >= 5)
-                    await RecycleItems();
+                    if (recycleCounter >= 5)
+                        await RecycleItems();
+                }
+                else {
+                    if (recycleCounter >= 5)
+                        await RecycleItems();
+                    Logger.Write("PokeStop hit skipped", LogLevel.Pokestop);
+                }
             }
         }
 
