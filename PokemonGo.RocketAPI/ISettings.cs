@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using PokemonGo.RocketAPI.Enums;
 using System.Collections.Generic;
@@ -43,6 +43,7 @@ namespace PokemonGo.RocketAPI
         bool UseLuckyEggs { get; }
         bool UseIncense { get; }
         bool DebugMode { get; }
+        bool SkipPokeStopHit { get; }
 
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
         ICollection<PokemonId> PokemonsToEvolve { get; }
