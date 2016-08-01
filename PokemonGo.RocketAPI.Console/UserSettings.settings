@@ -95,5 +95,8 @@
     <Setting Name="EvolveKeepCandiesValue" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
+    <Setting Name="CapturePokemonDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
