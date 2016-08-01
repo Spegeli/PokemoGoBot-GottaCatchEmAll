@@ -342,7 +342,7 @@ namespace PokemonGo.RocketAPI.Logic
                         }
                         w.Close();
                     }
-                    Logger.Write($"Export Player Infos and all Pokemon to \"\\Export\\{filename}\"", LogLevel.Info);
+                    Logger.Write($"Export Player Infos and all Pokemon to \"\\Export\\Profile_{player.Username}_{filename}\"", LogLevel.Info);
                 }
                 catch
                 {

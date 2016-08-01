@@ -25,6 +25,7 @@ namespace PokemonGo.RocketAPI
         bool GPXIgnorePokemon { get; }
         double WalkingSpeedInKilometerPerHour { get; }
         int MaxTravelDistanceInMeters { get; }
+        bool UseTeleportInsteadOfWalking { get; }
 
         bool UsePokemonToNotCatchList { get; }
         bool UsePokemonToNotTransferList { get; }

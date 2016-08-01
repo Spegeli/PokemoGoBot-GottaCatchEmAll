@@ -494,7 +494,7 @@ namespace PokemonGo.RocketAPI
                         useItemRequest);
         }
 
-        public async Task<EvolvePokemonOut> PowerUp(ulong pokemonId)
+        public async Task<EvolvePokemonOut> PowerUpPokemon(ulong pokemonId)
         {
             var customRequest = new EvolvePokemon
             {

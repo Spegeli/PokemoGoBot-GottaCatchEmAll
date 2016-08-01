@@ -33,6 +33,7 @@ namespace PokemonGo.RocketAPI.Console
 
         public double WalkingSpeedInKilometerPerHour => UserSettings.Default.WalkingSpeedInKilometerPerHour;
         public int MaxTravelDistanceInMeters => UserSettings.Default.MaxTravelDistanceInMeters;
+        public bool UseTeleportInsteadOfWalking => UserSettings.Default.UseTeleportInsteadOfWalking;
 
         public bool UsePokemonToNotCatchList => UserSettings.Default.UsePokemonToNotCatchList;
         public bool UsePokemonToNotTransferList => UserSettings.Default.UsePokemonToNotTransferList;

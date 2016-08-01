@@ -95,6 +95,7 @@
     <Compile Include="Exceptions\ArgumentNullException.cs" />
     <Compile Include="Exceptions\GoogleException.cs" />
     <Compile Include="Exceptions\GoogleOfflineException.cs" />
+    <Compile Include="Exceptions\InvalidProtocolBufferException.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\PtcOfflineException.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />

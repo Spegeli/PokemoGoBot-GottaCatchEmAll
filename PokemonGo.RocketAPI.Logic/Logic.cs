@@ -10,7 +10,9 @@ using PokemonGo.RocketAPI.GeneratedCode;
 using PokemonGo.RocketAPI.Logic.Utils;
 using PokemonGo.RocketAPI.Helpers;
 using System.IO;
+using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Logging;
+using System.Diagnostics;
 
 #endregion
 
@@ -51,12 +53,7 @@ namespace PokemonGo.RocketAPI.Logic
                 if (Math.Abs(_clientSettings.DefaultLatitude) <= 0  || Math.Abs(_clientSettings.DefaultLongitude) <= 0)
                 {
                     Logger.Write($"Please change first Latitude and/or Longitude because currently your using default values!", LogLevel.Error);
-                    for (int i = 3; i > 0; i--)
-                    {
-                        Logger.Write($"Script will auto closed in {i * 5} seconds!", LogLevel.Warning);
-                        await Task.Delay(5000);
-                    }
-                    System.Environment.Exit(1);
+                    Environment.Exit(1);
                 }
                 else
                 {
@@ -90,6 +87,39 @@ namespace PokemonGo.RocketAPI.Logic
                     await _client.SetServer();
 
                     await PostLoginExecute();
+                }
+                catch (AccountNotVerifiedException)
+                {
+                    Logger.Write("Account not verified! Exiting...", LogLevel.Error);
+                    await Task.Delay(5000);
+                    Environment.Exit(0);
+                }
+                catch (GoogleException e)
+                {
+                    if (e.Message.Contains("NeedsBrowser"))
+                    {
+                        Logger.Write("As you have Google Two Factor Auth enabled, you will need to insert an App Specific Password into the UserSettings.", LogLevel.Error);
+                        Logger.Write("Opening Google App-Passwords. Please make a new App Password (use Other as Device)", LogLevel.Error);
+                        await Task.Delay(7000);
+                        try
+                        {
+                            Process.Start("https://security.google.com/settings/security/apppasswords");
+                        }
+                        catch (Exception)
+                        {
+                            Logger.Write("https://security.google.com/settings/security/apppasswords");
+                            throw;
+                        }
+                    }
+                    Logger.Write("Make sure you have entered the right Email & Password.", LogLevel.Error);
+                    await Task.Delay(5000);
+                    Environment.Exit(0);
+                }
+                catch (InvalidProtocolBufferException ex) when (ex.Message.Contains("SkipLastField"))
+                {
+                    Logger.Write("Connection refused. Your IP might have been Blacklisted by Niantic. Exiting..", LogLevel.Error);
+                    await Task.Delay(5000);
+                    Environment.Exit(0);
                 }
                 catch (Exception e)
                 {
@@ -366,7 +396,19 @@ namespace PokemonGo.RocketAPI.Logic
 
                 Logger.Write($"Name: {fortInfo.Name} in {distance:0.##} m distance {latlngDebug}", LogLevel.Pokestop);
 
-                await _navigation.HumanLikeWalking(new GeoUtils(pokeStop.Latitude, pokeStop.Longitude), _clientSettings.WalkingSpeedInKilometerPerHour, ExecuteCatchAllNearbyPokemons);
+                if (_clientSettings.UseTeleportInsteadOfWalking)
+                {
+                    await
+                        _client.UpdatePlayerLocation(pokeStop.Latitude, pokeStop.Longitude,
+                            _clientSettings.DefaultAltitude);
+                    Logger.Write($"Using Teleport instead of Walking!", LogLevel.Debug);
+                }
+                else
+                {
+                    await
+                        _navigation.HumanLikeWalking(new GeoUtils(pokeStop.Latitude, pokeStop.Longitude),
+                            _clientSettings.WalkingSpeedInKilometerPerHour, ExecuteCatchAllNearbyPokemons);
+                }
 
                 var timesZeroXPawarded = 0;
                 var fortTry = 0;      //Current check
@@ -466,11 +508,11 @@ namespace PokemonGo.RocketAPI.Logic
                         ? $"{caughtPokemonResponse.Status} Attempt #{attemptCounter}"
                         : $"{caughtPokemonResponse.Status}";
 
-                    var receivedXp = catchStatus == "CatchSuccess" 
+                    var receivedXp = caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess
                         ? $"and received XP {caughtPokemonResponse.Scores.Xp.Sum()}" 
                         : $"";
 
-                    Logger.Write($"({catchStatus}) | {pokemon.PokemonId} - Lvl {PokemonInfo.GetLevel(encounter?.WildPokemon?.PokemonData)} [CP {encounter?.WildPokemon?.PokemonData?.Cp}/{PokemonInfo.CalculateMaxCp(encounter?.WildPokemon?.PokemonData)} | IV: {Math.Round(PokemonInfo.CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData)).ToString("0.00")}% perfect] | Chance: {(float)((int)(encounter?.CaptureProbability?.CaptureProbability_.First() * 100)) / 100} | {distance:0.##}m dist | with a {returnRealBallName(bestPokeball)}Ball {receivedXp}", LogLevel.Pokemon);
+                    Logger.Write($"({catchStatus}) | {pokemon.PokemonId} - Lvl {PokemonInfo.GetLevel(encounter?.WildPokemon?.PokemonData)} [CP {encounter?.WildPokemon?.PokemonData?.Cp}/{PokemonInfo.CalculateMaxCp(encounter?.WildPokemon?.PokemonData)} | IV: {PokemonInfo.CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData).ToString("0.00")}% perfect] | Chance: {(float)((int)(encounter?.CaptureProbability?.CaptureProbability_.First() * 100)) / 100} | {distance:0.##}m dist | with a {returnRealBallName(bestPokeball)}Ball {receivedXp}", LogLevel.Pokemon);
                 }
 
                 attemptCounter++;
@@ -733,12 +775,12 @@ namespace PokemonGo.RocketAPI.Logic
             if (!File.Exists(lastcoordsFile)) return;
             var latLngFromFile = Client.GetLatLngFromFile();
             if (latLngFromFile == null) return;
-            var DistanceInMeters = LocationUtils.CalculateDistanceInMeters(latLngFromFile.Item1, latLngFromFile.Item2, _clientSettings.DefaultLatitude, _clientSettings.DefaultLongitude);
+            var distanceInMeters = LocationUtils.CalculateDistanceInMeters(latLngFromFile.Item1, latLngFromFile.Item2, _clientSettings.DefaultLatitude, _clientSettings.DefaultLongitude);
             var lastModified = File.Exists(lastcoordsFile) ? (DateTime?)File.GetLastWriteTime(lastcoordsFile) : null;
             if (lastModified == null) return;
             var minutesSinceModified = (DateTime.Now - lastModified).HasValue ? (double?)((DateTime.Now - lastModified).Value.Minutes) : null;
-            if (minutesSinceModified == null || minutesSinceModified < 60) return; // Shouldn't really be null, but can be 0 and that's bad for division.
-            var kmph = (DistanceInMeters / 1000) / (minutesSinceModified);
+            if (minutesSinceModified == null || minutesSinceModified < 30) return; // Shouldn't really be null, but can be 0 and that's bad for division.
+            var kmph = (distanceInMeters / 1000) / (minutesSinceModified / 60);
             if (kmph < 80) // If speed required to get to the default location is < 80km/hr
             {
                 File.Delete(lastcoordsFile);

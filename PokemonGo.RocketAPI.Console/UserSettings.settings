@@ -42,7 +42,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="GPXFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">central_park_loop.gpx</Value>
+      <Value Profile="(Default)">GPXFILE.gpx</Value>
     </Setting>
     <Setting Name="UseLuckyEggs" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -94,6 +94,9 @@
     </Setting>
     <Setting Name="EvolveKeepCandiesValue" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="UseTeleportInsteadOfWalking" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

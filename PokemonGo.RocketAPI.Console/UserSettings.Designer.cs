@@ -181,7 +181,7 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("central_park_loop.gpx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("GPXFILE.gpx")]
         public string GPXFile {
             get {
                 return ((string)(this["GPXFile"]));
@@ -392,6 +392,18 @@ namespace PokemonGo.RocketAPI.Console {
             }
             set {
                 this["EvolveKeepCandiesValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseTeleportInsteadOfWalking {
+            get {
+                return ((bool)(this["UseTeleportInsteadOfWalking"]));
+            }
+            set {
+                this["UseTeleportInsteadOfWalking"] = value;
             }
         }
     }
