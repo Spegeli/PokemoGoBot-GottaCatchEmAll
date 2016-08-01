@@ -1,5 +1,6 @@
 ﻿#region
 
+using PokemonGo.RocketAPI.Logging;
 using System;
 using System.Net;
 using System.Reflection;
@@ -9,10 +10,11 @@ using System.Threading;
 #endregion
 
 
-namespace PokemonGo.RocketAPI.Helpers
+namespace PokemonGo.RocketAPI.Logic.Utils
 {
-    public static class Git
+    public static class GitChecker
     {
+        public static string CurrentVersion = $"{Assembly.GetExecutingAssembly().GetName().Version}";
         public static void CheckVersion()
         {
             try
@@ -26,15 +28,17 @@ namespace PokemonGo.RocketAPI.Helpers
                 var gitVersion =
                     new Version(
                         $"{match.Groups[1]}.{match.Groups[2]}.{match.Groups[3]}.{match.Groups[4]}");
+                
                 if (gitVersion <= Assembly.GetExecutingAssembly().GetName().Version)
                 {
-                    Logger.Normal(
+                    Logger.Write(
                         "Awesome! You have already got the newest version! " +
-                        Assembly.GetExecutingAssembly().GetName().Version);
+                        Assembly.GetExecutingAssembly().GetName().Version, LogLevel.Info);
                     return;
                 }
 
-                Logger.Normal(ConsoleColor.DarkGreen, "TThere is a new Version available: https://github.com/Spegeli/Pokemon-Go-Rocket-API");
+                Logger.Write("There is a new Version available: https://github.com/Spegeli/Pokemon-Go-Rocket-API", LogLevel.Info);
+                Logger.Write($"GitHub Version: {gitVersion} | Local Version: {CurrentVersion}", LogLevel.Info);
                 Thread.Sleep(1000);
             }
             catch (Exception)
@@ -49,7 +53,7 @@ namespace PokemonGo.RocketAPI.Helpers
             using (var wC = new WebClient())
                 return
                     wC.DownloadString(
-                        "https://raw.githubusercontent.com/Spegeli/Pokemon-Go-Rocket-API/master/PokemonGo.RocketAPI/Properties/AssemblyInfo.cs");
+                        "https://raw.githubusercontent.com/Spegeli/Pokemon-Go-Rocket-API/master/PokemonGo.RocketAPI.Logic/Properties/AssemblyInfo.cs");
         }
     }
 }

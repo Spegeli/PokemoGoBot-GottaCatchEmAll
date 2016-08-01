@@ -4,7 +4,6 @@ using System;
 
 #endregion
 
-
 namespace PokemonGo.RocketAPI.Helpers
 {
     public class Utils
@@ -14,6 +13,5 @@ namespace PokemonGo.RocketAPI.Helpers
             var bytes = BitConverter.GetBytes(value);
             return BitConverter.ToUInt64(bytes, 0);
         }
-
     }
 }

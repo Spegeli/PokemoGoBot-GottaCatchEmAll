@@ -37,5 +37,19 @@ message Response {
 		ERROR_NOT_ENOUGH_COPIES = 2;
 		ERROR_CANNOT_RECYCLE_INCUBATORS = 3;
 	}
+   }
+
+   message UseItemXpBoostResponse {
+	Result result = 1;
+	AllEnum.ItemType applied_items = 2;
+
+	enum Result {
+		UNSET = 0;
+		SUCCESS = 1;
+		ERROR_INVALID_ITEM_TYPE = 2;
+		ERROR_XP_BOOST_ALREADY_ACTIVE = 3;
+		ERROR_NO_ITEMS_REMAINING = 4;
+		ERROR_LOCATION_UNSET = 5;
+	}
 }
 }

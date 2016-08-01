@@ -1,6 +1,5 @@
 ﻿#region
 
-
 #endregion
 
 
@@ -78,6 +77,6 @@ namespace PokemonGo.RocketAPI.Enums
         SFIDA_UPDATE = 803,
         SFIDA_ACTION = 804,
         SFIDA_DOWSER = 805,
-        SFIDA_CAPTURE = 806,
+        SFIDA_CAPTURE = 806
     }
 }

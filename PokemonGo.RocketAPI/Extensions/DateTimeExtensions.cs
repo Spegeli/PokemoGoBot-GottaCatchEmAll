@@ -4,7 +4,6 @@ using System;
 
 #endregion
 
-
 namespace PokemonGo.RocketAPI.Extensions
 {
     public static class DateTimeExtensions

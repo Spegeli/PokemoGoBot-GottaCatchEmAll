@@ -6,20 +6,20 @@ using PokemonGo.RocketAPI.GeneratedCode;
 
 #endregion
 
-
 namespace PokemonGo.RocketAPI.Helpers
 {
     public static class RequestBuilder
     {
-        public static Request GetInitialRequest(string authToken, AuthType authType, double lat, double lng, double altitude, params Request.Types.Requests[] customRequests)
+        public static Request GetInitialRequest(string authToken, AuthType authType, double lat, double lng,
+            double altitude, params Request.Types.Requests[] customRequests)
         {
-            return new Request()
+            return new Request
             {
                 Altitude = Utils.FloatAsUlong(altitude),
-                Auth = new Request.Types.AuthInfo()
+                Auth = new Request.Types.AuthInfo
                 {
                     Provider = authType == AuthType.Google ? "google" : "ptc",
-                    Token = new Request.Types.AuthInfo.Types.JWT()
+                    Token = new Request.Types.AuthInfo.Types.JWT
                     {
                         Contents = authToken,
                         Unknown13 = 14
@@ -40,13 +40,14 @@ namespace PokemonGo.RocketAPI.Helpers
         public static Request GetInitialRequest(string authToken, AuthType authType, double lat, double lng,
             double altitude, params RequestType[] customRequestTypes)
         {
-            var customRequests = customRequestTypes.ToList().Select(c => new Request.Types.Requests() {Type = (int) c});
+            var customRequests = customRequestTypes.ToList().Select(c => new Request.Types.Requests {Type = (int) c});
             return GetInitialRequest(authToken, authType, lat, lng, altitude, customRequests.ToArray());
         }
 
-        public static Request GetRequest(Request.Types.UnknownAuth unknownAuth, double lat, double lng, double altitude, params Request.Types.Requests[] customRequests)
+        public static Request GetRequest(Request.Types.UnknownAuth unknownAuth, double lat, double lng, double altitude,
+            params Request.Types.Requests[] customRequests)
         {
-            return new Request()
+            return new Request
             {
                 Altitude = Utils.FloatAsUlong(altitude),
                 Unknownauth = unknownAuth,
@@ -62,9 +63,10 @@ namespace PokemonGo.RocketAPI.Helpers
             };
         }
 
-        public static Request GetRequest(Request.Types.UnknownAuth unknownAuth, double lat, double lng, double altitude, params RequestType[] customRequestTypes)
+        public static Request GetRequest(Request.Types.UnknownAuth unknownAuth, double lat, double lng, double altitude,
+            params RequestType[] customRequestTypes)
         {
-            var customRequests = customRequestTypes.ToList().Select(c => new Request.Types.Requests() { Type = (int)c });
+            var customRequests = customRequestTypes.ToList().Select(c => new Request.Types.Requests {Type = (int) c});
             return GetRequest(unknownAuth, lat, lng, altitude, customRequests.ToArray());
         }
     }

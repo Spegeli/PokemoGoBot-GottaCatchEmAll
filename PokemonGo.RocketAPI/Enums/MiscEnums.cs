@@ -1,14 +1,13 @@
 ﻿#region
 
-
 #endregion
 
 
-namespace PokemonGo.RocketAPI.GeneratedCode
+namespace PokemonGo.RocketAPI.Enums
 {
     public class MiscEnums
     {
-        public enum FortType 
+        public enum FortType
         {
             GYM = 0,
             CHECKPOINT = 1

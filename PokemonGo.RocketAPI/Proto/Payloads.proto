@@ -87,7 +87,7 @@ message Pokemon {
   int32 stamina_max = 5;
   .AllEnum.PokemonMove move_1 = 6;
   .AllEnum.PokemonMove move_2 = 7;
-  int32 deployed_fort_id = 8;
+  fixed64 deployed_fort_id = 8;
   string owner_name = 9;
   bool is_egg = 10;
   int32 egg_km_walked_target = 11;

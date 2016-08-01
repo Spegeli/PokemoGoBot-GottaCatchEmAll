@@ -6,7 +6,6 @@ using System.Linq;
 
 #endregion
 
-
 namespace PokemonGo.RocketAPI.Helpers
 {
     public class ProtoHelper

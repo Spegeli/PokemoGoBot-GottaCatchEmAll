@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 
 #endregion
 
-
 namespace PokemonGo.RocketAPI.Helpers
 {
     public class JsonHelper

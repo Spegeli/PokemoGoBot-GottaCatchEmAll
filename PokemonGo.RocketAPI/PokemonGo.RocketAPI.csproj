@@ -11,13 +11,13 @@
     <AssemblyName>Pokemon Go Rocket API</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AssemblyInfoFilePath>Properties\AssemblyInfo.cs</AssemblyInfoFilePath>
+    <AssemblyInfoFilePath>..\PokemonGo.RocketAPI.Logic\Properties\AssemblyInfo.cs</AssemblyInfoFilePath>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
     <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
     <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.Increment</AssemblyVersionSettings>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>2016.7.23.133</AssemblyVersion>
+    <AssemblyVersion>2016.8.1.637</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,9 +42,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.0.0-beta3\lib\dotnet\Google.Protobuf.dll</HintPath>
+      <HintPath>..\packages\Google.Protobuf.3.0.0-beta4\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GPSOAuthSharp, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GPSOAuthSharp.0.0.5\lib\GPSOAuthSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +91,10 @@
     <Compile Include="Enums\MiscEnums.cs" />
     <Compile Include="Enums\RequestType.cs" />
     <Compile Include="Exceptions\AccessTokenExpiredException.cs" />
+    <Compile Include="Exceptions\AccountNotVerifiedException.cs" />
+    <Compile Include="Exceptions\ArgumentNullException.cs" />
+    <Compile Include="Exceptions\GoogleException.cs" />
+    <Compile Include="Exceptions\GoogleOfflineException.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\PtcOfflineException.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
@@ -93,7 +102,6 @@
     <Compile Include="GeneratedCode\Payloads.cs" />
     <Compile Include="GeneratedCode\Request.cs" />
     <Compile Include="GeneratedCode\Response.cs" />
-    <Compile Include="Helpers\Git.cs" />
     <Compile Include="Helpers\HttpClientHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\ProtoHelper.cs" />
@@ -101,10 +109,9 @@
     <Compile Include="Helpers\S2Helper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="Logging\ConsoleLogger.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Login\GoogleLogin.cs" />
+    <Compile Include="Login\GoogleLoginGPSOAuth.cs" />
     <Compile Include="Login\PtcLogin.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
@@ -113,6 +120,7 @@
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\RequestBuilder.cs" />
+    <Compile Include="PokemonInfo.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
