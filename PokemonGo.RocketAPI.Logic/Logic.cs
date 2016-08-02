@@ -33,6 +33,8 @@ namespace PokemonGo.RocketAPI.Logic
         private int _recycleCounter = 0;
         private bool _isInitialized = false;
 
+        public bool loggedIn = false;
+
         public Logic(ISettings clientSettings)
         {
             _clientSettings = clientSettings;
@@ -86,6 +88,8 @@ namespace PokemonGo.RocketAPI.Logic
                     }
 
                     await _client.SetServer();
+
+                    loggedIn = true;
 
                     await PostLoginExecute();
                 }
@@ -576,12 +580,12 @@ namespace PokemonGo.RocketAPI.Logic
             }
         }
 
-        private async Task TransferPokemon()
+        public async Task TransferPokemon(LogLevel loglevel = LogLevel.None)
         {
             await Inventory.GetCachedInventory(_client, true);
             var pokemonToTransfer = await _inventory.GetPokemonToTransfer(_clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsToNotTransfer);
             if (pokemonToTransfer != null && pokemonToTransfer.Any())
-                Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer:", LogLevel.Info);
+                Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer:", LogLevel.Info | loglevel);
 
             foreach (var pokemon in pokemonToTransfer)
             {
@@ -606,21 +610,21 @@ namespace PokemonGo.RocketAPI.Logic
                 if (bestPokemonOfType != null)
                     bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCp(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect";
 
-                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer | loglevel);
             }
         }
 
-        private async Task RecycleItems()
+        public async Task RecycleItems(LogLevel loglevel = LogLevel.None)
         {
             await Inventory.GetCachedInventory(_client, true);
             var items = await _inventory.GetItemsToRecycle(_clientSettings);
             if (items != null && items.Any())
-                Logger.Write($"Found {items.Count()} Recyclable {(items.Count() == 1 ? "Item" : "Items")}:", LogLevel.Info);
+                Logger.Write($"Found {items.Count()} Recyclable {(items.Count() == 1 ? "Item" : "Items")}:", LogLevel.Info | loglevel);
 
             foreach (var item in items)
             {
                 await _client.RecycleItem((ItemId)item.Item_, item.Count);
-                Logger.Write($"{item.Count}x {(ItemId)item.Item_}", LogLevel.Recycling);
+                Logger.Write($"{item.Count}x {(ItemId)item.Item_}", LogLevel.Recycling | loglevel);
 
                 _stats.AddItemsRemoved(item.Count);
                 _stats.UpdateConsoleTitle(_client, _inventory);
@@ -696,21 +700,21 @@ namespace PokemonGo.RocketAPI.Logic
             return berries.OrderBy(g => g.Key).First().Key;
         }
 
-        private async Task DisplayHighests()
+        public async Task DisplayHighests(LogLevel loglevel = LogLevel.None)
         {
             Logger.Write("====== DisplayHighestsCP ======", LogLevel.Info, ConsoleColor.Yellow);
             var highestsPokemonCp = await _inventory.GetHighestsCp(10);
             foreach (var pokemon in highestsPokemonCp)
                 Logger.Write(
                     $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCp(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
-                    LogLevel.Info, ConsoleColor.Yellow);
+                    LogLevel.Info | loglevel, ConsoleColor.Yellow);
             Logger.Write("====== DisplayHighestsPerfect ======", LogLevel.Info, ConsoleColor.Yellow);
             var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(10);
             foreach (var pokemon in highestsPokemonPerfect)
             {
                 Logger.Write(
                     $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCp(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
-                    LogLevel.Info, ConsoleColor.Yellow);
+                    LogLevel.Info | loglevel, ConsoleColor.Yellow);
             }
         }
 
@@ -793,6 +797,90 @@ namespace PokemonGo.RocketAPI.Logic
             }
         }
         */
+
+        public async Task ExportPokemonData()
+        {
+            await _inventory.ExportPokemonToCsv(_playerProfile.Profile);
+        }
+
+        public async Task ListItems()
+        {
+            await Inventory.GetCachedInventory(_client);
+            var myItems = await _inventory.GetItems();
+
+            string str = "Items in the inventory: ";
+            int count = 0;
+            foreach (Item item in myItems)
+            {
+                str += $"\r\n{(ItemId)item.Item_,-30} {item.Count}";
+                count++;
+            }
+            Logger.Write(str, LogLevel.Console);
+            Logger.Write("Total: " + count.ToString(), LogLevel.Console);
+        }
+
+        public async Task ListPokemon()
+        {
+            await Inventory.GetCachedInventory(_client, true);
+            var pokemons = await _inventory.GetPokemons();
+
+            string str = $"Pokemons in the inventory: \r\n{"Pokemon",-15} {"CP",5}/{"MaxCP",-5} {"IV",-6}    {"IVl",4}  NickName";
+            int count = 0;
+            foreach (PokemonData pokemon in pokemons)
+            {
+                string nickName = pokemon.Nickname;
+                nickName = nickName == "" ? "" : $"[{nickName}]";
+                str += $"\r\n{pokemon.PokemonId,-15} {pokemon.Cp,5}/{PokemonInfo.CalculateMaxCp(pokemon),-5} {Math.Round(PokemonInfo.CalculatePokemonPerfection(pokemon)).ToString("0.00"),-6}%   {PokemonInfo.GetLevel(pokemon),4}  {nickName}";
+                count++;
+            }
+
+            Logger.Write(str, LogLevel.Console);
+            Logger.Write("Total: " + count.ToString(), LogLevel.Console);
+        }
+
+        public void SettingCommandHandler(string param)
+        {
+            if (param.StartsWith("reload"))
+            {
+                _clientSettings.LoadSettings();
+                Logger.Write("Settings reloaded", LogLevel.Info | LogLevel.Console);
+                return;
+            }
+
+            string str = "Item recycle filters:";
+            foreach (KeyValuePair<ItemId, int> filter in _clientSettings.ItemRecycleFilter)
+            {
+                str += $"\r\n{filter.Key}={filter.Value}";
+            }
+            Logger.Write(str, LogLevel.Console);
+
+            str = "Not to transfer list:";
+            foreach (PokemonId pokemonID in _clientSettings.PokemonsToNotTransfer)
+            {
+                str += $"\r\n{pokemonID}";
+            }
+            Logger.Write(str, LogLevel.Console);
+
+
+            str = "Evolve list:";
+            foreach (PokemonId pokemonID in _clientSettings.PokemonsToEvolve)
+            {
+                str += $"\r\n{pokemonID}";
+            }
+            Logger.Write(str, LogLevel.Console);
+
+            str = "Not to catch list:";
+            foreach (PokemonId pokemonID in _clientSettings.PokemonsToNotCatch)
+            {
+                str += $"\r\n{pokemonID}";
+            }
+            Logger.Write(str, LogLevel.Console);
+        }
+
+        public void LocationCommandHandler(string param)
+        {
+            Logger.Write($"Current latitude: {_client.CurrentLat}, current longtitude: {_client.CurrentLng}", LogLevel.Console);
+        }
     }
 }
  

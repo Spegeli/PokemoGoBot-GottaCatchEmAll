@@ -18,6 +18,9 @@ namespace PokemonGo.RocketAPI.Logging
         private static string _currentFile = string.Empty;
         private static readonly string Path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Logs");
 
+        public static bool consoleMode = false;
+        public static bool logToFile = false;   //Disable by default to protect disk
+
         //private static Logger _logger;
 
         /// <summary>
@@ -42,6 +45,18 @@ namespace PokemonGo.RocketAPI.Logging
         public static void Write(string message, LogLevel level = LogLevel.None, ConsoleColor color = ConsoleColor.White)
         {
             Console.OutputEncoding = Encoding.Unicode;
+
+            if ((level & LogLevel.Console) != 0)
+            {
+                //Console display
+                level &= ~LogLevel.Console;
+            }
+            else
+            {
+                //Normal log
+                if (consoleMode)
+                    return;     //Doesn't display normal info in console
+            }
 
             switch (level)
             {
@@ -106,7 +121,9 @@ namespace PokemonGo.RocketAPI.Logging
                     Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {message}");
                     break;
             }
-            Log(string.Concat($"[{DateTime.Now.ToString("HH:mm:ss")}] ", message));
+
+            if (logToFile)
+                Log(string.Concat($"[{DateTime.Now.ToString("HH:mm:ss")}] ", message));
         }
 
         private static void Log(string message)
@@ -135,6 +152,7 @@ namespace PokemonGo.RocketAPI.Logging
         Berry = 10,
         Egg = 11,
         Incense = 12,
-        Recycling = 13
+        Recycling = 13,
+        Console = 0x80
     }
 }

@@ -29,18 +29,21 @@ namespace PokemonGo.RocketAPI.Console
             ServicePointManager.ServerCertificateValidationCallback = Validator;
             Logger.SetLogger();
 
+            Logic.Logic logic = new Logic.Logic(new Settings());
+
             Task.Run(() =>
             {
                 try
                 {
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    logic.Execute().Wait();
                 }
                 catch (PtcOfflineException)
                 {
                     Logger.Write("PTC Servers are probably down OR your credentials are wrong. Try google", LogLevel.Error);
                     Logger.Write("Trying again in 60 seconds...");
                     Thread.Sleep(60000);
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    logic = new Logic.Logic(new Settings());
+                    logic.Execute().Wait();
                 }
                 catch (AccountNotVerifiedException)
                 {
@@ -50,10 +53,25 @@ namespace PokemonGo.RocketAPI.Console
                 catch (Exception ex)
                 {
                     Logger.Write($"Unhandled exception: {ex}", LogLevel.Error);
-                    new Logic.Logic(new Settings()).Execute().Wait();
+                    logic = new Logic.Logic(new Settings());
+                    logic.Execute().Wait();
                 }
             });
-             System.Console.ReadLine();
+
+
+            Logger.Write("Please check your settings before logging in!", LogLevel.Console | LogLevel.Warning);
+            Logger.Write("Command system is introduced! type console to enter console mode!", LogLevel.Console);
+
+            CommandHost cmdHost = new CommandHost(logic);
+
+
+            bool running = cmdHost.InvokeCommand(System.Console.ReadLine());
+            while (running)
+            {
+                System.Console.ForegroundColor = ConsoleColor.White;
+                System.Console.Write(">");
+                running = cmdHost.InvokeCommand(System.Console.ReadLine());
+            }
         }
 
         public static bool Validator(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
