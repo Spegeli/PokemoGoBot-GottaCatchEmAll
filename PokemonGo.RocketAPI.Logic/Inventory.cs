@@ -335,7 +335,7 @@ namespace PokemonGo.RocketAPI.Logic
                             var perfection = PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00");
                             perfection = perfection.Replace(",", ls == "," ? "." : ",");
                             string contentPart1 = $"\"{(int)pokemon.PokemonId}\",\"{pokemon.PokemonId}\",\"{pokemon.Nickname}\",";
-                            string contentPart2 = $",\"{pokemon.Cp}\" / {PokemonInfo.CalculateMaxCp(pokemon)},";
+                            string contentPart2 = $",\"{pokemon.Cp} / {PokemonInfo.CalculateMaxCp(pokemon)}\",";
                             string contentPart3 = $",\"{pokemon.Move1}\",\"{pokemon.Move2}\",\"{pokemon.Stamina}\",\"{pokemon.IndividualAttack}\",\"{pokemon.IndividualDefense}\",\"{pokemon.IndividualStamina}\",\"{familiecandies}\",\"{isInGym}\",\"{isFavorite}\",http://poke.isitin.org/#{encoded}";
                             string content = $"{contentPart1.Replace(",", $"{ls}")}\"{PokemonInfo.GetLevel(pokemon)}\"{contentPart2.Replace(",", $"{ls}")}\"{perfection}\"{contentPart3.Replace(",", $"{ls}")}";
                             w.WriteLine($"{content}");
