@@ -26,18 +26,13 @@ namespace PokemonGo.RocketAPI.Logging
         /// <summary>
         /// Set the logger. All future requests to <see cref="Write(string,LogLevel,ConsoleColor)"/> will use that logger, any old will be unset.
         /// </summary>
-        public static void SetLogger(string profileName = "")
+        public static void SetLogger()
 		{
             if (!Directory.Exists(Path))
             {
                 Directory.CreateDirectory(Path);
             }
-
-            if (profileName != "")
-                _currentFile = profileName + "_";
-
-            _currentFile += DateTime.Now.ToString("yyyy-MM-dd - HH.mm.ss");
-            
+            _currentFile = DateTime.Now.ToString("yyyy-MM-dd - HH.mm.ss");
             Log($"Initializing Rocket logger @ {DateTime.Now}...");
         }
 
