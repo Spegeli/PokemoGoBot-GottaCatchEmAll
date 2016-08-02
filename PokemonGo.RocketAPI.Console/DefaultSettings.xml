@@ -1,0 +1,78 @@
+<root>
+  <PtcUsername>
+  </PtcUsername>
+  <PtcPassword>
+  </PtcPassword>
+  <DefaultLatitude>-33.8589188036947</DefaultLatitude>
+  <DefaultLongitude>151.213339269161</DefaultLongitude>
+  <DefaultAltitude>10</DefaultAltitude>
+  <UseGPXPathing>False</UseGPXPathing>
+  <GPXFile>GPXFILE.gpx</GPXFile>
+  <GPXIgnorePokestops>False</GPXIgnorePokestops>
+  <GPXIgnorePokemon>False</GPXIgnorePokemon>
+  <WalkingSpeedInKilometerPerHour>50</WalkingSpeedInKilometerPerHour>
+  <MaxTravelDistanceInMeters>1000</MaxTravelDistanceInMeters>
+  <UsePokemonToNotCatchList>False</UsePokemonToNotCatchList>
+  <UsePokemonToNotTransferList>True</UsePokemonToNotTransferList>
+  <EvolvePokemon>False</EvolvePokemon>
+  <EvolveOnlyPokemonAboveIV>False</EvolveOnlyPokemonAboveIV>
+  <EvolveOnlyPokemonAboveIVValue>95</EvolveOnlyPokemonAboveIVValue>
+  <TransferPokemon>True</TransferPokemon>
+  <TransferPokemonKeepDuplicateAmount>2</TransferPokemonKeepDuplicateAmount>
+  <NotTransferPokemonsThatCanEvolve>False</NotTransferPokemonsThatCanEvolve>
+  <UseTransferPokemonKeepAboveCP>True</UseTransferPokemonKeepAboveCP>
+  <TransferPokemonKeepAboveCP>1200</TransferPokemonKeepAboveCP>
+  <UseTransferPokemonKeepAboveIV>True</UseTransferPokemonKeepAboveIV>
+  <TransferPokemonKeepAboveIVPercentage>90</TransferPokemonKeepAboveIVPercentage>
+  <UseLuckyEggs>False</UseLuckyEggs>
+  <UseIncense>False</UseIncense>
+  <PrioritizeIVOverCP>True</PrioritizeIVOverCP>
+  <UseTeleportInsteadOfWalking>False</UseTeleportInsteadOfWalking>
+  <EvolveKeepCandiesValue>200</EvolveKeepCandiesValue>
+  <DebugMode>False</DebugMode>
+  <ItemRecycleList>
+ItemUnknown=0
+ItemPokeBall=25
+ItemGreatBall=50
+ItemUltraBall=75
+ItemMasterBall=100
+ItemPotion=0
+ItemSuperPotion=10
+ItemHyperPotion=25
+ItemMaxPotion=75
+ItemRevive=15
+ItemMaxRevive=50
+ItemLuckyEgg=200
+ItemIncenseOrdinary=100
+ItemIncenseSpicy=100
+ItemIncenseCool=100
+ItemIncenseFloral=100
+ItemTroyDisk=100
+ItemXAttack=100
+ItemXDefense=100
+ItemXMiracle=100
+ItemRazzBerry=20
+ItemBlukBerry=10
+ItemNanabBerry=10
+ItemWeparBerry=30
+ItemPinapBerry=30
+ItemSpecialCamera=100
+ItemIncubatorBasicUnlimited=100
+ItemIncubatorBasic=100
+ItemPokemonStorageUpgrade=100
+ItemItemStorageUpgrade=100
+</ItemRecycleList>
+  <PokemonsToEvolve>
+  </PokemonsToEvolve>
+  <PokemonsToNotTransfer>
+Dragonite
+Charizard
+Zapdos
+Snorlax
+Alakazam
+Mew
+Mewtwo
+</PokemonsToNotTransfer>
+  <PokemonsToNotCatch>
+  </PokemonsToNotCatch>
+</root>

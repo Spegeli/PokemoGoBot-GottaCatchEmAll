@@ -29,7 +29,6 @@ namespace PokemonGo.RocketAPI.Logic
         private GetPlayerResponse _playerProfile;
         private static DateTime _lastLuckyEggTime;
         private static DateTime _lastIncenseTime;
-        private readonly string _configsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
 
         private int _recycleCounter = 0;
         private bool _isInitialized = false;
@@ -37,7 +36,7 @@ namespace PokemonGo.RocketAPI.Logic
         public Logic(ISettings clientSettings)
         {
             _clientSettings = clientSettings;
-            ResetCoords();
+            //ResetCoords();
             _client = new Client(_clientSettings);
             _inventory = new Inventory(_client);
             _stats = new BotStats();
@@ -58,11 +57,13 @@ namespace PokemonGo.RocketAPI.Logic
                 else
                 {
                     Logger.Write($"Make sure Lat & Lng is right. Exit Program if not! Lat: {_client.CurrentLat} Lng: {_client.CurrentLng}", LogLevel.Warning);
+                    /*
                     for (int i = 3; i > 0; i--)
                     {
                         Logger.Write($"Script will continue in {i * 5} seconds!", LogLevel.Warning);
                         await Task.Delay(5000);
                     }
+                    */
                 }
             }
             Logger.Write($"Logging in via: {_clientSettings.AuthType}", LogLevel.Info);
@@ -76,7 +77,7 @@ namespace PokemonGo.RocketAPI.Logic
                             await _client.DoPtcLogin(_clientSettings.PtcUsername, _clientSettings.PtcPassword);
                             break;
                         case AuthType.Google:
-                            await _client.DoGoogleLogin(_clientSettings.GoogleEmail, _clientSettings.GooglePassword);
+                            _client.DoGoogleLogin();
                             break;
                         default:
                             Logger.Write("wrong AuthType");
@@ -139,7 +140,7 @@ namespace PokemonGo.RocketAPI.Logic
                     await _client.DoPtcLogin(_clientSettings.PtcUsername, _clientSettings.PtcPassword);
                     break;
                 case AuthType.Google:
-                    await _client.DoGoogleLogin(_clientSettings.GoogleEmail, _clientSettings.GooglePassword);
+                     _client.DoGoogleLogin();
                     break;
             }
 
@@ -769,11 +770,11 @@ namespace PokemonGo.RocketAPI.Logic
         /// <summary>
         /// Resets coords if someone could realistically get back to the default coords points since they were last updated (program was last run)
         /// </summary>
-        private void ResetCoords(string filename = "LastCoords.ini")
+        /*
+        private void ResetCoords()
         {
-            var lastcoordsFile = Path.Combine(_configsPath, filename);
             if (!File.Exists(lastcoordsFile)) return;
-            var latLngFromFile = Client.GetLatLngFromFile();
+            var latLngFromFile = _client.GetLatLngFromFile();
             if (latLngFromFile == null) return;
             var distanceInMeters = LocationUtils.CalculateDistanceInMeters(latLngFromFile.Item1, latLngFromFile.Item2, _clientSettings.DefaultLatitude, _clientSettings.DefaultLongitude);
             var lastModified = File.Exists(lastcoordsFile) ? (DateTime?)File.GetLastWriteTime(lastcoordsFile) : null;
@@ -783,15 +784,15 @@ namespace PokemonGo.RocketAPI.Logic
             var kmph = (distanceInMeters / 1000) / (minutesSinceModified / 60);
             if (kmph < 80) // If speed required to get to the default location is < 80km/hr
             {
-                File.Delete(lastcoordsFile);
-                Logger.Write("Detected realistic Traveling , using UserSettings.settings", LogLevel.Warning);
-                //Client.SetCoordinates(_client.Settings.DefaultLatitude, _client.Settings.DefaultLongitude, _client.Settings.DefaultAltitude);
+                Logger.Write("Detected realistic Traveling , using default location", LogLevel.Warning);
+                _client.SetCoordinates(_client.Settings.DefaultLatitude, _client.Settings.DefaultLongitude, _client.Settings.DefaultAltitude);
             }
             else
             {
-                Logger.Write("Not realistic Traveling at " + kmph + ", using last saved Coords.ini", LogLevel.Warning);
+                Logger.Write("Not realistic Traveling at " + kmph + ", using last saved Coords", LogLevel.Warning);
             }
         }
+        */
     }
 }
  

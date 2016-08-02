@@ -11,11 +11,13 @@ namespace PokemonGo.RocketAPI
 {
     public interface ISettings
     {
+        void SetSavedData(string name, string value);
+        string GetSavedData(string name, string value = "");
+        void LoadSettings();
+
         AuthType AuthType { get; }
         string PtcPassword { get; }
         string PtcUsername { get; }
-        string GoogleEmail { get; }
-        string GooglePassword { get; }
         double DefaultLatitude { get; }
         double DefaultLongitude { get; }
         double DefaultAltitude { get; }

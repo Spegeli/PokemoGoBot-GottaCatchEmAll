@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Google.Protobuf;
-using DankMemes.GPSOAuthSharp;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Extensions;
@@ -29,9 +28,6 @@ namespace PokemonGo.RocketAPI
         private Request.Types.UnknownAuth _unknownAuth;
         private Random _rand;
 
-        private static readonly string ConfigsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
-        private static readonly string LastcoordsFile = Path.Combine(ConfigsPath, "LastCoords.ini");
-
         public Client(ISettings settings)
         {
             Settings = settings;
@@ -44,8 +40,9 @@ namespace PokemonGo.RocketAPI
             }
             else
             {
-                if (!File.Exists(LastcoordsFile) || !File.ReadAllText(LastcoordsFile).Contains(":"))
-                    Logger.Write("Missing Settings File \"LastCoords.ini\", using default settings for coordinates and create a new one...");
+                string latlngFromFile = Settings.GetSavedData("LastCoords");
+                if (!latlngFromFile.Contains(":"))
+                    Logger.Write("Missing last coord record, using default settings for coordinates...", LogLevel.Info);
                 SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
             }
 
@@ -69,35 +66,34 @@ namespace PokemonGo.RocketAPI
         /// Gets the lat LNG from file.
         /// </summary>
         /// <returns>Tuple&lt;System.Double, System.Double&gt;.</returns>
-        public static Tuple<double, double> GetLatLngFromFile()
+        public Tuple<double, double> GetLatLngFromFile()
         {
-            if (!Directory.Exists(ConfigsPath))
-                Directory.CreateDirectory(ConfigsPath);
-            if (File.Exists(LastcoordsFile) && File.ReadAllText(LastcoordsFile).Contains(":"))
+
+            string latlngFromFile = Settings.GetSavedData("LastCoords");
+            if (latlngFromFile.Contains(":"))
             {
-                var latlngFromFile = File.ReadAllText(LastcoordsFile);
                 var latlng = latlngFromFile.Split(':');
                 if (latlng[0].Length != 0 && latlng[1].Length != 0)
                 {
                     try
                     {
-                        var tempLat = Convert.ToDouble(latlng[0]);
-                        var tempLong = Convert.ToDouble(latlng[1]);
+                        double temp_lat = Convert.ToDouble(latlng[0]);
+                        double temp_long = Convert.ToDouble(latlng[1]);
 
-                        if (tempLat >= -90 && tempLat <= 90 && tempLong >= -180 && tempLong <= 180)
+                        if (temp_lat >= -90 && temp_lat <= 90 && temp_long >= -180 && temp_long <= 180)
                         {
                             //SetCoordinates(Convert.ToDouble(latlng[0]), Convert.ToDouble(latlng[1]), Settings.DefaultAltitude);
-                            return new Tuple<double, double>(tempLat, tempLong);
+                            return new Tuple<double, double>(temp_lat, temp_long);
                         }
                         else
                         {
-                            Logger.Write("Coordinates in \"\\Settings\\LastCoords.ini\" file are invalid, using the default coordinates", LogLevel.Error);
+                            Logger.Write("Coordinates in saved data are invalid, using the default coordinates", LogLevel.Error);
                             return null;
                         }
                     }
                     catch (FormatException)
                     {
-                        Logger.Write("Coordinates in \"\\Settings\\LastCoords.ini\" file are invalid, using the default coordinates", LogLevel.Error);
+                        Logger.Write("Coordinates in saved data are invalid, using the default coordinates", LogLevel.Error);
                         return null;
                     }
                 }
@@ -138,10 +134,32 @@ namespace PokemonGo.RocketAPI
                     _httpClient.PostProtoPayload<Request, CatchPokemonResponse>($"https://{_apiUrl}/rpc", catchPokemonRequest);
         }
         
-        public async Task DoGoogleLogin(string username, string password)
+        public void DoGoogleLogin()
         {
             _authType = AuthType.Google;
-            AccessToken = await GoogleLoginGPSOAuth.DoLogin(username, password);
+            GoogleLogin login = new GoogleLogin();
+
+            string refresh_token = Settings.GetSavedData("GoogleRefreshToken", "");
+            if (refresh_token == "")
+            {
+                login.Login();
+                Settings.SetSavedData("GoogleRefreshToken", login.refresh_token);
+                Logger.Write("Google refresh token has been saved!", LogLevel.Info);
+            }
+            else
+            {
+                Logger.Write("Found google refresh token from lase session", LogLevel.Info);
+                login.refresh_token = refresh_token;
+                if (!login.RefreshToken())
+                {
+                    Logger.Write("Google fresh token from last session is invalid, please authorize the program again!", LogLevel.Error);
+                    login.Login();
+                    Settings.SetSavedData("GoogleRefreshToken", login.refresh_token);
+                    Logger.Write("Google refresh token has been saved!", LogLevel.Info);
+                }
+            }
+
+            AccessToken = login.id_token;
         }
 
         public async Task DoPtcLogin(string username, string password)
@@ -297,10 +315,10 @@ namespace PokemonGo.RocketAPI
             return await _httpClient.PostProtoPayload<Request, RecycleInventoryItemResponse>($"https://{_apiUrl}/rpc", releasePokemonRequest);
         }
 
-        public void SaveLatLng(double lat, double lng, string filename = "LastCoords.ini")
+        public void SaveLatLng(double lat, double lng)
         {
             var latlng = lat + ":" + lng;
-            File.WriteAllText(Path.Combine(ConfigsPath, filename), latlng);
+            Settings.SetSavedData("LastCoords", latlng);
         }
 
         public async Task<FortSearchResponse> SearchFort(string fortId, double fortLat, double fortLng)
