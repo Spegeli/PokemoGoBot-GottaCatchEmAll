@@ -63,11 +63,14 @@ namespace PokemonGo.RocketAPI.Console
         public ICollection<PokemonId> PokemonsToNotCatch => _pokemonsToNotCatch;
         public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter => itemRecycleFilter;
 
-        public Settings()
+        public Settings(string profileName = "")
         {
+            configFile = Path.Combine(Directory.GetCurrentDirectory(),
+                profileName=="" ? "config.xml" : $"config_{profileName}.xml");
+            savedDataFile = Path.Combine(Directory.GetCurrentDirectory(),
+                profileName == "" ? "savedData.xml" : $"savedData_{profileName}.xml");
             LoadSettings();
         }
-
         
 
         /// <summary>
@@ -112,7 +115,7 @@ namespace PokemonGo.RocketAPI.Console
         }
 
         #region SavedData
-        string savedDataFile = Path.Combine(Directory.GetCurrentDirectory(), "LastData.xml");
+        string savedDataFile;
         XmlDocument savedDataXml = new XmlDocument();
         XmlNode savedDataRoot;
 
@@ -167,12 +170,12 @@ namespace PokemonGo.RocketAPI.Console
         #endregion
 
         #region Config
-        string configFile = Path.Combine(Directory.GetCurrentDirectory(), "config.xml");
+        string configFile;
         XmlDocument configXml = new XmlDocument();
         XmlNode configRoot;
 
         XmlDocument defConfigXml = new XmlDocument();
-        XmlNode defConfigRoot = null;
+        XmlNode defConfigRoot;
 
 
         string GetConfigString(string name)
