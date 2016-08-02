@@ -29,7 +29,21 @@ namespace PokemonGo.RocketAPI.Console
             ServicePointManager.ServerCertificateValidationCallback = Validator;
             Logger.SetLogger();
 
-            Logic.Logic logic = new Logic.Logic(new Settings());
+            string profileName = "";
+
+            if (Environment.GetCommandLineArgs().Length > 1)
+                profileName = Environment.GetCommandLineArgs()[1];
+
+            if (profileName == "")
+            {
+                Logger.Write("Loading configuration for default profile");
+            }
+            else
+            {
+                Logger.Write("Loading configuration for profile: " + profileName);
+            }
+
+            Logic.Logic logic = new Logic.Logic(new Settings(profileName));
 
             Task.Run(() =>
             {
