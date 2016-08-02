@@ -30,28 +30,35 @@ namespace PokemonGo.RocketAPI.Logic
         }
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCp = false, IEnumerable<PokemonId> filter = null)
-        {    
-            var myPokemon = await GetPokemons();
-            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0).ToList();
-            if (_client.Settings.UsePokemonToNotTransferList && filter != null)
-                pokemonList = pokemonList.Where(p => !filter.Contains(p.PokemonId)).ToList();
-            if (_client.Settings.UseTransferPokemonKeepAboveCP)
-                pokemonList = pokemonList.Where(p => p.Cp < _client.Settings.TransferPokemonKeepAboveCP).ToList();
-            if (_client.Settings.UseTransferPokemonKeepAboveIV)
-                pokemonList = pokemonList.Where(p => PokemonInfo.CalculatePokemonPerfection(p) < _client.Settings.TransferPokemonKeepAboveIVPercentage).ToList();
+        {
+            IEnumerable<PokemonData> myPokemon = await GetPokemons();
+
+            //Exclude pokemon in gym and favourite pokemons
+            List<PokemonData> pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0).ToList();
+
+            List<PokemonData> pokemonMustTransfer = PokemonFilter.GetMustTransferList(pokemonList, _client.Settings);
+
+            pokemonList = PokemonFilter.GetCanTransferList(pokemonList, _client.Settings);
+
 
 
             if (!keepPokemonsThatCanEvolve)
-                return pokemonList
+            {
+                var ret = pokemonList
                     .GroupBy(p => p.PokemonId)
                     .Where(x => x.Any())
-                    .SelectMany(
-                        p =>
-                            p.OrderByDescending(
-                                x => (prioritizeIVoverCp) ? PokemonInfo.CalculatePokemonPerfection(x) : x.Cp)
+                    .SelectMany(p =>
+                            p.OrderByDescending(x => (prioritizeIVoverCp) ? PokemonInfo.CalculatePokemonPerfection(x) : x.Cp)
                                 .ThenBy(n => n.StaminaMax)
                                 .Skip(_client.Settings.TransferPokemonKeepDuplicateAmount)
-                                .ToList());
+                                .ToList()).ToList();
+
+                foreach (PokemonData i in pokemonMustTransfer)
+                    if (!ret.Contains(i))
+                        ret.Add(i);
+                return ret;
+            }
+                 
 
 
             var results = new List<PokemonData>();
@@ -84,6 +91,11 @@ namespace PokemonGo.RocketAPI.Logic
                     .Skip(amountToSkip)
                     .ToList());
             }
+
+
+            foreach (PokemonData i in pokemonMustTransfer)
+                if (!results.Contains(i))
+                    results.Add(i);
 
             return results;
         }

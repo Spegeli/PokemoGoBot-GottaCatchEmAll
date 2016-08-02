@@ -52,5 +52,6 @@ namespace PokemonGo.RocketAPI
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsToNotTransfer { get; }
         ICollection<PokemonId> PokemonsToNotCatch { get; }
+        Dictionary<PokemonId, PokemonFilterOption> PokemonTransferFilter { get; }
     }
 }

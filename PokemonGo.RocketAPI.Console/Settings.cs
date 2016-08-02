@@ -21,7 +21,8 @@ namespace PokemonGo.RocketAPI.Console
         private ICollection<PokemonId> _pokemonsToNotTransfer = new LinkedList<PokemonId>();
         private ICollection<PokemonId> _pokemonsToNotCatch = new LinkedList<PokemonId>();
         private ICollection<KeyValuePair<ItemId, int>> itemRecycleFilter = new Dictionary<ItemId, int>();
-        
+        private Dictionary<PokemonId, PokemonFilterOption> _pokemonTransferFilter = new Dictionary<PokemonId, PokemonFilterOption>();
+
         public AuthType AuthType => PtcUsername == "" ? AuthType.Google : AuthType.Ptc;
 
         public string PtcUsername => GetConfigString("PtcUsername");
@@ -62,6 +63,7 @@ namespace PokemonGo.RocketAPI.Console
         public ICollection<PokemonId> PokemonsToNotTransfer => _pokemonsToNotTransfer;
         public ICollection<PokemonId> PokemonsToNotCatch => _pokemonsToNotCatch;
         public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter => itemRecycleFilter;
+        public Dictionary<PokemonId, PokemonFilterOption> PokemonTransferFilter => _pokemonTransferFilter;
 
         public Settings(string profileName = "")
         {
@@ -112,6 +114,7 @@ namespace PokemonGo.RocketAPI.Console
             LoadPokemonList("PokemonsToEvolve", _pokemonsToEvolve);
             LoadPokemonList("PokemonsToNotTransfer", _pokemonsToNotTransfer);
             LoadPokemonList("PokemonsToNotCatch", _pokemonsToNotCatch);
+            LoadPokemonTransferFilters();
         }
 
         #region SavedData
@@ -232,7 +235,7 @@ namespace PokemonGo.RocketAPI.Console
         #endregion
 
         #region List
-        public void LoadItemRecycleList()
+        private void LoadItemRecycleList()
         {
             string rawData = GetConfigString("ItemRecycleList");
 
@@ -278,5 +281,33 @@ namespace PokemonGo.RocketAPI.Console
             }
         }
         #endregion
+
+        private void LoadPokemonTransferFilters()
+        {
+            XmlNode xmlFilters = configRoot.SelectSingleNode("PokemonFilters");
+            if (xmlFilters == null)
+            {
+                configRoot.AppendChild(configXml.CreateElement("PokemonFilters")).InnerText = "";
+                configXml.Save(configFile);
+                return;
+            }
+
+            _pokemonTransferFilter.Clear();
+
+            foreach (XmlNode filter in xmlFilters.ChildNodes)
+            {
+                string pokemonName = filter.Attributes["PokemonID"].InnerText;
+                PokemonId pokemonID = (PokemonId)Enum.Parse(typeof(PokemonId), pokemonName);
+                PokemonFilterOption filterOption = new PokemonFilterOption()
+                {
+                    PokemonID = pokemonID,
+                    MinimumCPToConsiderKeep = int.Parse(filter.SelectSingleNode("MinimumCPToConsiderKeep").InnerText),
+                    MinimumIVToConsiderKeep = float.Parse(filter.SelectSingleNode("MinimumIVToConsiderKeep").InnerText),
+                    MinimumCPToKeep = int.Parse(filter.SelectSingleNode("MinimumCPToKeep").InnerText),
+                    MinimumIVToKeep = float.Parse(filter.SelectSingleNode("MinimumIVToKeep").InnerText)
+                };
+                _pokemonTransferFilter.Add(filterOption.PokemonID, filterOption);
+            }
+        }
     }
 }
