@@ -38,8 +38,8 @@ namespace PokemonGo.RocketAPI.Tests
             // 15/9/9 = 80%
             // 9/9/15 = 70%
             // 9/9/9 = 60%
-            myPokemonsList.Add(new PokemonData { Id = 1, PokemonId = PokemonId.Abra, Cp = 100, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 15, IndividualDefense = 15, IndividualStamina = 15 }); // 100 IV
-            myPokemonsList.Add(new PokemonData { Id = 2, PokemonId = PokemonId.Abra, Cp = 150, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 15, IndividualDefense = 15, IndividualStamina = 15 }); // 100 IV
+            myPokemonsList.Add(new PokemonData { Id = 1, PokemonId = PokemonId.Abra, Cp = 100, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 15, IndividualDefense = 15, IndividualStamina = 9 }); // 90 IV
+            myPokemonsList.Add(new PokemonData { Id = 2, PokemonId = PokemonId.Abra, Cp = 150, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 15, IndividualDefense = 15, IndividualStamina = 9 }); // 90 IV
             myPokemonsList.Add(new PokemonData { Id = 3, PokemonId = PokemonId.Abra, Cp = 200, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 9, IndividualDefense = 9, IndividualStamina = 9 }); // 60 IV
             myPokemonsList.Add(new PokemonData { Id = 4, PokemonId = PokemonId.Abra, Cp = 250, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 9, IndividualDefense = 9, IndividualStamina = 9 }); // 60 IV
             myPokemonsList.Add(new PokemonData { Id = 5, PokemonId = PokemonId.Abra, Cp = 300, CpMultiplier = 0, AdditionalCpMultiplier = 0, IndividualAttack = 9, IndividualDefense = 9, IndividualStamina = 9 }); // 60 IV
@@ -87,6 +87,51 @@ namespace PokemonGo.RocketAPI.Tests
             // Check that we are not transferring our two highest CP
             Assert.IsNull(transferList.FirstOrDefault(x => x.Id == 1));
             
+        }
+
+        [TestMethod]
+        public void GetPokemonToTransfer_ShouldKeepMaxIVandMaxCP()
+        {
+            settings.UseTransferPokemonKeepAboveCP = false;
+            settings.UseTransferPokemonKeepAboveIV = false;
+            settings.TransferPokemonKeepDuplicateAmountMaxCP = 1;
+            settings.TransferPokemonKeepDuplicateAmountMaxIV = 1;
+
+            Inventory inventory = new Inventory(client);
+
+            IEnumerable<PokemonData> transferList = inventory.GetPokemonToTransfer(myPokemonsList.AsEnumerable(), settings).Result;
+
+            // Assert that we are transferring 7
+            Assert.AreEqual(6, transferList.ToList().Count);
+
+            // Check that we are not transferring our two highest IV and CP
+            Assert.IsNull(transferList.FirstOrDefault(x => x.Id == 1));
+            Assert.IsNull(transferList.FirstOrDefault(x => x.Id == 8));
+        }
+
+        [TestMethod]
+        public void GetPokemonToTransfer_ShouldKeepOnlyOneIfBothCPandIVMax()
+        {
+            settings.UseTransferPokemonKeepAboveCP = false;
+            settings.UseTransferPokemonKeepAboveIV = false;
+            settings.TransferPokemonKeepDuplicateAmountMaxCP = 1;
+            settings.TransferPokemonKeepDuplicateAmountMaxIV = 1;
+
+            var found = myPokemonsList.FirstOrDefault(p => p.Id == 5);
+            found.Cp = 1000;
+            found.IndividualAttack = 15;
+            found.IndividualDefense = 15;
+            found.IndividualStamina = 15;
+            
+            Inventory inventory = new Inventory(client);
+
+            IEnumerable<PokemonData> transferList = inventory.GetPokemonToTransfer(myPokemonsList.AsEnumerable(), settings).Result;
+
+            // Assert that we are transferring 7
+            Assert.AreEqual(7, transferList.ToList().Count);
+
+            // Check that we are not transferring our highest pokemon
+            Assert.IsNull(transferList.FirstOrDefault(x => x.Id == 5));
         }
     }
 }
