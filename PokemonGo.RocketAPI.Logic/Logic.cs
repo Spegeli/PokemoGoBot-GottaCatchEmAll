@@ -571,8 +571,10 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task TransferPokemon()
         {
+            Inventory inventory = new Inventory(_client);
             await Inventory.GetCachedInventory(_client, true);
-            var pokemonToTransfer = await _inventory.GetPokemonToTransfer(_clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsToNotTransfer);
+            IEnumerable<PokemonData> myPokemons = await inventory.GetPokemons(_client);
+            var pokemonToTransfer = await _inventory.GetPokemonToTransfer(myPokemons, _client.Settings, _clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsToNotTransfer);
             if (pokemonToTransfer != null && pokemonToTransfer.Any())
                 Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer:", LogLevel.Info);
 

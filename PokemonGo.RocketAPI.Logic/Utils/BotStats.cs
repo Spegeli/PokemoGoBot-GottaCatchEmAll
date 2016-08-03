@@ -95,7 +95,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
         public async void UpdateConsoleTitle(Client client, Inventory _inventory)
         {
             //appears to give incorrect info?		
-            var pokes = await _inventory.GetPokemons();
+            var pokes = await _inventory.GetPokemons(client);
             TotalPokesInBag = pokes.Count();
 
             var inventory = await Inventory.GetCachedInventory(client);

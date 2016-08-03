@@ -266,12 +266,12 @@ namespace PokemonGo.RocketAPI.Console {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int TransferPokemonKeepDuplicateAmount {
+        public int TransferPokemonKeepDuplicateAmountMaxIV {
             get {
-                return ((int)(this["TransferPokemonKeepDuplicateAmount"]));
+                return ((int)(this["TransferPokemonKeepDuplicateAmountMaxIV"]));
             }
             set {
-                this["TransferPokemonKeepDuplicateAmount"] = value;
+                this["TransferPokemonKeepDuplicateAmountMaxIV"] = value;
             }
         }
         
@@ -404,6 +404,18 @@ namespace PokemonGo.RocketAPI.Console {
             }
             set {
                 this["CapturePokemonDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int TransferPokemonKeepDuplicateAmountMaxCP {
+            get {
+                return ((int)(this["TransferPokemonKeepDuplicateAmountMaxCP"]));
+            }
+            set {
+                this["TransferPokemonKeepDuplicateAmountMaxCP"] = value;
             }
         }
     }

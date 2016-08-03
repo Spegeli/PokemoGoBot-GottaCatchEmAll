@@ -11,45 +11,46 @@ namespace PokemonGo.RocketAPI
 {
     public interface ISettings
     {
-        AuthType AuthType { get; }
-        string PtcPassword { get; }
-        string PtcUsername { get; }
-        string GoogleEmail { get; }
-        string GooglePassword { get; }
-        double DefaultLatitude { get; }
-        double DefaultLongitude { get; }
-        double DefaultAltitude { get; }
-        bool UseGPXPathing { get; }
-        string GPXFile { get; }
-        bool GPXIgnorePokestops { get; }
-        bool GPXIgnorePokemon { get; }
-        double WalkingSpeedInKilometerPerHour { get; }
-        int MaxTravelDistanceInMeters { get; }
+        AuthType AuthType { get; set; }
+        string PtcPassword { get; set; }
+        string PtcUsername { get; set; }
+        string GoogleEmail { get; set; }
+        string GooglePassword { get; set; }
+        double DefaultLatitude { get; set; }
+        double DefaultLongitude { get; set; }
+        double DefaultAltitude { get; set; }
+        bool UseGPXPathing { get; set; }
+        string GPXFile { get; set; }
+        bool GPXIgnorePokestops { get; set; }
+        bool GPXIgnorePokemon { get; set; }
+        double WalkingSpeedInKilometerPerHour { get; set; }
+        int MaxTravelDistanceInMeters { get; set; }
 
-        int CapturePokemonDuration { get; }
+        int CapturePokemonDuration { get; set; }
 
-        bool UsePokemonToNotCatchList { get; }
-        bool UsePokemonToNotTransferList { get; }
-        bool EvolvePokemon { get; }
-        bool EvolveOnlyPokemonAboveIV { get; }
-        float EvolveOnlyPokemonAboveIVValue { get; }
-        int EvolveKeepCandiesValue { get; }
-        bool TransferPokemon { get; }
-        int TransferPokemonKeepDuplicateAmount { get; }
-        bool NotTransferPokemonsThatCanEvolve { get; }
-        bool UseTransferPokemonKeepAboveCP { get; }
-        int TransferPokemonKeepAboveCP { get; }
-        bool UseTransferPokemonKeepAboveIV { get; }
-        float TransferPokemonKeepAboveIVPercentage { get; }
+        bool UsePokemonToNotCatchList { get; set; }
+        bool UsePokemonToNotTransferList { get; set; }
+        bool EvolvePokemon { get; set; }
+        bool EvolveOnlyPokemonAboveIV { get; set; }
+        float EvolveOnlyPokemonAboveIVValue { get; set; }
+        int EvolveKeepCandiesValue { get; set; }
+        bool TransferPokemon { get; set; }
+        int TransferPokemonKeepDuplicateAmountMaxCP { get; set; }
+        int TransferPokemonKeepDuplicateAmountMaxIV { get; set; }
+        bool NotTransferPokemonsThatCanEvolve { get; set; }
+        bool UseTransferPokemonKeepAboveCP { get; set; }
+        int TransferPokemonKeepAboveCP { get; set; }
+        bool UseTransferPokemonKeepAboveIV { get; set; }
+        float TransferPokemonKeepAboveIVPercentage { get; set; }
 
-        bool PrioritizeIVOverCP { get; }
-        bool UseLuckyEggs { get; }
-        bool UseIncense { get; }
-        bool DebugMode { get; }
+        bool PrioritizeIVOverCP { get; set; }
+        bool UseLuckyEggs { get; set; }
+        bool UseIncense { get; set; }
+        bool DebugMode { get; set; }
 
-        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
-        ICollection<PokemonId> PokemonsToEvolve { get; }
-        ICollection<PokemonId> PokemonsToNotTransfer { get; }
-        ICollection<PokemonId> PokemonsToNotCatch { get; }
+        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; set; }
+        ICollection<PokemonId> PokemonsToEvolve { get; set; }
+        ICollection<PokemonId> PokemonsToNotTransfer { get; set; }
+        ICollection<PokemonId> PokemonsToNotCatch { get; set; }
     }
 }

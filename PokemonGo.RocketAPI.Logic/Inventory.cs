@@ -29,82 +29,118 @@ namespace PokemonGo.RocketAPI.Logic
             _client = client;
         }
 
-        public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCp = false, IEnumerable<PokemonId> filter = null)
-        {    
-            var myPokemon = await GetPokemons();
-            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0 && p.Favorite == 0).ToList();
-            if (_client.Settings.UsePokemonToNotTransferList && filter != null)
-                pokemonList = pokemonList.Where(p => !filter.Contains(p.PokemonId)).ToList();
-            if (_client.Settings.UseTransferPokemonKeepAboveCP)
-                pokemonList = pokemonList.Where(p => p.Cp < _client.Settings.TransferPokemonKeepAboveCP).ToList();
-            if (_client.Settings.UseTransferPokemonKeepAboveIV)
-                pokemonList = pokemonList.Where(p => PokemonInfo.CalculatePokemonPerfection(p) < _client.Settings.TransferPokemonKeepAboveIVPercentage).ToList();
+        public async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(IEnumerable<PokemonData> myPokemon, ISettings settings, bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCp = false, IEnumerable<PokemonId> filter = null)
+        {
+            IEnumerable<ulong> keepPokemonsList = new List<ulong>();
 
-
-            if (!keepPokemonsThatCanEvolve)
-                return pokemonList
-                    .GroupBy(p => p.PokemonId)
+            // Get a list of all Max CP pokemon
+            IEnumerable<ulong> maxCPPokemon = myPokemon.GroupBy(p => p.PokemonId)
                     .Where(x => x.Any())
                     .SelectMany(
                         p =>
-                            p.OrderByDescending(
-                                x => (prioritizeIVoverCp) ? PokemonInfo.CalculatePokemonPerfection(x) : x.Cp)
+                            p.OrderByDescending(x => x.Cp)
                                 .ThenBy(n => n.StaminaMax)
-                                .Skip(_client.Settings.TransferPokemonKeepDuplicateAmount)
+                                .Take(settings.TransferPokemonKeepDuplicateAmountMaxCP)
+                                .Select(n => n.Id)
                                 .ToList());
 
+            // Add them to the keep list
+            keepPokemonsList = keepPokemonsList.Union(maxCPPokemon);
 
-            var results = new List<PokemonData>();
-            var pokemonsThatCanBeTransfered = pokemonList.GroupBy(p => p.PokemonId)
-                .Where(x => x.Count() > _client.Settings.TransferPokemonKeepDuplicateAmount).ToList();
+            // Get a list of all Max IV pokemon
+            IEnumerable<ulong> maxIVPokemon = myPokemon.GroupBy(p => p.PokemonId)
+                    .Where(x => x.Any())
+                    .SelectMany(
+                        p =>
+                            p.OrderByDescending(x => PokemonInfo.CalculatePokemonPerfection(x))
+                                .ThenBy(n => n.StaminaMax)
+                                .Take(settings.TransferPokemonKeepDuplicateAmountMaxIV)
+                                .Select(n => n.Id)
+                                .ToList());
 
-            var myPokemonSettings = await GetPokemonSettings();
-            var pokemonSettings = myPokemonSettings.ToList();
+            // Add them to the keep list
+            keepPokemonsList = keepPokemonsList.Union(maxIVPokemon);
 
-            var myPokemonFamilies = await GetPokemonFamilies();
-            var pokemonFamilies = myPokemonFamilies.ToArray();
+            // All pokemon that are not in my favourites list and are not currently deployed to a fort
+            IEnumerable<ulong> pokemonInFortsAndFavourites = myPokemon.Where(p => p.DeployedFortId != 0 && p.Favorite != 0).Select(n => n.Id).ToList();
+            // Add them to the keep list
+            keepPokemonsList = keepPokemonsList.Union(pokemonInFortsAndFavourites);
 
-            foreach (var pokemon in pokemonsThatCanBeTransfered)
+            // Do we want to keep any that can evolve?
+            if (keepPokemonsThatCanEvolve)
             {
-                var settings = pokemonSettings.Single(x => x.PokemonId == pokemon.Key);
-                var familyCandy = pokemonFamilies.Single(x => settings.FamilyId == x.FamilyId);
-                var amountToSkip = _client.Settings.TransferPokemonKeepDuplicateAmount;
+                List<ulong> keepEvolveList = new List<ulong>();
+                var pokemonsThatCanBeTransfered = myPokemon.GroupBy(p => p.PokemonId).ToList();
 
-                if (settings.CandyToEvolve > 0)
+                var myPokemonSettings = await GetPokemonSettings();
+                var pokemonSettings = myPokemonSettings.ToList();
+
+                var myPokemonFamilies = await GetPokemonFamilies();
+                var pokemonFamilies = myPokemonFamilies.ToArray();
+
+                foreach (var pokemon in pokemonsThatCanBeTransfered)
                 {
-                    var amountPossible = familyCandy.Candy/settings.CandyToEvolve;
-                    if (amountPossible > amountToSkip)
-                        amountToSkip = amountPossible;
+                    var individualPokemonsettings = pokemonSettings.Single(x => x.PokemonId == pokemon.Key);
+                    var familyCandy = pokemonFamilies.Single(x => individualPokemonsettings.FamilyId == x.FamilyId);
+                    int amountToSkip = 0;
+
+                    if (individualPokemonsettings.CandyToEvolve > 0)
+                    {
+                        amountToSkip = familyCandy.Candy / individualPokemonsettings.CandyToEvolve;
+                    }
+
+                    keepEvolveList.AddRange(myPokemon.Where(x => x.PokemonId == pokemon.Key)
+                        .OrderByDescending(
+                            x => (prioritizeIVoverCp) ? PokemonInfo.CalculatePokemonPerfection(x) : x.Cp)
+                        .ThenBy(n => n.StaminaMax)
+                        .Take(amountToSkip)
+                        .Select(n => n.Id)
+                        .ToList());
                 }
 
-                results.AddRange(pokemonList.Where(x => x.PokemonId == pokemon.Key)
-                    .OrderByDescending(
-                        x => (prioritizeIVoverCp) ? PokemonInfo.CalculatePokemonPerfection(x) : x.Cp)
-                    .ThenBy(n => n.StaminaMax)
-                    .Skip(amountToSkip)
-                    .ToList());
+                // Add the list of pokemons to keep for evolving
+                keepPokemonsList = keepPokemonsList.Union(keepEvolveList);
+
+            }
+            
+            // Keep any that are on my NotToTransfer list
+            if (settings.UsePokemonToNotTransferList && filter != null)
+                keepPokemonsList = keepPokemonsList.Union(myPokemon.Where(p => filter.Contains(p.PokemonId)).Select(n => n.Id).ToList());
+
+            // Keep any that have CP higher than my KeepAboveCP setting
+            if (settings.UseTransferPokemonKeepAboveCP)
+                keepPokemonsList = keepPokemonsList.Union(myPokemon.Where(p => p.Cp < settings.TransferPokemonKeepAboveCP).Select(n => n.Id).ToList());
+
+            // Keep any that have higher IV than my KeepAboveIV setting
+            if (settings.UseTransferPokemonKeepAboveIV)
+            {
+                var aboveMaxIVList = myPokemon.Where(p => PokemonInfo.CalculatePokemonPerfection(p) >= settings.TransferPokemonKeepAboveIVPercentage).Select(n => n.Id).ToList();
+                keepPokemonsList = keepPokemonsList.Union(aboveMaxIVList);
             }
 
-            return results;
+            // Remove any that are not in my Keep list
+            IEnumerable<PokemonData> pokemonList = myPokemon.Where(p => !keepPokemonsList.Contains(p.Id)).ToList();
+
+            return pokemonList;
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsCp(int limit)
         {
-            var myPokemon = await GetPokemons();
+            var myPokemon = await GetPokemons(_client);
             var pokemons = myPokemon.ToList();
             return pokemons.OrderByDescending(x => x.Cp).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
         public async Task<IEnumerable<PokemonData>> GetHighestsPerfect(int limit = 1000)
         {
-            var myPokemon = await GetPokemons();
+            var myPokemon = await GetPokemons(_client);
             var pokemons = myPokemon.ToList();
             return pokemons.OrderByDescending(PokemonInfo.CalculatePokemonPerfection).Take(limit);
         }
 
         public async Task<PokemonData> GetHighestPokemonOfTypeByCp(PokemonData pokemon)
         {
-            var myPokemon = await GetPokemons();
+            var myPokemon = await GetPokemons(_client);
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
                 .OrderByDescending(x => x.Cp)
@@ -113,7 +149,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         public async Task<PokemonData> GetHighestPokemonOfTypeByIv(PokemonData pokemon)
         {
-            var myPokemon = await GetPokemons();
+            var myPokemon = await GetPokemons(_client);
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
                 .OrderByDescending(PokemonInfo.CalculatePokemonPerfection)
@@ -166,9 +202,9 @@ namespace PokemonGo.RocketAPI.Logic
                     .Where(p => p != null && p.FamilyId != PokemonFamilyId.FamilyUnset);
         }
 
-        public async Task<IEnumerable<PokemonData>> GetPokemons()
+        public async Task<IEnumerable<PokemonData>> GetPokemons(Client client)
         {
-            var inventory = await GetCachedInventory(_client);
+            var inventory = await GetCachedInventory(client);
             return
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
                     .Where(p => p != null && p.PokemonId > 0);
@@ -185,7 +221,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve(bool prioritizeIVoverCp = false, IEnumerable < PokemonId> filter = null)
         {
-            var myPokemons = await GetPokemons();
+            var myPokemons = await GetPokemons(_client);
             myPokemons = myPokemons.Where(p => p.DeployedFortId == 0);
             if (filter != null)
                 myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));		
