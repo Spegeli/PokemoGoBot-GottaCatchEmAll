@@ -62,7 +62,7 @@
     <Setting Name="TransferPokemon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="TransferPokemonKeepDuplicateAmount" Type="System.Int32" Scope="User">
+    <Setting Name="TransferPokemonKeepDuplicateAmountMaxCP" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="UseTransferPokemonKeepAboveCP" Type="System.Boolean" Scope="User">
@@ -97,6 +97,9 @@
     </Setting>
     <Setting Name="UseTeleportInsteadOfWalking" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TransferPokemonKeepDuplicateAmountMaxIV" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
