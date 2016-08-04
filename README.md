@@ -6,7 +6,7 @@
 <!-- disclaimer -->
 ![alt text][1.1] <strong><em> The contents of this repo are a proof of concept and are for educational use only </em></strong>![alt text][1.1]
 ![](https://github.com/Spegeli/Pokemon-Go-Rocket-API/blob/master/Screenshot.png)
-Chatting about this Repository can be done on our Discord: https://discord.gg/nJNh2PM <br/>
+Chatting about this Repository can be done on our Discord: https://discord.gg/KzJUjDE <br/>
 <br/>
 
 <h2><a name="features">Features</a></h2>
