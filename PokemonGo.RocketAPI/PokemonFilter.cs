@@ -24,17 +24,22 @@ namespace PokemonGo.RocketAPI
             List<PokemonData> ret = new List<PokemonData>();
             foreach(PokemonData pokemon in pokemons)
             {
+                //Avoid transfer favourite pokemons
+                if (pokemon.DeployedFortId == 0 && pokemon.Favorite != 0)
+                    continue;
+
                 if (settings.PokemonTransferFilter.ContainsKey(pokemon.PokemonId))
                 {
                     PokemonFilterOption filter = settings.PokemonTransferFilter[pokemon.PokemonId];
 
                     if (pokemon.Cp < filter.MinimumCPToConsiderKeep)
                     {
-                        Logger.Write($"Transfered rubish {pokemon.PokemonId} for too low CP: {pokemon.Cp},{PokemonInfo.CalculatePokemonPerfection(pokemon)}");
+                        Logger.Write($"Find rubbish {pokemon.PokemonId} with too low CP: {pokemon.Cp}, IV:{PokemonInfo.CalculatePokemonPerfection(pokemon)}",LogLevel.Transfer, ConsoleColor.White);
                         ret.Add(pokemon);
-                    } else if (PokemonInfo.CalculatePokemonPerfection(pokemon) < filter.MinimumIVToConsiderKeep)
+                    }
+                    else if (PokemonInfo.CalculatePokemonPerfection(pokemon) < filter.MinimumIVToConsiderKeep)
                     {
-                        Logger.Write($"Transfered rubish {pokemon.PokemonId} for too low IV: {pokemon.Cp},{PokemonInfo.CalculatePokemonPerfection(pokemon)}");
+                        Logger.Write($"Find rubbish {pokemon.PokemonId} with too low IV: {PokemonInfo.CalculatePokemonPerfection(pokemon)}, CP:{pokemon.Cp}", LogLevel.Transfer, ConsoleColor.White);
                         ret.Add(pokemon);
                     }
                         

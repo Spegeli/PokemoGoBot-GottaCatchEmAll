@@ -702,13 +702,13 @@ namespace PokemonGo.RocketAPI.Logic
 
         public async Task DisplayHighests(LogLevel loglevel = LogLevel.None)
         {
-            Logger.Write("====== DisplayHighestsCP ======", LogLevel.Info, ConsoleColor.Yellow);
+            Logger.Write("====== DisplayHighestsCP ======", LogLevel.Info | loglevel, ConsoleColor.Yellow);
             var highestsPokemonCp = await _inventory.GetHighestsCp(10);
             foreach (var pokemon in highestsPokemonCp)
                 Logger.Write(
                     $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCp(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect)\t| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                     LogLevel.Info | loglevel, ConsoleColor.Yellow);
-            Logger.Write("====== DisplayHighestsPerfect ======", LogLevel.Info, ConsoleColor.Yellow);
+            Logger.Write("====== DisplayHighestsPerfect ======", LogLevel.Info | loglevel, ConsoleColor.Yellow);
             var highestsPokemonPerfect = await _inventory.GetHighestsPerfect(10);
             foreach (var pokemon in highestsPokemonPerfect)
             {
