@@ -53,8 +53,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 if (currentDistanceToTarget < 30 && speedInMetersPerSecond > SpeedDownTo)
                 {
-                    if (_client.Settings.DebugMode)
-                        Logger.Write($"We are within 30 meters of the target. Speeding down to 10 km/h to not pass the target.", LogLevel.Navigation);
+                    Logger.Write($"We are within 30 meters of the target. Speeding down to 10 km/h to not pass the target.", LogLevel.Navigation);
                     speedInMetersPerSecond = SpeedDownTo;
                 }
 
@@ -109,7 +108,7 @@ namespace PokemonGo.RocketAPI.Logic
                 if (_client.Settings.DebugMode)
                     Logger.Write($"Distance to target location: {currentDistanceToTarget:0.##} meters. Will take {currentDistanceToTarget / speedInMetersPerSecond:0.##} seconds!", LogLevel.Navigation);
 
-                /*
+                
                 if (currentDistanceToTarget < 40)
                 {
                     if (speedInMetersPerSecond > SpeedDownTo)
@@ -118,7 +117,7 @@ namespace PokemonGo.RocketAPI.Logic
                         speedInMetersPerSecond = SpeedDownTo;
                     }
                 }
-                */
+                
 
                 nextWaypointDistance = Math.Min(currentDistanceToTarget,
                     millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);

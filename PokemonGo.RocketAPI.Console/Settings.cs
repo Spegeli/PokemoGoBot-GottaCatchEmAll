@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.GeneratedCode;
 using PokemonGo.RocketAPI.Logging;
+using System.Xml;
 
 
 #endregion
@@ -16,175 +17,297 @@ namespace PokemonGo.RocketAPI.Console
 {
     public class Settings : ISettings
     {
-        private readonly string _configsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
+        private ICollection<PokemonId> _pokemonsToEvolve = new LinkedList<PokemonId>();
+        private ICollection<PokemonId> _pokemonsToNotTransfer = new LinkedList<PokemonId>();
+        private ICollection<PokemonId> _pokemonsToNotCatch = new LinkedList<PokemonId>();
+        private ICollection<KeyValuePair<ItemId, int>> itemRecycleFilter = new Dictionary<ItemId, int>();
+        private Dictionary<PokemonId, PokemonFilterOption> _pokemonTransferFilter = new Dictionary<PokemonId, PokemonFilterOption>();
 
-        public AuthType AuthType => (AuthType)Enum.Parse(typeof(AuthType), UserSettings.Default.AuthType, true);
-        public string PtcUsername => UserSettings.Default.PtcUsername;
-        public string PtcPassword => UserSettings.Default.PtcPassword;
-        public string GoogleEmail => UserSettings.Default.GoogleEmail;
-        public string GooglePassword => UserSettings.Default.GooglePassword;
-        public double DefaultLatitude => UserSettings.Default.DefaultLatitude;
-        public double DefaultLongitude => UserSettings.Default.DefaultLongitude;
-        public double DefaultAltitude => UserSettings.Default.DefaultAltitude;
-        public bool UseGPXPathing => UserSettings.Default.UseGPXPathing;
-        public string GPXFile => UserSettings.Default.GPXFile;
-        public bool GPXIgnorePokestops => UserSettings.Default.GPXIgnorePokestops;
+        public AuthType AuthType => PtcUsername == "" ? AuthType.Google : AuthType.Ptc;
 
-        public double WalkingSpeedInKilometerPerHour => UserSettings.Default.WalkingSpeedInKilometerPerHour;
-        public int MaxTravelDistanceInMeters => UserSettings.Default.MaxTravelDistanceInMeters;
-        public bool UseTeleportInsteadOfWalking => UserSettings.Default.UseTeleportInsteadOfWalking;
+        public string PtcUsername => GetConfigString("PtcUsername");
+        public string PtcPassword => GetConfigString("PtcPassword");
+        public double DefaultLatitude => GetConfigDouble("DefaultLatitude");
+        public double DefaultLongitude => GetConfigDouble("DefaultLongitude");
+        public double DefaultAltitude => GetConfigDouble("DefaultAltitude");
+        public bool UseGPXPathing => GetConfigBool("UseGPXPathing");
+        public string GPXFile => GetConfigString("GPXFile");
+        public bool GPXIgnorePokestops => GetConfigBool("GPXIgnorePokestops");
+        public bool GPXIgnorePokemon => GetConfigBool("GPXIgnorePokemon");
 
-        public bool UsePokemonToNotCatchList => UserSettings.Default.UsePokemonToNotCatchList;
-        public bool UsePokemonToNotTransferList => UserSettings.Default.UsePokemonToNotTransferList;
+        public double WalkingSpeedInKilometerPerHour => GetConfigDouble("WalkingSpeedInKilometerPerHour");
+        public int MaxTravelDistanceInMeters => GetConfigInt("MaxTravelDistanceInMeters");
 
-        public bool CatchPokemon => UserSettings.Default.CatchPokemon;
+        public bool UsePokemonToNotCatchList => GetConfigBool("UsePokemonToNotCatchList");
+        public bool UsePokemonToNotTransferList => GetConfigBool("UsePokemonToNotTransferList");
+        public bool EvolvePokemon => GetConfigBool("EvolvePokemon");
+        public bool EvolveOnlyPokemonAboveIV => GetConfigBool("EvolveOnlyPokemonAboveIV");
+        public float EvolveOnlyPokemonAboveIVValue => GetConfigFloat("EvolveOnlyPokemonAboveIVValue");
+        public bool TransferPokemon => GetConfigBool("TransferPokemon");
+        public int TransferPokemonKeepDuplicateAmount => GetConfigInt("TransferPokemonKeepDuplicateAmount");
+        public bool NotTransferPokemonsThatCanEvolve => GetConfigBool("NotTransferPokemonsThatCanEvolve");
+        public bool UseTransferPokemonKeepAboveCP => GetConfigBool("UseTransferPokemonKeepAboveCP");
+        public int TransferPokemonKeepAboveCP => GetConfigInt("TransferPokemonKeepAboveCP");
+        public bool UseTransferPokemonKeepAboveIV => GetConfigBool("UseTransferPokemonKeepAboveIV");
+        public float TransferPokemonKeepAboveIVPercentage => GetConfigFloat("TransferPokemonKeepAboveIVPercentage");
 
-        public bool EvolvePokemon => UserSettings.Default.EvolvePokemon;
-        public bool EvolveOnlyPokemonAboveIV => UserSettings.Default.EvolveOnlyPokemonAboveIV;
-        public float EvolveOnlyPokemonAboveIVValue => UserSettings.Default.EvolveOnlyPokemonAboveIVValue;
-        public int EvolveKeepCandiesValue => UserSettings.Default.EvolveKeepCandiesValue;
+        public bool UseLuckyEggs => GetConfigBool("UseLuckyEggs");
+        public bool UseIncense => GetConfigBool("UseIncense");
+        public bool PrioritizeIVOverCP => GetConfigBool("PrioritizeIVOverCP");
 
-        public bool TransferPokemon => UserSettings.Default.TransferPokemon;
-        public int TransferPokemonKeepDuplicateAmount => UserSettings.Default.TransferPokemonKeepDuplicateAmount;
-        public bool NotTransferPokemonsThatCanEvolve => UserSettings.Default.NotTransferPokemonsThatCanEvolve;
-        public bool UseTransferPokemonKeepAboveCP => UserSettings.Default.UseTransferPokemonKeepAboveCP;
-        public int TransferPokemonKeepAboveCP => UserSettings.Default.TransferPokemonKeepAboveCP;
-        public bool UseTransferPokemonKeepAboveIV => UserSettings.Default.UseTransferPokemonKeepAboveIV;
-        public float TransferPokemonKeepAboveIVPercentage => UserSettings.Default.TransferPokemonKeepAboveIVPercentage;
+        public bool UseTeleportInsteadOfWalking => GetConfigBool("UseTeleportInsteadOfWalking");
+        public int EvolveKeepCandiesValue => GetConfigInt("EvolveKeepCandiesValue");
+        public bool DebugMode => GetConfigBool("DebugMode");
 
-        public bool UseLuckyEggs => UserSettings.Default.UseLuckyEggs;
-        public bool UseIncense => UserSettings.Default.UseIncense;
-        public bool PrioritizeIVOverCP => UserSettings.Default.PrioritizeIVOverCP;
-        public bool DebugMode => UserSettings.Default.DebugMode;
+        public ICollection<PokemonId> PokemonsToEvolve => _pokemonsToEvolve;
+        public ICollection<PokemonId> PokemonsToNotTransfer => _pokemonsToNotTransfer;
+        public ICollection<PokemonId> PokemonsToNotCatch => _pokemonsToNotCatch;
+        public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter => itemRecycleFilter;
+        public Dictionary<PokemonId, PokemonFilterOption> PokemonTransferFilter => _pokemonTransferFilter;
 
-        private ICollection<PokemonId> _pokemonsToEvolve;
-        private ICollection<PokemonId> _pokemonsToNotTransfer;
-        private ICollection<PokemonId> _pokemonsToNotCatch;
-
-        public ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter => new[]
+        public Settings(string profileName = "")
         {
-            new KeyValuePair<ItemId, int>(ItemId.ItemUnknown, 0),
-            new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 25),
-            new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 50),
-            new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 75),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 100),
+            configFile = Path.Combine(Directory.GetCurrentDirectory(),
+                profileName=="" ? "config.xml" : $"config_{profileName}.xml");
+            savedDataFile = Path.Combine(Directory.GetCurrentDirectory(),
+                profileName == "" ? "savedData.xml" : $"savedData_{profileName}.xml");
+            LoadSettings();
+        }
+        
 
-            new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 0),
-            new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 10),
-            new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 25),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 25),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 15),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 25),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemLuckyEgg, 200),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncenseOrdinary, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncenseSpicy, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncenseCool, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncenseFloral, 100),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemTroyDisk, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemXAttack, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemXDefense, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemXMiracle, 100),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 20),
-            new KeyValuePair<ItemId, int>(ItemId.ItemBlukBerry, 10),
-            new KeyValuePair<ItemId, int>(ItemId.ItemNanabBerry, 10),
-            new KeyValuePair<ItemId, int>(ItemId.ItemWeparBerry, 30),
-            new KeyValuePair<ItemId, int>(ItemId.ItemPinapBerry, 30),
-
-            new KeyValuePair<ItemId, int>(ItemId.ItemSpecialCamera, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncubatorBasicUnlimited, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemIncubatorBasic, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemPokemonStorageUpgrade, 100),
-            new KeyValuePair<ItemId, int>(ItemId.ItemItemStorageUpgrade, 100),
-        };
-
-        public ICollection<PokemonId> PokemonsToEvolve
+        /// <summary>
+        /// Load the config.xml file
+        /// </summary>
+        public void LoadSettings()
         {
-            get
+            if (defConfigRoot == null)
             {
-                //Type of pokemons to evolve
-                var defaultPokemon = new List<PokemonId> {
-                    PokemonId.Zubat, PokemonId.Pidgey, PokemonId.Rattata
-                };
-                _pokemonsToEvolve = _pokemonsToEvolve ?? LoadPokemonList("PokemonsToEvolve.ini", defaultPokemon);
-                return _pokemonsToEvolve;
+                defConfigXml.LoadXml(PokemonGo.RocketAPI.Console.Properties.Resources.DefaultSettings);
+                defConfigRoot = defConfigXml.SelectSingleNode("root");
+            }
+
+
+
+            if (File.Exists(configFile))
+            {
+                configXml.Load(configFile);
+                configRoot = configXml.SelectSingleNode("root");
+                Logger.Write("Existing config file loaded", LogLevel.Info);
+            }
+            else
+            {
+                configXml.LoadXml(PokemonGo.RocketAPI.Console.Properties.Resources.DefaultSettings);
+                Logger.Write("Creating new config file", LogLevel.Info);
+                configRoot = configXml.SelectSingleNode("root");
+                configXml.Save(configFile);
+            }
+
+            
+
+            if (File.Exists(savedDataFile))
+            {
+                savedDataXml.Load(savedDataFile);
+                savedDataRoot = savedDataXml.SelectSingleNode("root");
+            }
+
+            LoadItemRecycleList();
+            LoadPokemonList("PokemonsToEvolve", _pokemonsToEvolve);
+            LoadPokemonList("PokemonsToNotTransfer", _pokemonsToNotTransfer);
+            LoadPokemonList("PokemonsToNotCatch", _pokemonsToNotCatch);
+            LoadPokemonTransferFilters();
+        }
+
+        #region SavedData
+        string savedDataFile;
+        XmlDocument savedDataXml = new XmlDocument();
+        XmlNode savedDataRoot;
+
+        /// <summary>
+        /// Save some data to savedData.xml file
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetSavedData(string name, string value)
+        {
+            if (savedDataRoot == null)
+            {
+                savedDataRoot = savedDataXml.CreateElement("root");
+                savedDataRoot.InnerText = "";
+                savedDataXml.AppendChild(savedDataRoot);
+            }
+
+            XmlNode node = savedDataRoot.SelectSingleNode(name);
+            if (node == null)
+            {
+                savedDataRoot.AppendChild(savedDataXml.CreateElement(name)).InnerText = value;
+            }
+            else
+            {
+                node.InnerText = value;
+            }
+
+            savedDataXml.Save(savedDataFile);
+        }
+
+        /// <summary>
+        /// Retrieve some data to savedData.xml file
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string GetSavedData(string name, string value = "")
+        {
+            if (savedDataRoot == null)
+                return value;
+
+            XmlNode node = savedDataRoot.SelectSingleNode(name);
+            if (node == null)
+            {
+                return value;
+            }
+            else
+            {
+                return node.InnerText;
+            }
+        }
+        #endregion
+
+        #region Config
+        string configFile;
+        XmlDocument configXml = new XmlDocument();
+        XmlNode configRoot;
+
+        XmlDocument defConfigXml = new XmlDocument();
+        XmlNode defConfigRoot;
+
+
+        string GetConfigString(string name)
+        {
+            if (configRoot == null)
+            {
+                configRoot = configXml.CreateElement("root");
+                configRoot.InnerText = "";
+                configXml.AppendChild(configRoot);
+            }
+
+            XmlNode node = configRoot.SelectSingleNode(name);
+            if (node == null)
+            {
+                XmlNode defNode = defConfigRoot.SelectSingleNode(name);
+                if (defNode == null)
+                {
+                    //Err
+                    return null;
+                }
+                else
+                {
+                    string defValue = defNode.InnerText;
+                    configRoot.AppendChild(configXml.CreateElement(name)).InnerText = defValue;
+                    configXml.Save(configFile);
+                    return defValue;
+                }
+            }
+            else
+            {
+                return node.InnerText;
             }
         }
 
-        public ICollection<PokemonId> PokemonsToNotTransfer
+        int GetConfigInt(string name)
         {
-            get
-            {
-                //Type of pokemons not to transfer
-                var defaultPokemon = new List<PokemonId> {
-                    PokemonId.Farfetchd, PokemonId.Kangaskhan, PokemonId.Tauros, PokemonId.MrMime , PokemonId.Dragonite, PokemonId.Charizard, PokemonId.Zapdos, PokemonId.Snorlax, PokemonId.Alakazam, PokemonId.Mew, PokemonId.Mewtwo
-                };
-                _pokemonsToNotTransfer = _pokemonsToNotTransfer ?? LoadPokemonList("PokemonsToNotTransfer.ini", defaultPokemon);
-                return _pokemonsToNotTransfer;
-            }
+            return int.Parse(GetConfigString(name));
         }
 
-        public ICollection<PokemonId> PokemonsToNotCatch
+        double GetConfigDouble(string name)
         {
-            get
-            {
-                //Type of pokemons not to catch
-                var defaultPokemon = new List<PokemonId> {
-                    PokemonId.Zubat, PokemonId.Pidgey, PokemonId.Rattata
-                };
-                _pokemonsToNotCatch = _pokemonsToNotCatch ?? LoadPokemonList("PokemonsToNotCatch.ini", defaultPokemon);
-                return _pokemonsToNotCatch;
-            }
+            return double.Parse(GetConfigString(name));
         }
 
-        private ICollection<PokemonId> LoadPokemonList(string filename, List<PokemonId> defaultPokemon)
+        float GetConfigFloat(string name) { 
+            return float.Parse(GetConfigString(name));
+        }
+
+        bool GetConfigBool(string name)
         {
-            ICollection<PokemonId> result = new List<PokemonId>();
-            if (!Directory.Exists(_configsPath))
-                Directory.CreateDirectory(_configsPath);
-            var pokemonlistFile = Path.Combine(_configsPath, filename);
-            if (!File.Exists(pokemonlistFile))
+            return bool.Parse(GetConfigString(name));
+        }
+
+        #endregion
+
+        #region List
+        private void LoadItemRecycleList()
+        {
+            string rawData = GetConfigString("ItemRecycleList");
+
+            string[] ContentLines = rawData.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            itemRecycleFilter.Clear();
+            foreach (string line in ContentLines)
             {
-                Logger.Write($"Settings File: \"{filename}\" not found, creating new...", LogLevel.Warning);
-                using (var w = File.AppendText(pokemonlistFile))
+                string[] splitted = line.Replace(" ", "").Split('=');
+
+                if (splitted.Length == 2)
                 {
-                    defaultPokemon.ForEach(pokemon => w.WriteLine(pokemon.ToString()));
-                    defaultPokemon.ForEach(pokemon => result.Add(pokemon));
-                    w.Close();
+                    ItemId itemID = (ItemId)(Enum.Parse(typeof(ItemId), splitted[0]));
+                    int count = int.Parse(splitted[1]);
+                    itemRecycleFilter.Add(new KeyValuePair<ItemId, int>(itemID, count));
                 }
             }
 
-            if (File.Exists(pokemonlistFile))
+            Logger.Write($"Loading ttem recycle list...", LogLevel.Info);
+        }
+
+        private void LoadPokemonList(string listName, ICollection<PokemonId> result)
+        {
+            result.Clear();
+
+            string rawData = GetConfigString(listName);
+
+            Logger.Write($"Loading settings list: \"{listName}\"", LogLevel.Info);
+
+            var content = Regex.Replace(rawData, @"\\/\*(.|\n)*?\*\/", ""); //todo: supposed to remove comment blocks
+
+            StringReader tr = new StringReader(content);
+
+            var pokemonName = tr.ReadLine();
+            while (pokemonName != null)
             {
-                Logger.Write($"Loading Settings File: \"{filename}\"", LogLevel.Info);
-
-                string content;
-                using (var reader = new StreamReader(pokemonlistFile))
+                PokemonId pokemon;
+                if (Enum.TryParse<PokemonId>(pokemonName, out pokemon))
                 {
-                    content = reader.ReadToEnd();
-                    reader.Close();
+                    result.Add((PokemonId)pokemon);
                 }
-                content = Regex.Replace(content, @"\\/\*(.|\n)*?\*\/", ""); //todo: supposed to remove comment blocks
+                pokemonName = tr.ReadLine();
+            }
+        }
+        #endregion
 
-                var tr = new StringReader(content);
-
-                var pokemonName = tr.ReadLine();
-                while (pokemonName != null)
-                {
-                    PokemonId pokemon;
-                    if (Enum.TryParse(pokemonName, out pokemon))
-                    {
-                        result.Add(pokemon);
-                    }
-                    pokemonName = tr.ReadLine();
-                }
+        private void LoadPokemonTransferFilters()
+        {
+            XmlNode xmlFilters = configRoot.SelectSingleNode("PokemonFilters");
+            if (xmlFilters == null)
+            {
+                configRoot.AppendChild(configXml.CreateElement("PokemonFilters")).InnerText = "";
+                configXml.Save(configFile);
+                return;
             }
 
-            return result;
+            _pokemonTransferFilter.Clear();
+
+            foreach (XmlNode filter in xmlFilters.ChildNodes)
+            {
+                string pokemonName = filter.Attributes["PokemonID"].InnerText;
+                PokemonId pokemonID = (PokemonId)Enum.Parse(typeof(PokemonId), pokemonName);
+                PokemonFilterOption filterOption = new PokemonFilterOption()
+                {
+                    PokemonID = pokemonID,
+                    MinimumCPToConsiderKeep = int.Parse(filter.SelectSingleNode("MinimumCPToConsiderKeep").InnerText),
+                    MinimumIVToConsiderKeep = float.Parse(filter.SelectSingleNode("MinimumIVToConsiderKeep").InnerText),
+                    MinimumCPToKeep = int.Parse(filter.SelectSingleNode("MinimumCPToKeep").InnerText),
+                    MinimumIVToKeep = float.Parse(filter.SelectSingleNode("MinimumIVToKeep").InnerText)
+                };
+                _pokemonTransferFilter.Add(filterOption.PokemonID, filterOption);
+            }
         }
     }
 }
