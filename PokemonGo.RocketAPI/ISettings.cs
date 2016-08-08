@@ -50,7 +50,7 @@ namespace PokemonGo.RocketAPI
         bool UseIncense { get; }
         bool DebugMode { get; }
 
-        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
+        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter(IEnumerable<ItemData> myItems);
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsToNotTransfer { get; }
         ICollection<PokemonId> PokemonsToNotCatch { get; }
