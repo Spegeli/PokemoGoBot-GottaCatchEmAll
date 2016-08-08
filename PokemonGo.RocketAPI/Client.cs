@@ -69,10 +69,10 @@ namespace PokemonGo.RocketAPI
                     }
 
                     var response = await Inventory.UseItemEggIncubator(incubator.Id, egg.Id);
-                    unusedEggs.Remove(egg);
-
                     Logger.Write($"Egg #{unusedEggs.IndexOf(egg)} was successfully added to Incubator #{incubators.IndexOf(incubator)}.", LogLevel.Incubation);
-                }
+
+                    unusedEggs.Remove(egg);
+                   }
                 else
                 {
                     // Currently hatching
