@@ -7,20 +7,20 @@ The file is not hard to find and any questions about this or other common items 
 
 ############################################
 
-Damit der Bot funktioniert, wird eine Datei Namens "encrypt.dll" benötigt. Aufgrund rechtlicher Gründen ist diese Datei nicht direkt im Bot enthalten.
+Damit der Bot funktioniert, wird eine Datei Namens "encrypt.dll" benÃ¶tigt. Aufgrund rechtlicher GrÃ¼nden ist diese Datei nicht direkt im Bot enthalten.
 
 Die DLL-Datei muss in folgendem Ordner abgelegt werden:
 PokemoGoBot-GottaCatchEmAll-Master \ PokemonGo.RocketAPI.Console \ bin \ Debug
 
-Die Datei ist nicht schwer zu finden und Fragen zu diesem oder anderen algemeinen Sachen können auf unserem Discord Server im Kanal #readme gefunden werden.
+Die Datei ist nicht schwer zu finden und Fragen zu diesem oder anderen algemeinen Sachen kÃ¶nnen auf unserem Discord Server im Kanal #readme gefunden werden.
 
 ############################################
 
-Pour permettre au BOT the fonctionner, vous devez fournir vous-même une copie du fichier encrypt.dll. Pour des raisons légales il nous est impossible de distribuer ce fichier.
+Pour permettre au BOT de fonctionner, vous devez fournir vous-mÃªme une copie du fichier encrypt.dll. Pour des raisons lÃ©gales il nous est impossible de distribuer ce fichier.
 
-Ce fichier est assez facile à trouver et doit être placer dans le dossier:
+Ce fichier est assez facile Ã  trouver et doit Ãªtre placer dans le dossier:
 PokemoGoBot-GottaCatchEmAll-master\PokemonGo.RocketAPI.Console\bin\Debug
 
-Pour plus d'information consulté le chan: #readme sur notre Discord.
+Pour plus d'information consultez le canal: #readme sur notre serveur Discord.
 
 ############################################
