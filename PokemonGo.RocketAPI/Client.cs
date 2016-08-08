@@ -48,5 +48,43 @@ namespace PokemonGo.RocketAPI
             Encounter = new Rpc.Encounter(this);
             Misc = new Rpc.Misc(this);
         }
+
+        public async Task Incubate(float kmWalked, List<EggIncubator> incubators, List<PokemonData> unusedEggs, List<PokemonData> pokemons, int updateCounter)
+        {
+            foreach (var incubator in incubators)
+            {
+                if (incubator.PokemonId == 0)
+                {
+                    // Unlimited incubators prefer short eggs, limited incubators prefer long eggs
+                    // Special case: If only one incubator is available at all, it will prefer long eggs 
+                    // (disabled, i want to hatch more and more eggs)
+                    var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited && incubators.Count > 0
+                      ? unusedEggs.FirstOrDefault()
+                      : unusedEggs.LastOrDefault();
+
+                    // Don't use limited incubators for under 5km eggs
+                    if (egg == null | (egg.EggKmWalkedTarget < 5 && incubator.UsesRemaining > 0))
+                    {
+                        continue;
+                    }
+
+                    var response = await Inventory.UseItemEggIncubator(incubator.Id, egg.Id);
+                    unusedEggs.Remove(egg);
+
+                    Logger.Write($"Egg #{unusedEggs.IndexOf(egg)} was successfully added to Incubator #{incubators.IndexOf(incubator)}.", LogLevel.Incubation);
+                }
+                else
+                {
+                    // Currently hatching
+                    if (updateCounter <= 0) {
+                        var kmToWalk = incubator.TargetKmWalked - incubator.StartKmWalked;
+                        var kmRemaining = incubator.TargetKmWalked - kmWalked;
+
+                        Logger.Write($"Incubator #{incubators.IndexOf(incubator)} needs {kmRemaining.ToString("N2")}km/{kmToWalk.ToString("N2")}km to hatch.", LogLevel.Egg);
+                    }
+                }
+            }
+        }
+
     }
 }

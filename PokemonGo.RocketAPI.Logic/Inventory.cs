@@ -17,6 +17,9 @@ using POGOProtos.Inventory.Item;
 using POGOProtos.Map.Fort;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Settings.Master;
+using Google.Protobuf.Collections;
+using POGOProtos.Networking.Requests.Messages;
+using POGOProtos.Networking.Requests;
 
 #endregion
 
@@ -274,7 +277,27 @@ namespace PokemonGo.RocketAPI.Logic
             return pokemonToEvolve;
         }
 
-        public static async Task<GetInventoryResponse> GetCachedInventory(bool request = false)
+        public async Task<IEnumerable<EggIncubator>> GetEggIncubators(bool includeBasicIncubators)
+        {
+            var inventory = await GetCachedInventory(_client);
+            var availableIncubators = inventory.InventoryDelta.InventoryItems.Where(x => x.InventoryItemData.EggIncubators != null)
+                                                          .Select(i => i.InventoryItemData.EggIncubators.EggIncubator)
+                                                          .Where(i => i != null);
+            
+            var incubators = !includeBasicIncubators ? availableIncubators.Where(s => s.Where(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null)
+                : availableIncubators.Where(s => s.Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null);
+            
+            return incubators.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<PokemonData>> GetEggs()
+        {
+            var inventory = await GetCachedInventory(_client);
+            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
+                    .Where(p => p != null && p.IsEgg);
+        }
+
+        public static async Task<GetInventoryResponse> GetCachedInventory(Client client, bool request = false)
         {
             var now = DateTime.UtcNow;
             var ss = new SemaphoreSlim(10);

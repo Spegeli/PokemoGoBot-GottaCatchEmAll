@@ -39,6 +39,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         public readonly string ConfigsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
 
+        private int _hatchUpdateDelay = 0;
         private bool _isInitialized = false;
 
         public Logic(ISettings clientSettings)
@@ -201,6 +202,7 @@ namespace PokemonGo.RocketAPI.Logic
                     await RecycleItemsTask.Execute();
                     if (_client.Settings.EvolvePokemon || _client.Settings.EvolveOnlyPokemonAboveIV) await EvolvePokemonTask.Execute();
                     if (_client.Settings.TransferPokemon) await TransferPokemonTask.Execute();
+                    if (_clientSettings.IncubateEggs) await IncubateEggs();
                     await ExportPokemonToCsv.Execute(_playerProfile.PlayerData);
                 }
                 _isInitialized = true;

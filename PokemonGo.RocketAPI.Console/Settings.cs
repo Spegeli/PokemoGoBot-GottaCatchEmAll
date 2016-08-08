@@ -57,6 +57,8 @@ namespace PokemonGo.RocketAPI.Console
         public int TransferPokemonKeepAmountHighestIV => UserSettings.Default.TransferPokemonKeepAmountHighestIV;
 
         public bool UseLuckyEggs => UserSettings.Default.UseLuckyEggs;
+        public bool IncubateEggs => UserSettings.Default.IncubateEggs;
+        public bool UseOnlyBasicIncubator => UserSettings.Default.UseOnlyBasicIncubator;
         public bool PrioritizeIVOverCP => UserSettings.Default.PrioritizeIVOverCP;
         public bool DebugMode => UserSettings.Default.DebugMode;
 

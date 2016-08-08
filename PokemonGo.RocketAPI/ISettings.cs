@@ -49,6 +49,8 @@ namespace PokemonGo.RocketAPI
 
         bool PrioritizeIVOverCP { get; }
         bool UseLuckyEggs { get; }
+        bool IncubateEggs { get; }
+        bool UseOnlyBasicIncubator { get; }
         bool DebugMode { get; }
 
         ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter(IEnumerable<ItemData> myItems);
