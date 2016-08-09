@@ -17,6 +17,7 @@ using POGOProtos.Enums;
 using POGOProtos.Inventory.Item;
 using POGOProtos.Map.Pokemon;
 using POGOProtos.Networking.Responses;
+using POGOProtos.Data;
 
 #endregion
 
@@ -55,7 +56,7 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 GitChecker.CheckVersion();
 
-                if (Math.Abs(_clientSettings.DefaultLatitude) <= 0  || Math.Abs(_clientSettings.DefaultLongitude) <= 0)
+                if (Math.Abs(_clientSettings.DefaultLatitude) <= 0 || Math.Abs(_clientSettings.DefaultLongitude) <= 0)
                 {
                     Logger.Write($"Please change first Latitude and/or Longitude because currently your using default values!", LogLevel.Error);
                     for (int i = 3; i > 0; i--)
@@ -442,7 +443,7 @@ namespace PokemonGo.RocketAPI.Logic
                         fortTry += 1;
 
                         if (_client.Settings.DebugMode)
-                            Logger.Write($"Seems your Soft-Banned. Trying to Unban via Pokestop Spins. Retry {fortTry} of {retryNumber-zeroCheck}", LogLevel.Warning);
+                            Logger.Write($"Seems your Soft-Banned. Trying to Unban via Pokestop Spins. Retry {fortTry} of {retryNumber - zeroCheck}", LogLevel.Warning);
 
                         await RandomHelper.RandomDelay(75, 100);
                     }
@@ -521,7 +522,7 @@ namespace PokemonGo.RocketAPI.Logic
                         : $"{caughtPokemonResponse.Status}";
 
                     var receivedXp = caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess
-                        ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}" 
+                        ? $"and received XP {caughtPokemonResponse.CaptureAward.Xp.Sum()}"
                         : $"";
 
                     Logger.Write($"({catchStatus}) | {pokemon.PokemonId} - Lvl {PokemonInfo.GetLevel(encounter?.WildPokemon?.PokemonData)} [CP {encounter?.WildPokemon?.PokemonData?.Cp}/{PokemonInfo.CalculateMaxCp(encounter?.WildPokemon?.PokemonData)} | IV: {PokemonInfo.CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData).ToString("0.00")}% perfect] | Chance: {(float)((int)(encounter?.CaptureProbability?.CaptureProbability_.First() * 100)) / 100} | {distance:0.##}m dist | with a {returnRealBallName(bestPokeball)}Ball {receivedXp}", LogLevel.Pokemon);
@@ -545,7 +546,7 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 ICollection<PokemonId> filter = _clientSettings.PokemonsToNotCatch;
                 pokemons = pokemons.Where(p => !filter.Contains(p.PokemonId)).ToList();
-           }
+            }
 
             if (pokemons.Any())
                 Logger.Write($"Found {pokemons.Count()} catchable Pokemon", LogLevel.Info);
@@ -579,7 +580,7 @@ namespace PokemonGo.RocketAPI.Logic
 
                 await Inventory.GetCachedInventory(_client, true);
 
-                Logger.Write( evolvePokemonOutProto.Result == EvolvePokemonResponse.Types.Result.Success
+                Logger.Write(evolvePokemonOutProto.Result == EvolvePokemonResponse.Types.Result.Success
                         ? $"{pokemon.PokemonId} successfully for {evolvePokemonOutProto.ExperienceAwarded} xp"
                         : $"Failed: {pokemon.PokemonId}. EvolvePokemonOutProto.Result was {evolvePokemonOutProto.Result}, stopping evolving {pokemon.PokemonId}"
                     , LogLevel.Evolve);
@@ -588,8 +589,11 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task TransferPokemon()
         {
+            Inventory inventory = new Inventory(_client);
             await Inventory.GetCachedInventory(_client, true);
-            var pokemonToTransfer = await _inventory.GetPokemonToTransfer(_clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsToNotTransfer);
+            IEnumerable<PokemonData> myPokemons = await inventory.GetPokemons();
+
+            var pokemonToTransfer = await _inventory.GetPokemonToTransfer(myPokemons, _client.Settings, _clientSettings.NotTransferPokemonsThatCanEvolve, _clientSettings.PrioritizeIVOverCP, _clientSettings.PokemonsToNotTransfer);
             if (pokemonToTransfer != null && pokemonToTransfer.Any())
                 Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer:", LogLevel.Info);
 
@@ -805,4 +809,3 @@ namespace PokemonGo.RocketAPI.Logic
         }
     }
 }
- 
