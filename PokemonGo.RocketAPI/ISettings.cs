@@ -38,19 +38,21 @@ namespace PokemonGo.RocketAPI
         int EvolveKeepCandiesValue { get; }
 
         bool TransferPokemon { get; }
-        int TransferPokemonKeepDuplicateAmount { get; }
+        // int TransferPokemonKeepDuplicateAmount { get; }
         bool NotTransferPokemonsThatCanEvolve { get; }
         bool UseTransferPokemonKeepAboveCP { get; }
         int TransferPokemonKeepAboveCP { get; }
         bool UseTransferPokemonKeepAboveIV { get; }
         float TransferPokemonKeepAboveIVPercentage { get; }
+        int TransferPokemonKeepDuplicateAmountMaxCP { get; }
+        int TransferPokemonKeepDuplicateAmountMaxIV { get; }
 
         bool PrioritizeIVOverCP { get; }
         bool UseLuckyEggs { get; }
         bool UseIncense { get; }
         bool DebugMode { get; }
 
-        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter { get; }
+        ICollection<KeyValuePair<ItemId, int>> ItemRecycleFilter(IEnumerable<ItemData> myItems);
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsToNotTransfer { get; }
         ICollection<PokemonId> PokemonsToNotCatch { get; }
