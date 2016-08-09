@@ -290,11 +290,11 @@ namespace PokemonGo.RocketAPI.Logic
             return incubators.FirstOrDefault();
         }
 
-        public async Task<IEnumerable<PokemonData>> GetEggs()
+        public async Task<IEnumerable<PokemonData>> GetUnusedEggs()
         {
             var inventory = await GetCachedInventory(_client);
             return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
-                    .Where(p => p != null && p.IsEgg);
+                    .Where(p => p != null && p.IsEgg && p.EggIncubatorId == "");
         }
 
         public static async Task<GetInventoryResponse> GetCachedInventory(Client client, bool request = false)
