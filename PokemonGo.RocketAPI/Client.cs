@@ -61,15 +61,16 @@ namespace PokemonGo.RocketAPI
                     var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited && incubators.Count > 0
                       ? unusedEggs.FirstOrDefault()
                       : unusedEggs.LastOrDefault();
-
+                    
                     // Don't use limited incubators for under 5km eggs
-                    if (egg == null | (egg.EggKmWalkedTarget < 5 && incubator.UsesRemaining > 0))
+                    if (egg == null 
+                        | (egg.EggKmWalkedTarget < 5 && incubator.ItemId == ItemId.ItemIncubatorBasic))
                     {
                         continue;
                     }
 
                     var response = await Inventory.UseItemEggIncubator(incubator.Id, egg.Id);
-                    Logger.Write($"Egg #{unusedEggs.IndexOf(egg)} was successfully added to Incubator #{incubators.IndexOf(incubator)}.", LogLevel.Incubation);
+                    Logger.Write($"Adding Egg #{unusedEggs.IndexOf(egg)} to Incubator #{incubators.IndexOf(incubator)}: {response.Result}!", LogLevel.Incubation);
 
                     unusedEggs.Remove(egg);
                    }
