@@ -38,7 +38,7 @@ namespace PokemonGo.RocketAPI.Logic
         private GetPlayerResponse _playerProfile;
 
         public readonly string ConfigsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
-
+        
         private bool _isInitialized = false;
 
         public Logic(ISettings clientSettings)
@@ -201,6 +201,7 @@ namespace PokemonGo.RocketAPI.Logic
                     await RecycleItemsTask.Execute();
                     if (_client.Settings.EvolvePokemon || _client.Settings.EvolveOnlyPokemonAboveIV) await EvolvePokemonTask.Execute();
                     if (_client.Settings.TransferPokemon) await TransferPokemonTask.Execute();
+                    if (_clientSettings.IncubateEggs) await IncubateEggsTask.Execute();
                     await ExportPokemonToCsv.Execute(_playerProfile.PlayerData);
                 }
                 _isInitialized = true;
@@ -243,7 +244,6 @@ namespace PokemonGo.RocketAPI.Logic
                     $"# CP {pokemon.Cp.ToString().PadLeft(4, ' ')}/{PokemonInfo.CalculateMaxCp(pokemon).ToString().PadLeft(4, ' ')} | ({PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect){space}| Lvl {PokemonInfo.GetLevel(pokemon).ToString("00")}\t NAME: '{pokemon.PokemonId}'",
                     LogLevel.Info, ConsoleColor.Yellow);
             }
-
             Logger.Write("====== DisplayHighestsPerfect ======", LogLevel.Info, ConsoleColor.Yellow);
             var highestsPokemonPerfect = await Inventory.GetHighestsPerfect(10);
             foreach (var pokemon in highestsPokemonPerfect)

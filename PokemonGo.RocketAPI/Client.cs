@@ -1,10 +1,14 @@
 ﻿#region
 
-using System;
-using System.IO;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.HttpClient;
 using POGOProtos.Networking.Envelopes;
+using System.Collections.Generic;
+using POGOProtos.Inventory;
+using POGOProtos.Data;
+using System.Threading.Tasks;
+using POGOProtos.Inventory.Item;
+using System.Linq;
 
 #endregion
 

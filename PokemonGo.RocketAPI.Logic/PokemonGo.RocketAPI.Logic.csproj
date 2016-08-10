@@ -62,6 +62,7 @@
     <Compile Include="Tasks\CatchLurePokemonsTask.cs" />
     <Compile Include="Tasks\CatchMapPokemonsTask.cs" />
     <Compile Include="Tasks\CatchPokemonTask.cs" />
+    <Compile Include="Tasks\IncubateEggsTask.cs" />
     <Compile Include="Tasks\EvolvePokemonTask.cs" />
     <Compile Include="Tasks\ExportPokemonToCsv.cs" />
     <Compile Include="Tasks\FarmPokestopsGPXTask.cs" />

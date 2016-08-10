@@ -104,7 +104,7 @@ namespace PokemonGo.RocketAPI.Logic.Logging
                     Log(string.Concat($"[{dateFormat}] ", message));
                     break;
                 case LogLevel.Egg:
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"[{dateFormat}] (EGG) {message}");
                     Log(string.Concat($"[{dateFormat}] ", message));
                     break;
@@ -116,6 +116,11 @@ namespace PokemonGo.RocketAPI.Logic.Logging
                 case LogLevel.Recycling:
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.WriteLine($"[{dateFormat}] (RECYCLING) {message}");
+                    Log(string.Concat($"[{dateFormat}] ", message));
+                    break;
+                case LogLevel.Incubation:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"[{dateFormat}] (INCUBATION) {message}");
                     Log(string.Concat($"[{dateFormat}] ", message));
                     break;
                 case LogLevel.None:
@@ -157,6 +162,7 @@ namespace PokemonGo.RocketAPI.Logic.Logging
         Berry = 10,
         Egg = 11,
         Incense = 12,
-        Recycling = 13
+        Recycling = 13,
+        Incubation = 14
     }
 }
