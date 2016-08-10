@@ -11,7 +11,7 @@ using POGOProtos.Networking.Envelopes;
 
 namespace PokemonGo.RocketAPI
 {
-    public class Client
+    public class Client : IDisposable
     {
         public Rpc.Login Login;
         public Rpc.Player Player;
@@ -47,6 +47,27 @@ namespace PokemonGo.RocketAPI
             Fort = new Rpc.Fort(this);
             Encounter = new Rpc.Encounter(this);
             Misc = new Rpc.Misc(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (PokemonHttpClient != null) PokemonHttpClient.Dispose();
+            }
         }
     }
 }
