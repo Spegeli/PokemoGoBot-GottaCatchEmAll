@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonGo.RocketAPI.Exceptions
 {
+    [Serializable]
     public class GoogleOfflineException : Exception
     {
     }

@@ -45,8 +45,11 @@ namespace PokemonGo.RocketAPI.Logic.Logging
             Console.OutputEncoding = Encoding.Unicode;
 
             var dateFormat = DateTime.Now.ToString("HH:mm:ss");
-            if (Logic._client.Settings.DebugMode)
+            if (Logic._client != null &&
+                Logic._client.Settings.DebugMode)
+            {
                 dateFormat = DateTime.Now.ToString("HH:mm:ss:fff");
+            }
 
             switch (level)
             {
@@ -131,6 +134,10 @@ namespace PokemonGo.RocketAPI.Logic.Logging
             }
         }
 
+        /// <summary>
+        /// Logs the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
         private static void Log(string message)
         {
             // maybe do a new log rather than appending?
@@ -142,6 +149,9 @@ namespace PokemonGo.RocketAPI.Logic.Logging
         }
     }
 
+    /// <summary>
+    /// Represents the log level.
+    /// </summary>
     public enum LogLevel
     {
         None = 0,
