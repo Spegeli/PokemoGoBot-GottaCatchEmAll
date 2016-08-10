@@ -150,12 +150,16 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                         await BotStats.UpdateConsoleTitle();
                         Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                         RecycleItemsTask._recycleCounter++;
+                        IncubateEggsTask._hatchUpdateDelay--;
                         break; //Continue with program as loot was succesfull.
                     }
                 } while (fortTry < retryNumber - zeroCheck); //Stop trying if softban is cleaned earlier or if 40 times fort looting failed.
 
                 if (RecycleItemsTask._recycleCounter >= 5)
+                {
                     await RecycleItemsTask.Execute();
+                    await IncubateEggsTask.Execute();
+                }
             }
         }
     }

@@ -17,9 +17,6 @@ using POGOProtos.Inventory.Item;
 using POGOProtos.Map.Fort;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Settings.Master;
-using Google.Protobuf.Collections;
-using POGOProtos.Networking.Requests.Messages;
-using POGOProtos.Networking.Requests;
 
 #endregion
 
@@ -32,7 +29,7 @@ namespace PokemonGo.RocketAPI.Logic
         public static GetInventoryResponse CachedInventory;
 
         public static async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCp = false, IEnumerable<PokemonId> filter = null)
-        {    
+        {
             IEnumerable<PokemonData> myPokemons = await GetPokemons();
             IEnumerable<ulong> keepPokemonsList = new List<ulong>();
 
@@ -203,6 +200,26 @@ namespace PokemonGo.RocketAPI.Logic
             return families.ToList();
         }
 
+        public static async Task<IEnumerable<EggIncubator>> GetEggIncubators(bool includeBasicIncubators)
+        {
+            var inventory = await GetCachedInventory();
+            var availableIncubators = inventory.InventoryDelta.InventoryItems.Where(x => x.InventoryItemData.EggIncubators != null)
+                                                          .Select(i => i.InventoryItemData.EggIncubators.EggIncubator)
+                                                          .Where(i => i != null);
+
+            var incubators = !includeBasicIncubators ? availableIncubators.Where(s => s.Where(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null)
+                : availableIncubators.Where(s => s.Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null);
+
+            return incubators.FirstOrDefault();
+        }
+
+        public static async Task<IEnumerable<PokemonData>> GetUnusedEggs()
+        {
+            var inventory = await GetCachedInventory();
+            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
+                    .Where(p => p != null && p.IsEgg && p.EggIncubatorId == "");
+        }
+
         public static async Task<IEnumerable<PokemonData>> GetPokemons()
         {
             var inventory = await GetCachedInventory();
@@ -229,12 +246,12 @@ namespace PokemonGo.RocketAPI.Logic
                     select items).ToList();
         }
 
-        public static async Task<IEnumerable<PokemonData>> GetPokemonToEvolve(bool prioritizeIVoverCp = false, IEnumerable < PokemonId> filter = null)
+        public static async Task<IEnumerable<PokemonData>> GetPokemonToEvolve(bool prioritizeIVoverCp = false, IEnumerable<PokemonId> filter = null)
         {
             var myPokemons = await GetPokemons();
             myPokemons = myPokemons.Where(p => p.DeployedFortId == string.Empty);
             if (Logic._client.Settings.UsePokemonToEvolveList && filter != null)
-                myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));		
+                myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));
             if (Logic._client.Settings.EvolveOnlyPokemonAboveIV)
                 myPokemons = myPokemons.Where(p => PokemonInfo.CalculatePokemonPerfection(p) >= Logic._client.Settings.EvolveOnlyPokemonAboveIVValue);
             myPokemons = prioritizeIVoverCp ? myPokemons.OrderByDescending(PokemonInfo.CalculatePokemonPerfection) : myPokemons.OrderByDescending(p => p.Cp);
@@ -277,27 +294,7 @@ namespace PokemonGo.RocketAPI.Logic
             return pokemonToEvolve;
         }
 
-        public async Task<IEnumerable<EggIncubator>> GetEggIncubators(bool includeBasicIncubators)
-        {
-            var inventory = await GetCachedInventory(_client);
-            var availableIncubators = inventory.InventoryDelta.InventoryItems.Where(x => x.InventoryItemData.EggIncubators != null)
-                                                          .Select(i => i.InventoryItemData.EggIncubators.EggIncubator)
-                                                          .Where(i => i != null);
-            
-            var incubators = !includeBasicIncubators ? availableIncubators.Where(s => s.Where(x => x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null)
-                : availableIncubators.Where(s => s.Where(x => x.UsesRemaining > 0 || x.ItemId == ItemId.ItemIncubatorBasicUnlimited) != null);
-            
-            return incubators.FirstOrDefault();
-        }
-
-        public async Task<IEnumerable<PokemonData>> GetUnusedEggs()
-        {
-            var inventory = await GetCachedInventory(_client);
-            return inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
-                    .Where(p => p != null && p.IsEgg && p.EggIncubatorId == "");
-        }
-
-        public static async Task<GetInventoryResponse> GetCachedInventory(Client client, bool request = false)
+        public static async Task<GetInventoryResponse> GetCachedInventory(bool request = false)
         {
             var now = DateTime.UtcNow;
             var ss = new SemaphoreSlim(10);
@@ -332,7 +329,7 @@ namespace PokemonGo.RocketAPI.Logic
         public static async Task<List<FortData>> GetPokestops(bool gpx = false)
         {
             var mapObjects = await Logic._client.Map.GetMapObjects();
- 
+
             var pokeStops = mapObjects.Item1.MapCells.SelectMany(i => i.Forts)
                 .Where(
                     i =>

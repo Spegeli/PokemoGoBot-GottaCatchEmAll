@@ -1,10 +1,14 @@
 ﻿#region
 
-using System;
-using System.IO;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.HttpClient;
 using POGOProtos.Networking.Envelopes;
+using System.Collections.Generic;
+using POGOProtos.Inventory;
+using POGOProtos.Data;
+using System.Threading.Tasks;
+using POGOProtos.Inventory.Item;
+using System.Linq;
 
 #endregion
 
@@ -48,44 +52,5 @@ namespace PokemonGo.RocketAPI
             Encounter = new Rpc.Encounter(this);
             Misc = new Rpc.Misc(this);
         }
-
-        public async Task Incubate(float kmWalked, List<EggIncubator> incubators, List<PokemonData> unusedEggs, List<PokemonData> pokemons, int updateCounter)
-        {
-            foreach (var incubator in incubators)
-            {
-                if (incubator.PokemonId == 0)
-                {
-                    // Unlimited incubators prefer short eggs, limited incubators prefer long eggs
-                    // Special case: If only one incubator is available at all, it will prefer long eggs 
-                    // (disabled, i want to hatch more and more eggs)
-                    var egg = incubator.ItemId == ItemId.ItemIncubatorBasicUnlimited && incubators.Count > 0
-                      ? unusedEggs.FirstOrDefault()
-                      : unusedEggs.LastOrDefault();
-                    
-                    // Don't use limited incubators for under 5km eggs
-                    if (egg == null 
-                        | (egg.EggKmWalkedTarget < 5 && incubator.ItemId == ItemId.ItemIncubatorBasic))
-                    {
-                        continue;
-                    }
-
-                    var response = await Inventory.UseItemEggIncubator(incubator.Id, egg.Id);
-                    Logger.Write($"Adding Egg #{unusedEggs.IndexOf(egg)} to Incubator #{incubators.IndexOf(incubator)}: {response.Result}!", LogLevel.Incubation);
-
-                    unusedEggs.Remove(egg);
-                   }
-                else
-                {
-                    // Currently hatching
-                    if (updateCounter <= 0) {
-                        var kmToWalk = incubator.TargetKmWalked - incubator.StartKmWalked;
-                        var kmRemaining = incubator.TargetKmWalked - kmWalked;
-
-                        Logger.Write($"Incubator #{incubators.IndexOf(incubator)} needs {kmRemaining.ToString("N2")}km/{kmToWalk.ToString("N2")}km to hatch.", LogLevel.Egg);
-                    }
-                }
-            }
-        }
-
     }
 }
