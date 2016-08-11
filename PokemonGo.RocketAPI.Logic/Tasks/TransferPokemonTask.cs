@@ -37,9 +37,9 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                 var bestPokemonOfType = await Inventory.GetBestPokemonOfType(pokemon);
                 var bestPokemonInfo = "NONE";
                 if (bestPokemonOfType != null)
-                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCp(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect | Trash: {PokemonInfo.CalculatePokemonTrashIndicator(bestPokemonOfType).ToString("0.00")}";
+                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCp(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect | Rank: {PokemonInfo.CalculatePokemonRanking(bestPokemonOfType, Logic._clientSettings.PrioritizeFactor).ToString("0.00")}";
 
-                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: {PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect | Trash: {PokemonInfo.CalculatePokemonTrashIndicator(pokemon).ToString("0.00")}] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: {PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect | Rank: {PokemonInfo.CalculatePokemonRanking(pokemon, Logic._clientSettings.PrioritizeFactor).ToString("0.00")}] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer);
             }
 
             await BotStats.GetPokemonCount();

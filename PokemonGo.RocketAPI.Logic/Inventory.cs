@@ -36,7 +36,7 @@ namespace PokemonGo.RocketAPI.Logic
                 myPokemons = myPokemons.Where(p => filter.Contains(p.PokemonId));
             if (Logic._client.Settings.EvolveOnlyPokemonAboveIV)
                 myPokemons = myPokemons.Where(p => PokemonInfo.CalculatePokemonPerfection(p) >= Logic._client.Settings.EvolveOnlyPokemonAboveIVValue);
-            myPokemons = myPokemons.OrderByDescending(PokemonInfo.CalculatePokemonTrashIndicator);
+            myPokemons = myPokemons.OrderByDescending(x => PokemonInfo.CalculatePokemonRanking(x, Logic._clientSettings.PrioritizeFactor));
 
             var pokemons = myPokemons.ToList();
 
@@ -85,7 +85,7 @@ namespace PokemonGo.RocketAPI.Logic
             keepPokemonsList = keepPokemonsList.Union(myPokemons.GroupBy(p => p.PokemonId)
                 .SelectMany(
                     p =>
-                        p.OrderByDescending(PokemonInfo.CalculatePokemonTrashIndicator)
+                        p.OrderByDescending(x => PokemonInfo.CalculatePokemonRanking(x, Logic._clientSettings.PrioritizeFactor))
                             .ThenBy(n => n.StaminaMax)
                             .Take(Logic._client.Settings.TransferPokemonKeepDuplicationAmount)
                             .Select(n => n.Id)
@@ -120,7 +120,7 @@ namespace PokemonGo.RocketAPI.Logic
                     }
 
                     keepEvolveList.AddRange(myPokemons.Where(x => x.PokemonId == pokemon.Key)
-                        .OrderByDescending(PokemonInfo.CalculatePokemonTrashIndicator)
+                        .OrderByDescending(x => PokemonInfo.CalculatePokemonRanking(x, Logic._clientSettings.PrioritizeFactor))
                         .ThenBy(n => n.StaminaMax)
                         .Take(amountToSkip)
                         .Select(n => n.Id)
@@ -167,7 +167,7 @@ namespace PokemonGo.RocketAPI.Logic
             var myPokemon = await GetPokemons();
             var pokemons = myPokemon.ToList();
             return pokemons.Where(x => x.PokemonId == pokemon.PokemonId)
-                .OrderByDescending(PokemonInfo.CalculatePokemonTrashIndicator)
+                .OrderByDescending(x => PokemonInfo.CalculatePokemonRanking(x, Logic._clientSettings.PrioritizeFactor))
                 .FirstOrDefault();
         }
 

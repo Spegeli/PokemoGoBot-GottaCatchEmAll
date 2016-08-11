@@ -44,6 +44,7 @@ namespace PokemonGo.RocketAPI
         float TransferPokemonKeepIV { get; }
         int TransferPokemonKeepIVMinCP { get; }
         int TransferPokemonKeepDuplicationAmount { get; }
+        float PrioritizeFactor { get; }
 
         bool HatchEggs { get; }
         bool UseOnlyBasicIncubator { get; }

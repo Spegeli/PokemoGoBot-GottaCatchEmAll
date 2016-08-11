@@ -53,6 +53,7 @@ namespace PokemonGo.RocketAPI.Console
         public float TransferPokemonKeepIV => UserSettings.Default.TransferPokemonKeepIV;
         public int TransferPokemonKeepIVMinCP => UserSettings.Default.TransferPokemonKeepIVMinCP;
         public int TransferPokemonKeepDuplicationAmount => UserSettings.Default.TransferPokemonKeepDuplicationAmount;
+        public float PrioritizeFactor => UserSettings.Default.PrioritizeFactor;
 
         public bool UseLuckyEggs => UserSettings.Default.UseLuckyEggs;
         public bool HatchEggs => UserSettings.Default.HatchEggs;
