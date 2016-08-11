@@ -159,6 +159,17 @@ namespace PokemonGo.RocketAPI.Logic
             return pokemonList.OrderBy(p => p.PokemonId);
         }
 
+        public static async Task<IEnumerable<PokemonData>> GetPokemonToRename()
+        {
+            IEnumerable<PokemonData> myPokemons = await GetPokemons();
+
+            IEnumerable<PokemonData> pokemonList = myPokemons
+            .Where(p => p.DeployedFortId == String.Empty && p.Favorite == 0 && PokemonInfo.CalculatePokemonPerfection(p) >= Logic._client.Settings.RenameOnlyPokemonAboveIV)
+            .OrderBy(p => p.PokemonId).ToList();
+
+            return pokemonList;
+        }
+
         public static async Task<IEnumerable<PokemonData>> GetHighestsCp(int limit)
         {
             var myPokemon = await GetPokemons();

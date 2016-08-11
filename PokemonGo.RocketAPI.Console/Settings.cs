@@ -56,6 +56,10 @@ namespace PokemonGo.RocketAPI.Console
         public int TransferPokemonKeepAmountHighestCP => UserSettings.Default.TransferPokemonKeepAmountHighestCP;
         public int TransferPokemonKeepAmountHighestIV => UserSettings.Default.TransferPokemonKeepAmountHighestIV;
 
+        public bool RenamePokemon => UserSettings.Default.RenamePokemon;
+        public float RenameOnlyPokemonAboveIV => UserSettings.Default.RenameOnlyPokemonAboveIV;
+        public string RenamePokemonTemplate => UserSettings.Default.RenamePokemonTemplate;
+
         public bool UseLuckyEggs => UserSettings.Default.UseLuckyEggs;
         public bool HatchEggs => UserSettings.Default.HatchEggs;
         public bool UseOnlyBasicIncubator => UserSettings.Default.UseOnlyBasicIncubator;

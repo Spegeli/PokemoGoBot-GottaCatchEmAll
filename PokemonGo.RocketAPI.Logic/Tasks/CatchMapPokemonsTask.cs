@@ -43,6 +43,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
 
             if (Logic._client.Settings.EvolvePokemon || Logic._client.Settings.EvolveOnlyPokemonAboveIV) await EvolvePokemonTask.Execute();
             if (Logic._client.Settings.TransferPokemon) await TransferPokemonTask.Execute();
+            if (Logic._client.Settings.RenamePokemon) await RenamePokemonTask.Execute();
         }
 
         private static async Task<List<MapPokemon>> GetNearbyPokemons()
