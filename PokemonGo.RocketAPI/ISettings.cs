@@ -47,6 +47,10 @@ namespace PokemonGo.RocketAPI
         int TransferPokemonKeepAmountHighestCP { get; }
         int TransferPokemonKeepAmountHighestIV { get; }
 
+        bool RenamePokemon { get; }
+        float RenameOnlyPokemonAboveIV { get; }
+        string RenamePokemonTemplate { get; }
+
         bool HatchEggs { get; }
         bool UseOnlyBasicIncubator { get; }
         bool UseLuckyEggs { get; }

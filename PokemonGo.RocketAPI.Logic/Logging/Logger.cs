@@ -123,6 +123,11 @@ namespace PokemonGo.RocketAPI.Logic.Logging
                     Console.WriteLine($"[{dateFormat}] (INCUBATION) {message}");
                     Log(string.Concat($"[{dateFormat}] ", message));
                     break;
+                case LogLevel.Rename:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($"[{dateFormat}] (RENAME) {message}");
+                    Log(string.Concat($"[{dateFormat}] ", message));
+                    break;
                 case LogLevel.None:
                     Console.ForegroundColor = color;
                     Console.WriteLine($"[{dateFormat}] {message}");
@@ -163,6 +168,7 @@ namespace PokemonGo.RocketAPI.Logic.Logging
         Egg = 11,
         Incense = 12,
         Recycling = 13,
-        Incubation = 14
+        Incubation = 14,
+        Rename = 15
     }
 }

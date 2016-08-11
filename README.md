@@ -35,6 +35,7 @@ Make sure you check out our [Wiki](https://github.com/Spegeli/PokemoGoBot-GottaC
  - [Catch Pokemon (Lured & Incense supported)]<br />
  - [Evolve Pokemon]<br />
  - [Transfer Pokemon]<br />
+ - [Rename Pokemon]<br />
  - [Throws away unneeded items]<br />
  - [Use Lucky Eggs]<br />
  - [Use Incense]<br />

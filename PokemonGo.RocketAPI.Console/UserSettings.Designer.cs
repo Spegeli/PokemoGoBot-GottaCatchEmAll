@@ -478,5 +478,41 @@ namespace PokemonGo.RocketAPI.Console {
                 this["UseOnlyBasicIncubator"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RenamePokemon {
+            get {
+                return ((bool)(this["RenamePokemon"]));
+            }
+            set {
+                this["RenamePokemon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        public float RenameOnlyPokemonAboveIV {
+            get {
+                return ((float)(this["RenameOnlyPokemonAboveIV"]));
+            }
+            set {
+                this["RenameOnlyPokemonAboveIV"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{IV}_{NAME}")]
+        public string RenamePokemonTemplate {
+            get {
+                return ((string)(this["RenamePokemonTemplate"]));
+            }
+            set {
+                this["RenamePokemonTemplate"] = value;
+            }
+        }
     }
 }

@@ -200,6 +200,7 @@ namespace PokemonGo.RocketAPI.Logic
                     if (_client.Settings.UseLuckyEggs) await UseLuckyEggTask.Execute();
                     if (_client.Settings.EvolvePokemon || _client.Settings.EvolveOnlyPokemonAboveIV) await EvolvePokemonTask.Execute();
                     if (_client.Settings.TransferPokemon) await TransferPokemonTask.Execute();
+                    if (_client.Settings.RenamePokemon) await RenamePokemonTask.Execute();
                     await ExportPokemonToCsv.Execute(_playerProfile.PlayerData);
                     if (_clientSettings.HatchEggs) await HatchEggsTask.Execute();
                 }
