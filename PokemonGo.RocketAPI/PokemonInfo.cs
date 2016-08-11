@@ -26,6 +26,12 @@ namespace PokemonGo.RocketAPI
 
     public static class PokemonInfo
     {
+        // new trash indicator for pokemon comparison, which will include cp and iv
+        public static double CalculatePokemonTrashIndicator(PokemonData poke)
+        {
+            return poke.Cp * (CalculatePokemonPerfection(poke) / 100);
+        }
+
         public static double CalculatePokemonPerfection(PokemonData poke)
         {
             if (Math.Abs(poke.CpMultiplier + poke.AdditionalCpMultiplier) <= 0)

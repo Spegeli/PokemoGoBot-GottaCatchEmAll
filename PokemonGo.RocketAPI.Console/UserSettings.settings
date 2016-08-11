@@ -5,10 +5,10 @@
     <Setting Name="DefaultAltitude" Type="System.Double" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="TransferPokemonKeepAllAboveIV" Type="System.Single" Scope="User">
+    <Setting Name="TransferPokemonKeepIV" Type="System.Single" Scope="User">
       <Value Profile="(Default)">95</Value>
     </Setting>
-    <Setting Name="TransferPokemonKeepAllAboveCP" Type="System.Int32" Scope="User">
+    <Setting Name="TransferPokemonKeepCP" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2000</Value>
     </Setting>
     <Setting Name="WalkingSpeedInKilometerPerHour" Type="System.Double" Scope="User">
@@ -31,9 +31,6 @@
     </Setting>
     <Setting Name="PtcPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">PtcPassword</Value>
-    </Setting>
-    <Setting Name="PrioritizeIVOverCP" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MaxTravelDistanceInMeters" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
@@ -62,11 +59,11 @@
     <Setting Name="TransferPokemon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="UseTransferPokemonKeepAllAboveCP" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="TransferPokemonKeepIVMinCP" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">420</Value>
     </Setting>
-    <Setting Name="UseTransferPokemonKeepAllAboveIV" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="TransferPokemonKeepDuplicationAmount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="UsePokemonToNotTransferList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -97,12 +94,6 @@
     </Setting>
     <Setting Name="CatchIncensePokemon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="TransferPokemonKeepAmountHighestCP" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="TransferPokemonKeepAmountHighestIV" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="CatchLuredPokemon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

@@ -14,7 +14,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
         public static async Task Execute()
         {
             await Inventory.GetCachedInventory(true);
-            var pokemonToTransfer = await Inventory.GetPokemonToTransfer(Logic._clientSettings.NotTransferPokemonsThatCanEvolve, Logic._clientSettings.PrioritizeIVOverCP, Logic._clientSettings.PokemonsToNotTransfer);
+            var pokemonToTransfer = await Inventory.GetPokemonToTransfer(Logic._clientSettings.NotTransferPokemonsThatCanEvolve, Logic._clientSettings.PokemonsToNotTransfer);
             if (pokemonToTransfer == null || !pokemonToTransfer.Any())
                 return;
 
@@ -34,14 +34,12 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
 
                 BotStats.PokemonTransferedThisSession += 1;
 
-                var bestPokemonOfType = Logic._client.Settings.PrioritizeIVOverCP
-                    ? await Inventory.GetHighestPokemonOfTypeByIv(pokemon)
-                    : await Inventory.GetHighestPokemonOfTypeByCp(pokemon);
+                var bestPokemonOfType = await Inventory.GetBestPokemonOfType(pokemon);
                 var bestPokemonInfo = "NONE";
                 if (bestPokemonOfType != null)
-                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCp(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect";
+                    bestPokemonInfo = $"CP: {bestPokemonOfType.Cp}/{PokemonInfo.CalculateMaxCp(bestPokemonOfType)} | IV: {PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType).ToString("0.00")}% perfect | Trash: {PokemonInfo.CalculatePokemonTrashIndicator(bestPokemonOfType).ToString("0.00")}";
 
-                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: { PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer);
+                Logger.Write($"{pokemon.PokemonId} [CP {pokemon.Cp}/{PokemonInfo.CalculateMaxCp(pokemon)} | IV: {PokemonInfo.CalculatePokemonPerfection(pokemon).ToString("0.00")}% perfect | Trash: {PokemonInfo.CalculatePokemonTrashIndicator(pokemon).ToString("0.00")}] | Best: [{bestPokemonInfo}] | Family Candies: {familyCandies}", LogLevel.Transfer);
             }
 
             await BotStats.GetPokemonCount();

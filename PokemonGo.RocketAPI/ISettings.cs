@@ -40,17 +40,14 @@ namespace PokemonGo.RocketAPI
 
         bool TransferPokemon { get; }
         bool NotTransferPokemonsThatCanEvolve { get; }
-        bool UseTransferPokemonKeepAllAboveCP { get; }
-        int TransferPokemonKeepAllAboveCP { get; }
-        bool UseTransferPokemonKeepAllAboveIV { get; }
-        float TransferPokemonKeepAllAboveIV { get; }
-        int TransferPokemonKeepAmountHighestCP { get; }
-        int TransferPokemonKeepAmountHighestIV { get; }
+        int TransferPokemonKeepCP { get; }
+        float TransferPokemonKeepIV { get; }
+        int TransferPokemonKeepIVMinCP { get; }
+        int TransferPokemonKeepDuplicationAmount { get; }
 
         bool HatchEggs { get; }
         bool UseOnlyBasicIncubator { get; }
         bool UseLuckyEggs { get; }
-        bool PrioritizeIVOverCP { get; }
         int ExportPokemonToCsvEveryMinutes { get; }
         bool DebugMode { get; }
 

@@ -49,17 +49,14 @@ namespace PokemonGo.RocketAPI.Console
 
         public bool TransferPokemon => UserSettings.Default.TransferPokemon;
         public bool NotTransferPokemonsThatCanEvolve => UserSettings.Default.NotTransferPokemonsThatCanEvolve;
-        public bool UseTransferPokemonKeepAllAboveCP => UserSettings.Default.UseTransferPokemonKeepAllAboveCP;
-        public int TransferPokemonKeepAllAboveCP => UserSettings.Default.TransferPokemonKeepAllAboveCP;
-        public bool UseTransferPokemonKeepAllAboveIV => UserSettings.Default.UseTransferPokemonKeepAllAboveIV;
-        public float TransferPokemonKeepAllAboveIV => UserSettings.Default.TransferPokemonKeepAllAboveIV;
-        public int TransferPokemonKeepAmountHighestCP => UserSettings.Default.TransferPokemonKeepAmountHighestCP;
-        public int TransferPokemonKeepAmountHighestIV => UserSettings.Default.TransferPokemonKeepAmountHighestIV;
+        public int TransferPokemonKeepCP => UserSettings.Default.TransferPokemonKeepCP;
+        public float TransferPokemonKeepIV => UserSettings.Default.TransferPokemonKeepIV;
+        public int TransferPokemonKeepIVMinCP => UserSettings.Default.TransferPokemonKeepIVMinCP;
+        public int TransferPokemonKeepDuplicationAmount => UserSettings.Default.TransferPokemonKeepDuplicationAmount;
 
         public bool UseLuckyEggs => UserSettings.Default.UseLuckyEggs;
         public bool HatchEggs => UserSettings.Default.HatchEggs;
         public bool UseOnlyBasicIncubator => UserSettings.Default.UseOnlyBasicIncubator;
-        public bool PrioritizeIVOverCP => UserSettings.Default.PrioritizeIVOverCP;
         public int ExportPokemonToCsvEveryMinutes => UserSettings.Default.ExportPokemonToCsvEveryMinutes;
         public bool DebugMode => UserSettings.Default.DebugMode;
 
