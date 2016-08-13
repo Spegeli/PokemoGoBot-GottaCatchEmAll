@@ -107,6 +107,12 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.MaxRandomWalkingSpeed = value; }
         }
 
+        public bool MakeMeHuman
+        {
+            get { return UserSettings.Default.MakeMeHuman; }
+            set { UserSettings.Default.MakeMeHuman = value; }
+        }
+
         public int MaxTravelDistanceInMeters
         {
             get { return UserSettings.Default.MaxTravelDistanceInMeters; }

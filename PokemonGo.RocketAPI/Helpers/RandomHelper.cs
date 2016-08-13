@@ -28,6 +28,18 @@ namespace PokemonGo.RocketAPI.Helpers
             await Task.Delay(randomizedDelay);
         }
 
+        public static Boolean getRandBool()
+        {
+            Random rand = new Random();
+            return rand.Next(0, 2) == 0;
+        }
+
+        public static double getRandomDoubleInteger(int minimum, int maximum)
+        {
+            Random random = new Random();
+            return random.Next(minimum, maximum);
+        }
+
         public static async Task RandomDelay(int min, int max)
         {
             await Task.Delay(Random.Next(min, max));
