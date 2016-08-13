@@ -153,7 +153,8 @@ namespace PokemonGo.RocketAPI.Logic
                     _keepIV = individualFilter.KeepIV;
                     _keepIVMinCP = individualFilter.KeepIVMinCP;
                 }
-                if (_keepIV > 0 && _keepIV <= PokemonInfo.CalculatePokemonPerfection(pokemon) && _keepIVMinCP <= pokemon.Cp)
+                if (_keepIV > 0 && _keepIV <= PokemonInfo.CalculatePokemonPerfection(pokemon) 
+                    && (_keepIVMinCP <= pokemon.Cp || 95 <= PokemonInfo.CalculatePokemonPerfection(pokemon)))
                     keepIndividualPokemonsList.Add(pokemon.Id);
             }
             // Add all with good CP and good IV filter to keep list
