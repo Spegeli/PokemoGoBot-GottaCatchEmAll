@@ -24,6 +24,8 @@ namespace PokemonGo.RocketAPI
         string GPXFile { get; }
         bool GPXIgnorePokestops { get; }
         double WalkingSpeedInKilometerPerHour { get; }
+        double MinRandomWalkingSpeed { get; }
+        double MaxRandomWalkingSpeed { get; }
         int MaxTravelDistanceInMeters { get; }
         bool UseTeleportInsteadOfWalking { get; }
 

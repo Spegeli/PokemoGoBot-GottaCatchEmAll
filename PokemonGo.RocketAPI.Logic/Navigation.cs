@@ -25,7 +25,8 @@ namespace PokemonGo.RocketAPI.Logic
             if (Logic._client.Settings.WalkingSpeedInKilometerPerHour == 0)
             {
                 Random random = new Random();
-                walkingSpeedInKilometersPerHour = random.NextDouble() * (8 - 4) + 4;
+                walkingSpeedInKilometersPerHour = random.NextDouble() * (Logic._client.Settings.MaxRandomWalkingSpeed - Logic._client.Settings.MinRandomWalkingSpeed) + Logic._client.Settings.MinRandomWalkingSpeed;
+                Logger.Write("Speed is now " + walkingSpeedInKilometersPerHour, LogLevel.Navigation);
             }
             else
             {
@@ -81,7 +82,8 @@ namespace PokemonGo.RocketAPI.Logic
             if ( Logic._client.Settings.WalkingSpeedInKilometerPerHour == 0 )
             {
                 Random random = new Random();
-                walkingSpeedInKilometersPerHour = random.NextDouble() * (8 - 4) + 4;
+                walkingSpeedInKilometersPerHour = random.NextDouble() * (Logic._client.Settings.MaxRandomWalkingSpeed - Logic._client.Settings.MinRandomWalkingSpeed) + Logic._client.Settings.MinRandomWalkingSpeed;
+                Logger.Write("Speed is now " + walkingSpeedInKilometersPerHour, LogLevel.Navigation);
             }
             else
             {
