@@ -56,5 +56,21 @@ namespace PokemonGo.RocketAPI
         ICollection<PokemonId> PokemonsToEvolve { get; }
         ICollection<PokemonId> PokemonsToNotTransfer { get; }
         ICollection<PokemonId> PokemonsToNotCatch { get; }
+        Dictionary<PokemonId, TransferFilter> PokemonsTransferFilter { get; }
     }
+
+    public class TransferFilter
+    {
+        public TransferFilter(int keepCP, float keepIV, int keepIVMinCP)
+        {
+            KeepCP = keepCP;
+            KeepIV = keepIV;
+            KeepIVMinCP = keepIVMinCP;
+        }
+
+        public int KeepCP { get; }
+        public float KeepIV { get; }
+        public int KeepIVMinCP { get; }
+    }
+
 }

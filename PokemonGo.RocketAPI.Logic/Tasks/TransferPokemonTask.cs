@@ -14,7 +14,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
         public static async Task Execute()
         {
             await Inventory.GetCachedInventory(true);
-            var pokemonToTransfer = await Inventory.GetPokemonToTransfer(Logic._clientSettings.NotTransferPokemonsThatCanEvolve, Logic._clientSettings.PokemonsToNotTransfer);
+            var pokemonToTransfer = await Inventory.GetPokemonToTransfer(Logic._clientSettings.NotTransferPokemonsThatCanEvolve, Logic._clientSettings.PokemonsToNotTransfer, Logic._clientSettings.PokemonsTransferFilter);
             if (pokemonToTransfer == null || !pokemonToTransfer.Any())
                 return;
 

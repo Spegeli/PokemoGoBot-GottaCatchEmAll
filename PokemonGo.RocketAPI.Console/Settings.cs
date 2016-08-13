@@ -9,6 +9,7 @@ using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Logic.Logging;
 using POGOProtos.Enums;
 using POGOProtos.Inventory.Item;
+using System.Xml.Linq;
 
 #endregion
 
@@ -64,6 +65,7 @@ namespace PokemonGo.RocketAPI.Console
         private ICollection<PokemonId> _pokemonsToEvolve;
         private ICollection<PokemonId> _pokemonsToNotTransfer;
         private ICollection<PokemonId> _pokemonsToNotCatch;
+        private Dictionary<PokemonId, TransferFilter> _pokemonsTransferFilter;
 
         // Create our group of inventory items
         private readonly SortedList<int, ItemId> _inventoryBalls = new SortedList<int, ItemId>();
@@ -225,6 +227,64 @@ namespace PokemonGo.RocketAPI.Console
                 _pokemonsToNotCatch = _pokemonsToNotCatch ?? LoadPokemonList("PokemonsToNotCatch.ini", defaultPokemon);
                 return _pokemonsToNotCatch;
             }
+        }
+
+        public Dictionary<PokemonId, TransferFilter> PokemonsTransferFilter
+        {
+            get
+            {
+                var defaultFilter = new Dictionary<PokemonId, TransferFilter>
+                {
+                    { PokemonId.Eevee, new TransferFilter(0, 90, 600)}
+                };
+                _pokemonsTransferFilter = _pokemonsTransferFilter ?? LoadPokemonTransferFilter("PokemonTransferFilter.xml", defaultFilter);
+                return _pokemonsTransferFilter;
+            }
+        }
+
+        private Dictionary<PokemonId, TransferFilter> LoadPokemonTransferFilter(string filename, Dictionary<PokemonId, TransferFilter> defaultTransferFilter)
+        {
+            var result = new Dictionary<PokemonId, TransferFilter>();
+            if (!Directory.Exists(ConfigsPath))
+                Directory.CreateDirectory(ConfigsPath);
+            var pokemonFilterFile = Path.Combine(ConfigsPath, filename);
+            if (!File.Exists(pokemonFilterFile))
+            {
+                Logger.Write($"Settings File: \"{filename}\" not found, creating new...", LogLevel.Warning);
+
+                XDocument newDoc = new XDocument();
+                XElement transferFilter = new XElement("PokemonTransferFilter");
+                foreach (var filter in defaultTransferFilter)
+                {
+                    XElement pokemonIdEl = new XElement("PokemonId", filter.Key);
+                    XElement keepCPEl = new XElement("KeepCP", filter.Value.KeepCP);
+                    XElement keepIVEl = new XElement("KeepIV", filter.Value.KeepIV);
+                    XElement keepIVMinCPEl = new XElement("KeepIVMinCP", filter.Value.KeepIVMinCP);
+                    transferFilter.Add(new XElement("Pokemon", pokemonIdEl, keepCPEl, keepIVEl, keepIVMinCPEl));
+                    result.Add(filter.Key, filter.Value);
+                }
+                newDoc.Add(transferFilter);
+                newDoc.Save(pokemonFilterFile);
+            }
+            else if (File.Exists(pokemonFilterFile))
+            {
+                Logger.Write($"Loading Settings File: \"{filename}\"", LogLevel.Info);
+
+                var doc = XDocument.Load(pokemonFilterFile);
+                var pokemons = doc.Root.Elements("Pokemon");
+
+                foreach (var pokemon in pokemons)
+                {
+                    PokemonId pokemonId;
+                    var pokemonName = (string) pokemon.Element("PokemonId");
+                    if (!Enum.TryParse(pokemonName, out pokemonId)) continue;
+                    var keepCP = (int) pokemon.Element("KeepCP");
+                    var keepIV = (float) pokemon.Element("KeepIV");
+                    var keepIVMinCP = (int) pokemon.Element("KeepIVMinCP");
+                    result.Add(pokemonId, new TransferFilter(keepCP, keepIV, keepIVMinCP));
+                }
+            }
+            return result;
         }
 
         private ICollection<PokemonId> LoadPokemonList(string filename, List<PokemonId> defaultPokemon)

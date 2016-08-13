@@ -195,6 +195,7 @@ namespace PokemonGo.RocketAPI.Logic
                     var pokemonsToNotTransfer = _clientSettings.PokemonsToNotTransfer;
                     var pokemonsToNotCatch = _clientSettings.PokemonsToNotCatch;
                     var pokemonsToEvolve = _clientSettings.PokemonsToEvolve;
+                    var pokemonsTransferFilter = _clientSettings.PokemonsTransferFilter;
 
                     await RecycleItemsTask.Execute();
                     if (_client.Settings.UseLuckyEggs) await UseLuckyEggTask.Execute();

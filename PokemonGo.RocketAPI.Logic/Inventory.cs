@@ -76,7 +76,7 @@ namespace PokemonGo.RocketAPI.Logic
             return pokemonToEvolve;
         }
 
-        public static async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, IEnumerable<PokemonId> filter = null)
+        public static async Task<IEnumerable<PokemonData>> GetPokemonToTransfer(bool keepPokemonsThatCanEvolve = false, IEnumerable<PokemonId> filter = null, IDictionary<PokemonId, TransferFilter> transferFilter = null)
         {    
             IEnumerable<PokemonData> myPokemons = await GetPokemons();
             IEnumerable<ulong> keepPokemonsList = new List<ulong>();
@@ -134,13 +134,30 @@ namespace PokemonGo.RocketAPI.Logic
             if (Logic._client.Settings.UsePokemonToNotTransferList && filter != null)
                 keepPokemonsList = keepPokemonsList.Union(myPokemons.Where(p => filter.Contains(p.PokemonId)).Select(n => n.Id).ToList());
 
-            // Keep any that have CP higher than my KeepAboveCP setting
-            if (Logic._client.Settings.TransferPokemonKeepCP > 0)
-                keepPokemonsList = keepPokemonsList.Union(myPokemons.Where(p => p.Cp >= Logic._client.Settings.TransferPokemonKeepCP).Select(n => n.Id).ToList());
-
-            // Keep any that have higher IV than my KeepAboveIV setting
-            if (Logic._client.Settings.TransferPokemonKeepIV > 0)
-                keepPokemonsList = keepPokemonsList.Union(myPokemons.Where(p => PokemonInfo.CalculatePokemonPerfection(p) >= Logic._client.Settings.TransferPokemonKeepIV).Select(n => n.Id).ToList());
+            List<ulong> keepIndividualPokemonsList = new List<ulong>();
+            foreach (var pokemon in myPokemons)
+            {
+                var individualFilter = transferFilter.Where(p => pokemon.PokemonId == p.Key).Select(p => p.Value).FirstOrDefault();
+                
+                // Keep any that have CP higher than my KeepAboveCP setting
+                int _keepCP = Logic._client.Settings.TransferPokemonKeepCP;
+                if (individualFilter != null)
+                    _keepCP = individualFilter.KeepCP;
+                if (_keepCP > 0 && _keepCP <= pokemon.Cp)
+                    keepIndividualPokemonsList.Add(pokemon.Id);
+            
+                // Keep any that have higher IV than my KeepAboveIV setting
+                float _keepIV = Logic._client.Settings.TransferPokemonKeepIV;
+                int _keepIVMinCP = Logic._clientSettings.TransferPokemonKeepIVMinCP;
+                if (individualFilter != null) { 
+                    _keepIV = individualFilter.KeepIV;
+                    _keepIVMinCP = individualFilter.KeepIVMinCP;
+                }
+                if (_keepIV > 0 && _keepIV <= PokemonInfo.CalculatePokemonPerfection(pokemon) && _keepIVMinCP <= pokemon.Cp)
+                    keepIndividualPokemonsList.Add(pokemon.Id);
+            }
+            // Add all with good CP and good IV filter to keep list
+            keepPokemonsList = keepPokemonsList.Union(keepIndividualPokemonsList);
 
             // Remove any that are not in my Keep list
             IEnumerable<PokemonData> pokemonList = myPokemons.Where(p => !keepPokemonsList.Contains(p.Id)).OrderBy(p => p.PokemonId).ToList();
