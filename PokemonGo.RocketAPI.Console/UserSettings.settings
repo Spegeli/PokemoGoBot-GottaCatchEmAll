@@ -20,6 +20,9 @@
     <Setting Name="MaxRandomWalkingSpeed" Type="System.Double" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
+    <Setting Name="MakeMeHuman" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
