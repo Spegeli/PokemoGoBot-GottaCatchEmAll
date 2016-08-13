@@ -81,7 +81,7 @@ namespace PokemonGo.RocketAPI.Logic
             IEnumerable<PokemonData> myPokemons = await GetPokemons();
             IEnumerable<ulong> keepPokemonsList = new List<ulong>();
 
-            // Keep best pokemon by new trash indicator (cp * (iv / 100)) and duplication amount
+            // Keep best pokemon by new ranking indicator (cp^factor * (iv / 100)) and duplication amount
             keepPokemonsList = keepPokemonsList.Union(myPokemons.GroupBy(p => p.PokemonId)
                 .SelectMany(
                     p =>

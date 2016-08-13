@@ -194,7 +194,7 @@ namespace PokemonGo.RocketAPI.Console
             {
                 //Type of pokemons to evolve
                 var defaultPokemon = new List<PokemonId> {
-                    PokemonId.Zubat, PokemonId.Pidgey, PokemonId.Rattata
+                    PokemonId.Zubat, PokemonId.Pidgey, PokemonId.Rattata, PokemonId.Spearow, PokemonId.Caterpie, PokemonId.Weedle
                 };
                 _pokemonsToEvolve = _pokemonsToEvolve ?? LoadPokemonList("PokemonsToEvolve.ini", defaultPokemon);
                 return _pokemonsToEvolve;
