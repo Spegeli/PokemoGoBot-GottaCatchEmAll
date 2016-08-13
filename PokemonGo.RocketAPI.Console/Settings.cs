@@ -95,6 +95,18 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.WalkingSpeedInKilometerPerHour = value; }
         }
 
+        public double MinRandomWalkingSpeed
+        {
+            get { return UserSettings.Default.MinRandomWalkingSpeed; }
+            set { UserSettings.Default.MinRandomWalkingSpeed = value; }
+        }
+
+        public double MaxRandomWalkingSpeed
+        {
+            get { return UserSettings.Default.MaxRandomWalkingSpeed; }
+            set { UserSettings.Default.MaxRandomWalkingSpeed = value; }
+        }
+
         public int MaxTravelDistanceInMeters
         {
             get { return UserSettings.Default.MaxTravelDistanceInMeters; }

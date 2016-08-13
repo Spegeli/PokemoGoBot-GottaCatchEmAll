@@ -73,6 +73,30 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public double MinRandomWalkingSpeed {
+            get {
+                return ((double)(this["MinRandomWalkingSpeed"]));
+            }
+            set {
+                this["MinRandomWalkingSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public double MaxRandomWalkingSpeed {
+            get {
+                return ((double)(this["MaxRandomWalkingSpeed"]));
+            }
+            set {
+                this["MaxRandomWalkingSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double DefaultLatitude {
             get {

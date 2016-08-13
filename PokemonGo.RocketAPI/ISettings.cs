@@ -28,6 +28,8 @@ namespace PokemonGo.RocketAPI
         double MaxGPXNoise { get; }
         int MaxSleepTransfer { get; }
         int MinSleepTransfer { get; }
+        double MinRandomWalkingSpeed { get; }
+        double MaxRandomWalkingSpeed { get; }
         int MaxTravelDistanceInMeters { get; }
         bool UseTeleportInsteadOfWalking { get; }
 
