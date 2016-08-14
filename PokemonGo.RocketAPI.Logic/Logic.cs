@@ -225,7 +225,15 @@ namespace PokemonGo.RocketAPI.Logic
         private async Task Main()
         {
             if (_clientSettings.UseGPXPathing)
+            {
+                if (_clientSettings.MakeMeHuman)
+                {
+                    FarmPokestopsGPXTask.MakeMeHuman = true;
+                    FarmPokestopsGPXTask.MaxGPXNoise = _clientSettings.MaxGPXNoise;
+                }
+
                 await FarmPokestopsGPXTask.Execute();
+            }
             else
                 await FarmPokestopsTask.Execute();
         }

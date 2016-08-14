@@ -28,6 +28,21 @@ namespace PokemonGo.RocketAPI.Helpers
             await Task.Delay(randomizedDelay);
         }
 
+        public static double RandomRoundDouble(double minimum, double maximum, int roundCases)
+        {
+            Random rand = new Random();
+            var next = rand.NextDouble();
+            // even the cut should be random to look like more real stuff, too big number would be double size
+            var nextFixed = Math.Round(next, RandomNumber(1, roundCases), MidpointRounding.AwayFromZero);
+            return minimum + (nextFixed * (maximum - minimum));
+        }
+
+        public static int GetNumberOfDigits(double d)
+        {
+            double abs = Math.Abs(d);
+            return abs < 1 ? 0 : (int)(Math.Log10(abs) + 1);
+        }
+
         public static async Task RandomDelay(int min, int max)
         {
             await Task.Delay(Random.Next(min, max));

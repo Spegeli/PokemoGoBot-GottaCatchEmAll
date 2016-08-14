@@ -119,5 +119,11 @@
     <Setting Name="DevicePackageName" Type="System.String" Scope="User">
       <Value Profile="(Default)">random</Value>
     </Setting>
+    <Setting Name="MakeMeHuman" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MaxGPXNoise" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2E-05</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
