@@ -22,7 +22,11 @@ namespace PokemonGo.RocketAPI.Logic
         public static async Task<PlayerUpdateResponse> HumanLikeWalking(GeoUtils targetLocation,Func<Task<bool>> functionExecutedWhileWalking)
         {
             double walkingSpeedInKilometersPerHour = ((Logic._client.Settings.WalkingSpeedInKilometerPerHour == 0  || Logic._client.Settings.MakeMeHuman == true ) ? Helpers.RandomHelper.getRandomDouble(Logic._client.Settings.MinRandomWalkingSpeed, Logic._client.Settings.MaxRandomWalkingSpeed )  : Logic._client.Settings.WalkingSpeedInKilometerPerHour) ;
-            
+            if( Logic._client.Settings.MakeMeHuman || Logic._client.Settings.WalkingSpeedInKilometerPerHour == 0)
+            {
+                Logger.Write("Speed is now " + walkingSpeedInKilometersPerHour, LogLevel.Navigation);
+            }
+
             var speedInMetersPerSecond = walkingSpeedInKilometersPerHour / 3.6;
 
             var sourceLocation = new GeoUtils(Logic._client.CurrentLatitude, Logic._client.CurrentLongitude);
