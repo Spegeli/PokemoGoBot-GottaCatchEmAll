@@ -119,6 +119,18 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.MaxGPXNoise = value; }
         }
 
+        public int MaxSleepTransfer
+        {
+            get { return UserSettings.Default.MaxSleepTransfer; }
+            set { UserSettings.Default.MaxSleepTransfer = value; }
+        }
+
+        public int MinSleepTransfer
+        {
+            get { return UserSettings.Default.MinSleepTransfer; }
+            set { UserSettings.Default.MinSleepTransfer = value; }
+        }
+
         public bool UsePokemonToNotCatchList
         {
             get { return UserSettings.Default.UsePokemonToNotCatchList; }

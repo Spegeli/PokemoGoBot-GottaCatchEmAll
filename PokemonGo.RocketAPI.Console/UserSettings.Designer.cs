@@ -514,5 +514,29 @@ namespace PokemonGo.RocketAPI.Console {
                 this["MaxGPXNoise"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int MaxSleepTransfer {
+            get {
+                return ((int)(this["MaxSleepTransfer"]));
+            }
+            set {
+                this["MaxSleepTransfer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MinSleepTransfer {
+            get {
+                return ((int)(this["MinSleepTransfer"]));
+            }
+            set {
+                this["MinSleepTransfer"] = value;
+            }
+        }
     }
 }

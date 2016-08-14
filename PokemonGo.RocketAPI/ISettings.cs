@@ -26,6 +26,8 @@ namespace PokemonGo.RocketAPI
         double WalkingSpeedInKilometerPerHour { get; }
         bool MakeMeHuman { get; }
         double MaxGPXNoise { get; }
+        int MaxSleepTransfer { get; }
+        int MinSleepTransfer { get; }
         int MaxTravelDistanceInMeters { get; }
         bool UseTeleportInsteadOfWalking { get; }
 

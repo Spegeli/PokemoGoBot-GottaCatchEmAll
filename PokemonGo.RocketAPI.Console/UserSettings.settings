@@ -125,5 +125,11 @@
     <Setting Name="MaxGPXNoise" Type="System.Double" Scope="User">
       <Value Profile="(Default)">2E-05</Value>
     </Setting>
+    <Setting Name="MaxSleepTransfer" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="MinSleepTransfer" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
