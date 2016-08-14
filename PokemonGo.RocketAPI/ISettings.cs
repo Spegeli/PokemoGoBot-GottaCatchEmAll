@@ -20,6 +20,8 @@ namespace PokemonGo.RocketAPI
         double DefaultLatitude { get; }
         double DefaultLongitude { get; }
         double DefaultAltitude { get; }
+        double MaxIncreaseAltitude { get; }
+        double MaxDecreaseAltitude { get; }
         bool UseGPXPathing { get; }
         string GPXFile { get; }
         bool GPXIgnorePokestops { get; }
@@ -27,6 +29,7 @@ namespace PokemonGo.RocketAPI
         double MinRandomWalkingSpeed { get; }
         double MaxRandomWalkingSpeed { get; }
         bool MakeMeHuman { get; }
+        bool ElevationToMetric { get; }
         int MaxTravelDistanceInMeters { get; }
         bool UseTeleportInsteadOfWalking { get; }
 
