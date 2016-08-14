@@ -143,12 +143,6 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.UseTeleportInsteadOfWalking = value; }
         }
 
-        public bool MakeMeHuman
-        {
-             get { return UserSettings.Default.MakeMeHuman; }
-             set { UserSettings.Default.MakeMeHuman = value; }
-        }
-
         public double MaxGPXNoise
         {
             get { return UserSettings.Default.MaxGPXNoise; }
