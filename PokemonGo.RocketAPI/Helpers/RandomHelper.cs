@@ -49,14 +49,12 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public static double getRandomDoubleInteger(int minimum, int maximum)
         {
-            Random random = new Random();
-            return random.Next(minimum, maximum);
+            return Random.Next(minimum, maximum);
         }
 
         public static double getRandomDouble( double minimum, double maximum )
         {
-            Random random = new Random();
-            return random.NextDouble() * (maximum - minimum) + minimum;
+            return Random.NextDouble() * (maximum - minimum) + minimum;
         }
         public static async Task RandomDelay(int min, int max)
         {
