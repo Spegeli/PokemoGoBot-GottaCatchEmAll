@@ -17,6 +17,11 @@ namespace PokemonGo.RocketAPI
         string PtcUsername { get; }
         string GoogleEmail { get; }
         string GooglePassword { get; }
+        bool UseProxy { get; }
+        string ProxyAddress { get; }
+        int ProxyPort { get; }
+        string ProxyUsername { get; }
+        string ProxyPassword { get; }
         double DefaultLatitude { get; }
         double DefaultLongitude { get; }
         double DefaultAltitude { get; }

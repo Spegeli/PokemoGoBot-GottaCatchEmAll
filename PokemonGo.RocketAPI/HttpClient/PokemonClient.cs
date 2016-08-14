@@ -25,5 +25,14 @@ namespace PokemonGo.RocketAPI.HttpClient
             DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
             DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
         }
+
+        public PokemonHttpClient(HttpClientHandler handler) : base(handler)
+        {
+            DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Niantic App");
+            DefaultRequestHeaders.ExpectContinue = false;
+            DefaultRequestHeaders.TryAddWithoutValidation("Connection", "keep-alive");
+            DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
+            DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
+        }
     }
 }
