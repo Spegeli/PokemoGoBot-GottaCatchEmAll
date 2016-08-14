@@ -41,7 +41,7 @@ namespace PokemonGo.RocketAPI.Rpc
             return await PostProtoPayload<Request, UseItemCaptureResponse>(RequestType.UseItemCapture, message);
         }
 
-        public async Task<CatchPokemonResponse> CatchPokemon(ulong encounterId, string spawnPointGuid, ItemId pokeballItemId, double normalizedRecticleSize = 1.950, double spinModifier = 1, double normalizedHitPos = 1)
+        public async Task<CatchPokemonResponse> CatchPokemon(ulong encounterId, string spawnPointGuid, ItemId pokeballItemId, double normalizedRecticleSize = 1.950, double spinModifier = 1, double normalizedHitPos = 1, bool hitPokemon = true)
         {
             
 
@@ -52,10 +52,10 @@ namespace PokemonGo.RocketAPI.Rpc
                 EncounterId = encounterId,
                 Pokeball = pokeballItemId,
                 SpawnPointId = spawnPointGuid,
-                HitPokemon = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandBool() : true),
+                HitPokemon = hitPokemon,
                 NormalizedReticleSize = normalizedRecticleSize,
-                SpinModifier = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,2) : spinModifier),
-                NormalizedHitPosition = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,2) : normalizedHitPos)
+                SpinModifier = spinModifier,
+                NormalizedHitPosition = normalizedHitPos
             };
 
             
