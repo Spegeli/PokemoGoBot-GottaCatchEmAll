@@ -40,6 +40,11 @@ namespace PokemonGo.RocketAPI.Helpers
             return random.Next(minimum, maximum);
         }
 
+        public static double getRandomDouble( double minimum, double maximum )
+        {
+            Random random = new Random();
+            return random.NextDouble() * (maximum - minimum) + minimum;
+        }
         public static async Task RandomDelay(int min, int max)
         {
             await Task.Delay(Random.Next(min, max));
