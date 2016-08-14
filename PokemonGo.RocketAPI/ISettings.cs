@@ -34,7 +34,6 @@ namespace PokemonGo.RocketAPI
         double MaxRandomWalkingSpeed { get; }
 
         bool ElevationToMetric { get; }
-
         int MaxTravelDistanceInMeters { get; }
         bool UseTeleportInsteadOfWalking { get; }
 
