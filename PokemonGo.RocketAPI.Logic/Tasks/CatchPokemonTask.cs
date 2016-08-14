@@ -56,7 +56,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                         ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0, 2) : 1),
                         ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0, 2) : 1),
                         ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandBool() : true
-                        );
+                        ));
 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
