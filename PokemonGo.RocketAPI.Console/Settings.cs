@@ -327,9 +327,9 @@ namespace PokemonGo.RocketAPI.Console
         private readonly SortedList<int, ItemId> _inventoryBalls = new SortedList<int, ItemId>();
         private readonly SortedList<int, ItemId> _inventoryBerries = new SortedList<int, ItemId>();
         private readonly SortedList<int, ItemId> _inventoryPotions = new SortedList<int, ItemId>();
-        private const int MaxBalls = 210;
+        private const int MaxBalls = 200;
         private const int MaxBerries = 20;
-        private const int MaxPotions = 20;
+        private const int MaxPotions = 50;
         public Settings()
         {
             _inventoryBalls.Add(1, ItemId.ItemMasterBall);
