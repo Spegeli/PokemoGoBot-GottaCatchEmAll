@@ -37,6 +37,30 @@ namespace PokemonGo.RocketAPI.Console {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double MaxIncreaseAltitude {
+            get {
+                return ((double)(this["MaxIncreaseAltitude"]));
+            }
+            set {
+                this["MaxIncreaseAltitude"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double MaxDecreaseAltitude {
+            get {
+                return ((double)(this["MaxDecreaseAltitude"]));
+            }
+            set {
+                this["MaxDecreaseAltitude"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("99")]
         public float TransferPokemonKeepAllAboveIVValue {
             get {
@@ -92,6 +116,18 @@ namespace PokemonGo.RocketAPI.Console {
             }
             set {
                 this["MaxRandomWalkingSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ElevationToMetric {
+            get {
+                return ((bool)(this["ElevationToMetric"]));
+            }
+            set {
+                this["ElevationToMetric"] = value;
             }
         }
         

@@ -36,7 +36,7 @@ namespace PokemonGo.RocketAPI.Logic
             //Initial walking
             var requestSendDateTime = DateTime.Now;
             PlayerUpdateResponse result;
-            await Logic._client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, Logic._client.Settings.DefaultAltitude);
+            await Logic._client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, (( Logic._client.Settings.MakeMeHuman == true ) ? Helpers.RandomHelper.getRandomDoubleInteger( Convert.ToInt32(Logic._client.Settings.DefaultAltitude - Logic._client.Settings.MaxDecreaseAltitude), Convert.ToInt32(Logic._client.Settings.DefaultAltitude + Logic._client.Settings.MaxIncreaseAltitude )) : Logic._client.Settings.DefaultAltitude) );
 
             do
             {
@@ -89,12 +89,11 @@ namespace PokemonGo.RocketAPI.Logic
 
             var nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
             var nextWaypointDistance = speedInMetersPerSecond;
-            var waypoint = LocationUtils.CreateWaypoint(sourceLocation, nextWaypointDistance, nextWaypointBearing, Convert.ToDouble(trk.Ele));
-
+            var waypoint = LocationUtils.CreateWaypoint(sourceLocation, nextWaypointDistance, nextWaypointBearing, (( Logic._client.Settings.ElevationToMetric == true ) ? Convert.ToDouble(trk.Ele) * 0.3048 : Convert.ToDouble(trk.Ele) ) );
             //Initial walking
             var requestSendDateTime = DateTime.Now;
             PlayerUpdateResponse result;
-            await Logic._client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, Logic._client.Settings.DefaultAltitude);
+            await Logic._client.Player.UpdatePlayerLocation(waypoint.Latitude, waypoint.Longitude, waypoint.Altitude);
 
             do
             {
@@ -119,7 +118,7 @@ namespace PokemonGo.RocketAPI.Logic
                     await functionExecutedWhileWalking();// look for pokemon
 
             } while (LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 35);
-
+            Logger.Write(Convert.ToString((Logic._client.Settings.ElevationToMetric == true) ? Convert.ToDouble(trk.Ele) * 0.3048 : Convert.ToDouble(trk.Ele)));
             return result;
         }
 

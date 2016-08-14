@@ -71,6 +71,18 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.DefaultAltitude = value; }
         }
 
+        public double MaxIncreaseAltitude
+        {
+            get { return UserSettings.Default.MaxIncreaseAltitude; }
+            set { UserSettings.Default.MaxIncreaseAltitude = value; }
+        }
+
+        public double MaxDecreaseAltitude
+        {
+            get { return UserSettings.Default.MaxDecreaseAltitude; }
+            set { UserSettings.Default.MaxDecreaseAltitude = value; }
+        }
+
         public bool UseGPXPathing
         {
             get { return UserSettings.Default.UseGPXPathing; }
@@ -105,6 +117,12 @@ namespace PokemonGo.RocketAPI.Console
         {
             get { return UserSettings.Default.MaxRandomWalkingSpeed; }
             set { UserSettings.Default.MaxRandomWalkingSpeed = value; }
+        }
+
+        public bool ElevationToMetric
+        {
+            get { return UserSettings.Default.ElevationToMetric; }
+            set { UserSettings.Default.ElevationToMetric = value; }
         }
 
         public bool MakeMeHuman

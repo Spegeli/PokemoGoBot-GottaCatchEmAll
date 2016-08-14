@@ -41,6 +41,7 @@ namespace PokemonGo.RocketAPI.Helpers
         {
             double abs = Math.Abs(d);
             return abs < 1 ? 0 : (int)(Math.Log10(abs) + 1);
+        }
 
         public static Boolean getRandBool()
         {
