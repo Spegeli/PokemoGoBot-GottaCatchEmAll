@@ -54,8 +54,8 @@ namespace PokemonGo.RocketAPI.Rpc
                 SpawnPointId = spawnPointGuid,
                 HitPokemon = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandBool() : true),
                 NormalizedReticleSize = normalizedRecticleSize,
-                SpinModifier = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,1) : spinModifier),
-                NormalizedHitPosition = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,1) : normalizedHitPos)
+                SpinModifier = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,2) : spinModifier),
+                NormalizedHitPosition = ((_client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0,2) : normalizedHitPos)
             };
 
             
