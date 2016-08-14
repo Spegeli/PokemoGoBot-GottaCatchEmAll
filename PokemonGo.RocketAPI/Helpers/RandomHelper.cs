@@ -30,20 +30,17 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public static Boolean getRandBool()
         {
-            Random rand = new Random();
-            return rand.Next(0, 2) == 0;
+            return Random.Next(0, 2) == 0;
         }
 
         public static double getRandomDoubleInteger(int minimum, int maximum)
         {
-            Random random = new Random();
-            return random.Next(minimum, maximum);
+            return Random.Next(minimum, maximum);
         }
 
         public static double getRandomDouble( double minimum, double maximum )
         {
-            Random random = new Random();
-            return random.NextDouble() * (maximum - minimum) + minimum;
+            return Random.NextDouble() * (maximum - minimum) + minimum;
         }
         public static async Task RandomDelay(int min, int max)
         {
@@ -57,8 +54,7 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public static int RandomNumber(int min, int max)
         {
-            Random random = new Random();
-            return random.Next(min, max);
+            return Random.Next(min, max);
         }
     }
 }
