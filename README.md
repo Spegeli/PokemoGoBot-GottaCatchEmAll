@@ -8,6 +8,11 @@
 <h1>Pokemo GO Bot - Gotta Catch 'Em All Edition</h1>
 <!-- disclaimer -->
 Chatting about this Repository can be done on our Discord: https://discord.gg/KzJUjDE <br/>
+<p align="center">
+  <a href="https://discord.gg/KzJUjDE">
+    <img alt="Logo" src="https://discordapp.com/api/guilds/210510987189682176/widget.png?style=banner2">
+  </a>
+</p>
 <br/>
 <strong><em>UPDATE (8/7/2016)</em></strong> - Back online!<br />
 <br />
