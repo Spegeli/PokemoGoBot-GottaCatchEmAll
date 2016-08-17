@@ -135,15 +135,11 @@ FirmwareFingerprint = "OnePlus/OnePlus2/OnePlus2:6.0.1/MMB29M/1447840820:user/re
         }
         private byte[] Encrypt(byte[] bytes)
         {
-            var outputLength = 32 + bytes.Length + (256 - (bytes.Length % 256));
-
             byte[] outp = null;
             try
             {
                 byte[] iv = new byte[32];
                 new Random().NextBytes(iv);
-
-                int outputSize = outputLength;
                 outp = PokemonGoEncryptSharp.Util.Encrypt(bytes, iv);
 
             }
@@ -151,7 +147,6 @@ FirmwareFingerprint = "OnePlus/OnePlus2/OnePlus2:6.0.1/MMB29M/1447840820:user/re
             {
                 Console.WriteLine(ex.Message);
             }
-            var output = new byte[outputLength];
             return outp;
         }
 

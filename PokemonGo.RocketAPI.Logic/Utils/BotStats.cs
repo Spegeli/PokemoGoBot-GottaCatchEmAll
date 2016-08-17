@@ -94,6 +94,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
                 "{0} - Runtime {1} - Lvl: {2:0} | EXP/H: {3:0} | P/H: {4:0} | Stardust: {5:0} | Transfered: {6:0} | Items Recycled: {7:0} | Pokemon: {8:0} | Pokedex: [Captured: {9:0} - Saw: {10:0}] | Km Walked this Session: {11:0.00} | Bot Version: {12:0}",
                 _playerName, FormatRuntime(), GetCurrentInfo(), ExperienceThisSession / GetRuntime(),
                 PokemonCaughtThisSession / GetRuntime(), TotalStardust, PokemonTransferedThisSession, ItemsRemovedThisSession, TotalPokesInBag, TotalPokesInPokedexCaptured, TotalPokesInPokedex, KmWalkedCurrent, GitChecker.CurrentVersion);
+			await Task.Delay (0);
         }
 
         public static int GetXpDiff(int level)

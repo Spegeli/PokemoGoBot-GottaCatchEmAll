@@ -171,7 +171,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     await Inventory.GetCachedInventory();
                     _playerProfile = await _client.Player.GetPlayer();
-                    BotStats.UpdateConsoleTitle();
+                    await BotStats.UpdateConsoleTitle();
 
                     var stats = await Inventory.GetPlayerStats();
                     var stat = stats.FirstOrDefault();

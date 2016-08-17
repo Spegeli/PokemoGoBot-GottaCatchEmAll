@@ -30,7 +30,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                 BotStats.ItemsRemovedThisSession += item.Count;
             }
 
-            BotStats.UpdateConsoleTitle();
+            await BotStats.UpdateConsoleTitle();
             _recycleCounter = 0;
         }
     }

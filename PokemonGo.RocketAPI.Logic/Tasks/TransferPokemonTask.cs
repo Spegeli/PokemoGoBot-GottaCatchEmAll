@@ -60,7 +60,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
             }
 
             await BotStats.GetPokemonCount();
-            BotStats.UpdateConsoleTitle();
+            await BotStats.UpdateConsoleTitle();
         }
     }
 }

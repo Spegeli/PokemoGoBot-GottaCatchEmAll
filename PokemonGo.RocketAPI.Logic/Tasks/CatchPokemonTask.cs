@@ -66,7 +66,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     await BotStats.GetPokemonCount();
                     var profile = await Logic._client.Player.GetPlayer();
                     BotStats.TotalStardust = profile.PlayerData.Currencies.ToArray()[1].Amount;
-                    BotStats.UpdateConsoleTitle();
+                    await BotStats.UpdateConsoleTitle();
                 }
                 
                 if (encounter?.CaptureProbability?.CaptureProbability_ != null)
@@ -130,6 +130,11 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
 
             if (greatBalls && (pokemonCp >= 300 || (iV >= Logic._client.Settings.TransferPokemonKeepAllAboveIVValue && probability < 0.50)))
                 return ItemId.ItemGreatBall;
+
+			if( pokeBalls && (pokemonCp >= 100 || ( iV >= Logic._client.Settings.TransferPokemonKeepAllAboveIVValue && probability < 0.70)))
+			{
+				return ItemId.ItemPokeBall;
+			}
 
             return balls.OrderBy(g => g.Key).First().Key;
         }
