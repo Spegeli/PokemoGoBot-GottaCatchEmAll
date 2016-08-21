@@ -53,6 +53,36 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.GooglePassword = value; }
         }
 
+        public bool UseProxy
+        {
+            get { return UserSettings.Default.UseProxy; }
+            set { UserSettings.Default.UseProxy = value; }
+        }
+
+        public string ProxyAddress
+        {
+            get { return UserSettings.Default.ProxyAddress; }
+            set { UserSettings.Default.ProxyAddress = value; }
+        }
+
+        public int ProxyPort
+        {
+            get { return UserSettings.Default.ProxyPort; }
+            set { UserSettings.Default.ProxyPort = value; }
+        }
+
+        public string ProxyUsername
+        {
+            get { return UserSettings.Default.ProxyUsername; }
+            set { UserSettings.Default.ProxyUsername = value; }
+        }
+
+        public string ProxyPassword
+        {
+            get { return UserSettings.Default.ProxyPassword; }
+            set { UserSettings.Default.ProxyPassword = value; }
+        }
+
         public double DefaultLatitude
         {
             get { return UserSettings.Default.DefaultLatitude; }
@@ -250,6 +280,7 @@ namespace PokemonGo.RocketAPI.Console
             get { return UserSettings.Default.DebugMode; }
             set { UserSettings.Default.DebugMode = value; }
         }
+
         public string DevicePackageName
         {
             get { return UserSettings.Default.DevicePackageName; }
@@ -262,7 +293,8 @@ namespace PokemonGo.RocketAPI.Console
         public string AndroidBoardName = "msm8996";
         [XmlIgnore]
         public string AndroidBootloader = "1.0.0.0000";
-        [XmlIgnore]public string DeviceBrand = "HTC";
+        [XmlIgnore]
+        public string DeviceBrand = "HTC";
         [XmlIgnore]
         public string DeviceModel = "HTC 10";
         [XmlIgnore]

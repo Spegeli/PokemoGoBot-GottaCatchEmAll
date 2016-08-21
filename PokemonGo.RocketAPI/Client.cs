@@ -6,6 +6,8 @@ using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Helpers;
 using PokemonGo.RocketAPI.HttpClient;
 using POGOProtos.Networking.Envelopes;
+using System.Net.Http;
+using System.Net;
 
 #endregion
 
@@ -32,7 +34,7 @@ namespace PokemonGo.RocketAPI
 
         public AuthType AuthType => Settings.AuthType;
 
-        internal readonly PokemonHttpClient PokemonHttpClient = new PokemonHttpClient();
+        internal readonly PokemonHttpClient PokemonHttpClient;
         internal string ApiUrl { get; set; }
         internal AuthTicket AuthTicket { get; set; }
         internal static string DeviceId { get; set; }
@@ -55,6 +57,24 @@ namespace PokemonGo.RocketAPI
             RequestBuilder.SetDevice(settings);
 
             Settings = settings;
+
+            if (Settings.UseProxy)
+            {
+                HttpClientHandler Handler = new HttpClientHandler
+                {
+                    Proxy = new WebProxy(string.Format("http://{0}:{1}/", Settings.ProxyAddress, Settings.ProxyPort), false),
+                    PreAuthenticate = true,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(Settings.ProxyUsername, Settings.ProxyPassword),
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                    AllowAutoRedirect = false
+                };
+                PokemonHttpClient = new PokemonHttpClient(Handler);
+            }
+            else
+            {
+                PokemonHttpClient = new PokemonHttpClient();
+            }
 
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
