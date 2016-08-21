@@ -171,7 +171,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     await Inventory.GetCachedInventory();
                     _playerProfile = await _client.Player.GetPlayer();
-                    BotStats.UpdateConsoleTitle();
+                    await BotStats.UpdateConsoleTitle();
 
                     var stats = await Inventory.GetPlayerStats();
                     var stat = stats.FirstOrDefault();
@@ -199,7 +199,16 @@ namespace PokemonGo.RocketAPI.Logic
                     await RecycleItemsTask.Execute();
                     if (_client.Settings.UseLuckyEggs) await UseLuckyEggTask.Execute();
                     if (_client.Settings.EvolvePokemon || _client.Settings.EvolveOnlyPokemonAboveIV) await EvolvePokemonTask.Execute();
-                    if (_client.Settings.TransferPokemon) await TransferPokemonTask.Execute();
+                    if (_client.Settings.TransferPokemon)
+                    {
+                        if (_clientSettings.MakeMeHuman)
+                        {
+                            TransferPokemonTask.MakeMeHuman = true;
+                            TransferPokemonTask.MaxSleepTransfer = _clientSettings.MaxSleepTransfer;
+                            TransferPokemonTask.MinSleepTransfer = _clientSettings.MinSleepTransfer;
+                        }
+                        await TransferPokemonTask.Execute();
+                    }
                     await ExportPokemonToCsv.Execute(_playerProfile.PlayerData);
                     if (_clientSettings.HatchEggs) await HatchEggsTask.Execute();
                 }
@@ -224,8 +233,15 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task Main()
         {
+            if (_clientSettings.MakeMeHuman)
+            {
+                FarmPokestopsGPXTask.MakeMeHuman = true;
+                FarmPokestopsGPXTask.MaxGPXNoise = _clientSettings.MaxGPXNoise;
+            }
             if (_clientSettings.UseGPXPathing)
+            {
                 await FarmPokestopsGPXTask.Execute();
+            }
             else
                 await FarmPokestopsTask.Execute();
         }

@@ -9,8 +9,14 @@ using LogLevel = PokemonGo.RocketAPI.Logic.Logging.LogLevel;
 
 namespace PokemonGo.RocketAPI.Logic.Tasks
 {
+
+
     public class TransferPokemonTask
     {
+        public static bool MakeMeHuman = false;
+        public static int MaxSleepTransfer = 0;
+        public static int MinSleepTransfer = 0;
+
         public static async Task Execute()
         {
             await Inventory.GetCachedInventory(true);
@@ -18,9 +24,18 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
             if (pokemonToTransfer == null || !pokemonToTransfer.Any())
                 return;
 
-            Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer:", LogLevel.Debug);
+            Logger.Write($"Found {pokemonToTransfer.Count()} Pokemon for Transfer.", LogLevel.Info);
             foreach (var pokemon in pokemonToTransfer)
             {
+                // await if we want to be humans
+                if (MakeMeHuman)
+                {
+                    // we input secs and delay uses milliseconds 1s = 1000ms
+                    int rand = Helpers.RandomHelper.RandomNumber(MinSleepTransfer * 1000, MaxSleepTransfer * 1000);
+                    Logger.Write($"Sleeping {rand} milliseconds to look more human.", LogLevel.Info);
+                    Task.Delay(rand).Wait();
+                }
+
                 await Logic._client.Inventory.TransferPokemon(pokemon.Id);
 
                 await Inventory.GetCachedInventory(true);
@@ -45,7 +60,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
             }
 
             await BotStats.GetPokemonCount();
-            BotStats.UpdateConsoleTitle();
+            await BotStats.UpdateConsoleTitle();
         }
     }
 }

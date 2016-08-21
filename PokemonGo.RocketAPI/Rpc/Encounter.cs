@@ -9,6 +9,7 @@ using POGOProtos.Networking.Requests;
 using POGOProtos.Networking.Requests.Messages;
 using POGOProtos.Networking.Responses;
 
+
 namespace PokemonGo.RocketAPI.Rpc
 {
     public class Encounter : BaseRpc
@@ -40,14 +41,15 @@ namespace PokemonGo.RocketAPI.Rpc
             return await PostProtoPayload<Request, UseItemCaptureResponse>(RequestType.UseItemCapture, message);
         }
 
-        public async Task<CatchPokemonResponse> CatchPokemon(ulong encounterId, string spawnPointGuid, ItemId pokeballItemId, double normalizedRecticleSize = 1.950, double spinModifier = 1, double normalizedHitPos = 1)
-        {
+        public async Task<CatchPokemonResponse> CatchPokemon(ulong encounterId, string spawnPointGuid, ItemId pokeballItemId, double normalizedRecticleSize = 1.950, double spinModifier = 1, double normalizedHitPos = 1, bool hitPokemon = true)
+        {                
             var message = new CatchPokemonMessage
             {
+                
                 EncounterId = encounterId,
                 Pokeball = pokeballItemId,
                 SpawnPointId = spawnPointGuid,
-                HitPokemon = true,
+                HitPokemon = hitPokemon,
                 NormalizedReticleSize = normalizedRecticleSize,
                 SpinModifier = spinModifier,
                 NormalizedHitPosition = normalizedHitPos
@@ -56,6 +58,7 @@ namespace PokemonGo.RocketAPI.Rpc
             return await PostProtoPayload<Request, CatchPokemonResponse>(RequestType.CatchPokemon, message);
         }
 
+        
         public async Task<IncenseEncounterResponse> EncounterIncensePokemon(ulong encounterId, string encounterLocation)
         {
             var message = new IncenseEncounterMessage()

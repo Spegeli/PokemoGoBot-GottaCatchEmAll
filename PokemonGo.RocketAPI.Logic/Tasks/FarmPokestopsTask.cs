@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
+//using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -159,7 +159,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     else if (fortSearch.ExperienceAwarded != 0)
                     {
                         BotStats.ExperienceThisSession += fortSearch.ExperienceAwarded;
-                        BotStats.UpdateConsoleTitle();
+                        await BotStats.UpdateConsoleTitle();
                         Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                         RecycleItemsTask._recycleCounter++;
                         HatchEggsTask._hatchUpdateDelay++;

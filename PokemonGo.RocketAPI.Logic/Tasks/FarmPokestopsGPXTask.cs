@@ -14,6 +14,10 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
 {
     public class FarmPokestopsGPXTask
     {
+        public static bool MakeMeHuman = false;
+        public static double MaxGPXNoise = 0.0d;
+        public static int maxRoundNoise = 6;
+
         public static async Task Execute()
         {
             var tracks = GetGpxTracks();
@@ -27,6 +31,20 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     for (var curTrkPt = 0; curTrkPt < trackPoints.Count; curTrkPt++)
                     {
                         var nextPoint = trackPoints.ElementAt(curTrkPt);
+
+                        // if we want to be humans we add entropy to the next GPX point
+                        if (MakeMeHuman == true)
+                        {
+                            double lat = Convert.ToDouble(nextPoint.Lat);
+                            double lon = Convert.ToDouble(nextPoint.Lon);
+
+                            lat += Helpers.RandomHelper.RandomRoundDouble(0.0, MaxGPXNoise, maxRoundNoise);
+                            lon += Helpers.RandomHelper.RandomRoundDouble(0.0, MaxGPXNoise, maxRoundNoise);
+
+                            nextPoint.Lat = lat.ToString();
+                            nextPoint.Lon = lon.ToString();
+                        }
+
                         var distanceCheck = LocationUtils.CalculateDistanceInMeters(Logic._client.CurrentLatitude,
                                Logic._client.CurrentLongitude, Convert.ToDouble(nextPoint.Lat, CultureInfo.InvariantCulture),
                             Convert.ToDouble(nextPoint.Lon, CultureInfo.InvariantCulture));
@@ -141,7 +159,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     else
                     {
                         BotStats.ExperienceThisSession += fortSearch.ExperienceAwarded;
-                        BotStats.UpdateConsoleTitle();
+                        await BotStats.UpdateConsoleTitle();
                         Logger.Write($"XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Pokestop);
                         RecycleItemsTask._recycleCounter++;
                         HatchEggsTask._hatchUpdateDelayGPX++;

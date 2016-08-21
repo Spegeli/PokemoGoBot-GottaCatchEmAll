@@ -71,6 +71,18 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.DefaultAltitude = value; }
         }
 
+        public double MaxIncreaseAltitude
+        {
+            get { return UserSettings.Default.MaxIncreaseAltitude; }
+            set { UserSettings.Default.MaxIncreaseAltitude = value; }
+        }
+
+        public double MaxDecreaseAltitude
+        {
+            get { return UserSettings.Default.MaxDecreaseAltitude; }
+            set { UserSettings.Default.MaxDecreaseAltitude = value; }
+        }
+
         public bool UseGPXPathing
         {
             get { return UserSettings.Default.UseGPXPathing; }
@@ -95,6 +107,30 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.WalkingSpeedInKilometerPerHour = value; }
         }
 
+        public double MinRandomWalkingSpeed
+        {
+            get { return UserSettings.Default.MinRandomWalkingSpeed; }
+            set { UserSettings.Default.MinRandomWalkingSpeed = value; }
+        }
+
+        public double MaxRandomWalkingSpeed
+        {
+            get { return UserSettings.Default.MaxRandomWalkingSpeed; }
+            set { UserSettings.Default.MaxRandomWalkingSpeed = value; }
+        }
+
+        public bool ElevationToMetric
+        {
+            get { return UserSettings.Default.ElevationToMetric; }
+            set { UserSettings.Default.ElevationToMetric = value; }
+        }
+
+        public bool MakeMeHuman
+        {
+            get { return UserSettings.Default.MakeMeHuman; }
+            set { UserSettings.Default.MakeMeHuman = value; }
+        }
+
         public int MaxTravelDistanceInMeters
         {
             get { return UserSettings.Default.MaxTravelDistanceInMeters; }
@@ -105,6 +141,24 @@ namespace PokemonGo.RocketAPI.Console
         {
             get { return UserSettings.Default.UseTeleportInsteadOfWalking; }
             set { UserSettings.Default.UseTeleportInsteadOfWalking = value; }
+        }
+
+        public double MaxGPXNoise
+        {
+            get { return UserSettings.Default.MaxGPXNoise; }
+            set { UserSettings.Default.MaxGPXNoise = value; }
+        }
+
+        public int MaxSleepTransfer
+        {
+            get { return UserSettings.Default.MaxSleepTransfer; }
+            set { UserSettings.Default.MaxSleepTransfer = value; }
+        }
+
+        public int MinSleepTransfer
+        {
+            get { return UserSettings.Default.MinSleepTransfer; }
+            set { UserSettings.Default.MinSleepTransfer = value; }
         }
 
         public bool UsePokemonToNotCatchList

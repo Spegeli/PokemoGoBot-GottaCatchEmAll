@@ -28,6 +28,35 @@ namespace PokemonGo.RocketAPI.Helpers
             await Task.Delay(randomizedDelay);
         }
 
+
+        public static double RandomRoundDouble(double minimum, double maximum, int roundCases)
+        {
+            var next = Random.NextDouble();
+            // even the cut should be random to look like more real stuff, too big number would be double size
+            var nextFixed = Math.Round(next, RandomNumber(1, roundCases), MidpointRounding.AwayFromZero);
+            return minimum + (nextFixed * (maximum - minimum));
+        }
+
+        public static int GetNumberOfDigits(double d)
+        {
+            double abs = Math.Abs(d);
+            return abs < 1 ? 0 : (int)(Math.Log10(abs) + 1);
+        }
+
+        public static Boolean getRandBool()
+        {
+            return Random.Next(0, 2) == 0;
+        }
+
+        public static double getRandomDoubleInteger(int minimum, int maximum)
+        {
+            return Random.Next(minimum, maximum);
+        }
+
+        public static double getRandomDouble( double minimum, double maximum )
+        {
+            return Random.NextDouble() * (maximum - minimum) + minimum;
+        }
         public static async Task RandomDelay(int min, int max)
         {
             await Task.Delay(Random.Next(min, max));
@@ -40,8 +69,7 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public static int RandomNumber(int min, int max)
         {
-            Random random = new Random();
-            return random.Next(min, max);
+            return Random.Next(min, max);
         }
     }
 }

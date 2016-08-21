@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI.Logic.Utils;
+using PokemonGoEncryptSharp;
 
 namespace PokemonGo.RocketAPI.Helpers
 {
@@ -134,30 +135,21 @@ FirmwareFingerprint = "OnePlus/OnePlus2/OnePlus2:6.0.1/MMB29M/1447840820:user/re
         }
         private byte[] Encrypt(byte[] bytes)
         {
-            var outputLength = 32 + bytes.Length + (256 - (bytes.Length % 256));
-            var ptr = Marshal.AllocHGlobal(outputLength);
-            var ptrOutput = Marshal.AllocHGlobal(outputLength);
-            FillMemory(ptr, (uint)outputLength, 0);
-            FillMemory(ptrOutput, (uint)outputLength, 0);
-            Marshal.Copy(bytes, 0, ptr, bytes.Length);
+            byte[] outp = null;
             try
             {
-                int outputSize = outputLength;
-                EncryptNative(ptr, bytes.Length, new byte[32], 32, ptrOutput, out outputSize);
+                byte[] iv = new byte[32];
+                new Random().NextBytes(iv);
+                outp = PokemonGoEncryptSharp.Util.Encrypt(bytes, iv);
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            var output = new byte[outputLength];
-            Marshal.Copy(ptrOutput, output, 0, outputLength);
-            return output;
+            return outp;
         }
 
-        [DllImport("encrypt.dll", EntryPoint = "encrypt", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
-        static extern private void EncryptNative(IntPtr arr, int length, byte[] iv, int ivsize, IntPtr output, out int outputSize);
-        [DllImport("kernel32.dll", EntryPoint = "RtlFillMemory", SetLastError = false)]
-        static extern void FillMemory(IntPtr destination, uint length, byte fill);
 
         public RequestEnvelope GetRequestEnvelope(params Request[] customRequests)
         {

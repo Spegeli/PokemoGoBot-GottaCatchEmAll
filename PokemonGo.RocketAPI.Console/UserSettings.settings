@@ -5,6 +5,12 @@
     <Setting Name="DefaultAltitude" Type="System.Double" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="MaxIncreaseAltitude" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="MaxDecreaseAltitude" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
     <Setting Name="TransferPokemonKeepAllAboveIVValue" Type="System.Single" Scope="User">
       <Value Profile="(Default)">99</Value>
     </Setting>
@@ -13,6 +19,18 @@
     </Setting>
     <Setting Name="WalkingSpeedInKilometerPerHour" Type="System.Double" Scope="User">
       <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="MinRandomWalkingSpeed" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="MaxRandomWalkingSpeed" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ElevationToMetric" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MakeMeHuman" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DefaultLatitude" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -118,6 +136,15 @@
     </Setting>
     <Setting Name="DevicePackageName" Type="System.String" Scope="User">
       <Value Profile="(Default)">random</Value>
+    </Setting>
+    <Setting Name="MaxGPXNoise" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2E-05</Value>
+    </Setting>
+    <Setting Name="MaxSleepTransfer" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="MinSleepTransfer" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
     </Setting>
   </Settings>
 </SettingsFile>

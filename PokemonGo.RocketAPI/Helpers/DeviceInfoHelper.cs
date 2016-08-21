@@ -426,19 +426,19 @@ namespace PokemonGo.RocketAPI.Logic.Utils
             { "yureka",
                 new Dictionary<string, string>()
                 {
-                    { "AndroidBoardName", "MSM8916" },
+                    { "AndroidBoardName", "MSM8916" }, // ro.product.board=MSM8974
                     { "AndroidBootloader", "tomato-12-gf7e8024" },
-                    { "DeviceBrand", "YU" },
-                    { "DeviceId", "8525f5d8201f78b5" },
-                    { "DeviceModel", "AO5510" },
-                    { "DeviceModelBoot", "qcom" },
-                    { "DeviceModelIdentifier", "YUREKA" },
-                    { "FirmwareBrand", "YUREKA" },
-                    { "FirmwareFingerprint", "YU/YUREKA/YUREKA:5.0.2/LRX22G/YNG1TAS1K0:user/release-keys" },
-                    { "FirmwareTags", "test-keys" },
-                    { "FirmwareType", "userdebug" },
-                    { "HardwareManufacturer", "YU" },
-                    { "HardwareModel", "AO5510" }
+                    { "DeviceBrand", "YU" }, //ro.product.brand=oneplus
+                    { "DeviceId", "8525f5d8201f78b5" }, //settings get secure android_id
+                    { "DeviceModel", "AO5510" }, //ro.product.model=A0001
+                    { "DeviceModelBoot", "qcom" }, //if msm qcom, if smd samsung or if CPU TYPE stuff
+                    { "DeviceModelIdentifier", "YUREKA" }, //ro.product.name=bacon
+                    { "FirmwareBrand", "YUREKA" }, //ro.product.name=bacon
+                    { "FirmwareFingerprint", "YU/YUREKA/YUREKA:5.0.2/LRX22G/YNG1TAS1K0:user/release-keys" }, //ro.build.fingerprint=oneplus/bacon/A0001:6.0.1/MHC19Q/ZNH2KAS2X1:user/release-keys
+                    { "FirmwareTags", "test-keys" }, //ro.build.tags=release-keys
+                    { "FirmwareType", "userdebug" }, //ro.build.type=user
+                    { "HardwareManufacturer", "YU" }, //ro.product.manufacturer=OnePlus
+                    { "HardwareModel", "AO5510" } //ro.product.model=A0001
                 }
             },
             { "note3",

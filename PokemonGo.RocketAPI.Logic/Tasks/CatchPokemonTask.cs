@@ -52,7 +52,11 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                 caughtPokemonResponse =
                     await Logic._client.Encounter.CatchPokemon(
                         encounter is EncounterResponse || encounter is IncenseEncounterResponse ? pokemon.EncounterId : encounterId,
-                        encounter is EncounterResponse || encounter is IncenseEncounterResponse ? pokemon.SpawnPointId : currentFortData.Id, pokeball);
+                        encounter is EncounterResponse || encounter is IncenseEncounterResponse ? pokemon.SpawnPointId : currentFortData.Id, pokeball, 1.950,
+                        ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0, 2) : 1),
+                        ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandomDoubleInteger(0, 2) : 1),
+                        ((Logic._client.Settings.MakeMeHuman) == true ? Helpers.RandomHelper.getRandBool() : true
+                        ));
 
                 if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
                 {
@@ -62,7 +66,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     await BotStats.GetPokemonCount();
                     var profile = await Logic._client.Player.GetPlayer();
                     BotStats.TotalStardust = profile.PlayerData.Currencies.ToArray()[1].Amount;
-                    BotStats.UpdateConsoleTitle();
+                    await BotStats.UpdateConsoleTitle();
                 }
                 
                 if (encounter?.CaptureProbability?.CaptureProbability_ != null)
@@ -126,6 +130,11 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
 
             if (greatBalls && (pokemonCp >= 300 || (iV >= Logic._client.Settings.TransferPokemonKeepAllAboveIVValue && probability < 0.50)))
                 return ItemId.ItemGreatBall;
+
+			if( pokeBalls && (pokemonCp >= 100 || ( iV >= Logic._client.Settings.TransferPokemonKeepAllAboveIVValue && probability < 0.70)))
+			{
+				return ItemId.ItemPokeBall;
+			}
 
             return balls.OrderBy(g => g.Key).First().Key;
         }

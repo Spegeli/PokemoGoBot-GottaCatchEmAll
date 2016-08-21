@@ -36,7 +36,7 @@ namespace PokemonGo.RocketAPI.Logic.Tasks
                     BotStats.ExperienceThisSession += evolvePokemonOutProto.ExperienceAwarded;
             }
             await BotStats.GetPokeDexCount();
-            BotStats.UpdateConsoleTitle();
+            await BotStats.UpdateConsoleTitle();
         }
 
     }
