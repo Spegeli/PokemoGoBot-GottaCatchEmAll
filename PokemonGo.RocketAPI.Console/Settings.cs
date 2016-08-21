@@ -107,6 +107,30 @@ namespace PokemonGo.RocketAPI.Console
             set { UserSettings.Default.UseTeleportInsteadOfWalking = value; }
         }
 
+        public bool MakeMeHuman
+        {
+             get { return UserSettings.Default.MakeMeHuman; }
+             set { UserSettings.Default.MakeMeHuman = value; }
+        }
+
+        public double MaxGPXNoise
+        {
+            get { return UserSettings.Default.MaxGPXNoise; }
+            set { UserSettings.Default.MaxGPXNoise = value; }
+        }
+
+        public int MaxSleepTransfer
+        {
+            get { return UserSettings.Default.MaxSleepTransfer; }
+            set { UserSettings.Default.MaxSleepTransfer = value; }
+        }
+
+        public int MinSleepTransfer
+        {
+            get { return UserSettings.Default.MinSleepTransfer; }
+            set { UserSettings.Default.MinSleepTransfer = value; }
+        }
+
         public bool UsePokemonToNotCatchList
         {
             get { return UserSettings.Default.UsePokemonToNotCatchList; }
